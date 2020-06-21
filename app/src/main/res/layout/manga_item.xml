@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
+        <variable
+            name="manga"
+            type="com.vianh.blogtruyen.data.PreviewManga" />
+        <variable
+            name="viewModel"
+            type="com.vianh.blogtruyen.ui.main.MainViewModel" />
+    </data>
+    <FrameLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_marginBottom="10dp"
+        android:layout_width="110dp"
+        android:layout_height="120dp">
+        <ImageView
+            android:id="@+id/imageCover"
+            android:src="@drawable/one_punch"
+            android:scaleType="centerCrop"
+            app:imageUrl="@{manga.imageUrl}"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+        <TextView
+            android:id="@+id/mangaName"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:alpha="0.8"
+            android:textSize="12sp"
+            android:maxLines="2"
+            android:ellipsize="end"
+            android:text="@{manga.title}"
+            android:background="@android:color/background_dark"
+            android:textColor="@android:color/white"
+            android:layout_gravity="bottom"/>
+    </FrameLayout>
+</layout>
