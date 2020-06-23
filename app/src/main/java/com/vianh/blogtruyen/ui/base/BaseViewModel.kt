@@ -2,7 +2,6 @@ package com.vianh.blogtruyen.ui.base
 
 import androidx.lifecycle.ViewModel
 import com.vianh.blogtruyen.data.DataManager
-import com.vianh.blogtruyen.data.PreviewManga
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job

@@ -16,9 +16,9 @@ abstract class BaseActivity<V: ViewModel, B: ViewDataBinding>: AppCompatActivity
 
     private lateinit var mBinding: B
 
-    public fun getBinding() = mBinding
+    fun getBinding() = mBinding
 
-    public fun getViewModel() = mViewModel
+    fun getViewModel() = mViewModel
 
     abstract fun getViewModelClass(): Class<V>
 

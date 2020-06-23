@@ -3,15 +3,15 @@ package com.vianh.blogtruyen.ui.main
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.vianh.blogtruyen.data.PreviewManga
+import com.vianh.blogtruyen.data.model.Manga
 import com.vianh.blogtruyen.databinding.MangaItemBinding
 import com.vianh.blogtruyen.ui.base.BaseBindingViewHolder
 
-class DashBoardAdapter(private var items: List<PreviewManga>):
+class DashBoardAdapter(private var items: List<Manga>, val viewModel: MainViewModel):
     RecyclerView.Adapter<DashBoardAdapter.DashBoardViewHolder>() {
 
     fun getItems() = items
-    fun setItems(items: List<PreviewManga>) {
+    fun setItems(items: List<Manga>) {
         this.items = items
         notifyDataSetChanged()
     }
@@ -20,6 +20,7 @@ class DashBoardAdapter(private var items: List<PreviewManga>):
         BaseBindingViewHolder<MangaItemBinding>(binding) {
         override fun onBind(position: Int) {
             getBinding().manga = items[position]
+            getBinding().viewModel = viewModel
             getBinding().executePendingBindings()
         }
     }

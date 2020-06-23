@@ -24,12 +24,6 @@ allprojects {
     }
 }
 
-ext {
-    androidNetworkingVersion = '1.0.2'
-    coroutine_version = '1.0.0'
-    glide_version = '4.11.0'
-}
-
 task clean(type: Delete) {
     delete rootProject.buildDir
 }

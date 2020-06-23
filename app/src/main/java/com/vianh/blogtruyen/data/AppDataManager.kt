@@ -5,7 +5,7 @@ import com.vianh.blogtruyen.data.remote.MangaProvider
 
 class AppDataManager private constructor() : DataManager {
 
-    override fun getMangaProvider(): MangaProvider = BlogtruyenProvider.instance
+    override fun getMangaProvider(): MangaProvider = BlogtruyenProvider
 
     companion object Instance {
         @JvmStatic
