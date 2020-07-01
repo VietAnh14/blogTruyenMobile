@@ -7,13 +7,19 @@ import com.vianh.blogtruyen.data.model.Manga
 import com.vianh.blogtruyen.databinding.MangaItemBinding
 import com.vianh.blogtruyen.ui.base.BaseBindingViewHolder
 
-class DashBoardAdapter(private var items: List<Manga>, val viewModel: MainViewModel):
+class DashBoardAdapter(private var items: MutableList<Manga>, val viewModel: MainViewModel):
     RecyclerView.Adapter<DashBoardAdapter.DashBoardViewHolder>() {
 
     fun getItems() = items
-    fun setItems(items: List<Manga>) {
+    fun setItems(items: MutableList<Manga>) {
         this.items = items
         notifyDataSetChanged()
+    }
+
+    fun addItems(newItems: List<Manga>) {
+        val index = items.size
+        items.addAll(newItems)
+        notifyItemRangeInserted(index, items.lastIndex)
     }
 
     inner class DashBoardViewHolder(binding: MangaItemBinding) :

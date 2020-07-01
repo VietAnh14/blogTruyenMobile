@@ -14,7 +14,6 @@ import okhttp3.Request
 import org.jsoup.Jsoup
 import org.jsoup.select.Elements
 import java.io.File
-import java.net.URL
 
 object BlogtruyenProvider : MangaProvider {
 
@@ -24,16 +23,15 @@ object BlogtruyenProvider : MangaProvider {
             Cache(File(MvvmApp.app.cacheDir, "http_cache"), 40 * 1024 * 1024)
         ).build()
     }
-    const val DASHBOARD = BuildConfig.HOST + "/thumb"
     const val AJAX_LOAD_CHAPTER = BuildConfig.HOST + "/Chapter/LoadListChapter"
 
-    override suspend fun fetchNewManga(): List<Manga> {
-        val request = Request.Builder().url(DASHBOARD).build()
-        val listManga = withContext(Dispatchers.IO) {
+    override suspend fun fetchNewManga(pageNumber: Int): MutableList<Manga> {
+        val url = BuildConfig.HOST + "/thumb-$pageNumber"
+        val request = Request.Builder().url(url).build()
+        return withContext(Dispatchers.IO) {
             val response = client.newCall(request).extractData()
             parseManga(response)
         }
-        return listManga
     }
 
     override suspend fun fetchDetailManga(manga: Manga): Manga {
@@ -75,8 +73,7 @@ object BlogtruyenProvider : MangaProvider {
             val url = BuildConfig.HOST + link
             val request = Request.Builder().url(url).build()
             val content = client.newCall(request).extractData()
-            val images = parseChapter(content)
-            return@withContext images
+            return@withContext parseChapter(content)
         }
     }
 
@@ -103,7 +100,7 @@ object BlogtruyenProvider : MangaProvider {
         return Manga(image, manga.link, title, manga.uploadTitle, description, id)
     }
 
-    fun parseManga(html: String): List<Manga> {
+    fun parseManga(html: String): MutableList<Manga> {
         val items = Jsoup.parse(html).getElementsByClass("ps-relative")
         val listManga = mutableListOf<Manga>()
         for (item in items) {

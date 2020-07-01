@@ -12,17 +12,23 @@ import kotlinx.coroutines.launch
 import java.lang.Exception
 
 class MainViewModel(dataManager: DataManager) : BaseViewModel(dataManager) {
-    val _items = MutableLiveData<List<Manga>>()
+    val _items = MutableLiveData<MutableList<Manga>>()
     val mangaClickEvent = MutableLiveData<Event<Manga>>()
+    val isLoading = MutableLiveData<Boolean>()
+    var pageNumber = 1
 
     fun getListManga() {
         uiScope.launch {
+            isLoading.value = true
             try {
-                val data = dataManager.getMangaProvider().fetchNewManga()
+                val data = dataManager.getMangaProvider().fetchNewManga(pageNumber)
                 _items.value = data
+                pageNumber++
                 Log.d(TAG, _items.toString())
             } catch (e: Exception) {
                 Log.e(TAG, e.message!!)
+            } finally {
+                isLoading.value = false
             }
         }
     }
