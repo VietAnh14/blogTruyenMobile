@@ -57,7 +57,6 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 
     // android networking
-    implementation "com.amitshekhar.android:android-networking:1.0.2"
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
     implementation "com.squareup.okhttp3:okhttp:4.7.2"
 
@@ -75,4 +74,7 @@ dependencies {
 
     // Material design
     implementation 'com.google.android.material:material:1.1.0'
+
+    // For display large images
+    implementation 'com.davemorrissey.labs:subsampling-scale-image-view-androidx:3.10.0'
 }

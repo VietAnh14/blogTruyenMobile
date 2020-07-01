@@ -7,7 +7,7 @@ import com.vianh.blogtruyen.data.model.Chapter
 import com.vianh.blogtruyen.databinding.ChapterItemBinding
 import com.vianh.blogtruyen.ui.base.BaseBindingViewHolder
 
-class ChapterAdapter:
+class ChapterAdapter(private val viewModel: MangaInfoViewModel):
     RecyclerView.Adapter<ChapterAdapter.ChapterViewHolder>() {
     var items: List<Chapter> = mutableListOf()
     set(value) {
@@ -17,6 +17,7 @@ class ChapterAdapter:
     inner class ChapterViewHolder(binding: ChapterItemBinding):
         BaseBindingViewHolder<ChapterItemBinding>(binding) {
         override fun onBind(position: Int) {
+            getBinding().viewModel = viewModel
             getBinding().chapter = items[position]
         }
     }

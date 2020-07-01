@@ -12,8 +12,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:theme="@style/AppTheme.StatusTranslucent"
-            android:name=".ui.mangaInfo.MangaInfoActivity" />
+        <activity android:name=".ui.mangaViewer.MangaViewerActivity"></activity>
+        <activity
+            android:name=".ui.mangaInfo.MangaInfoActivity"
+            android:theme="@style/AppTheme.StatusTranslucent" />
         <activity android:name=".ui.main.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

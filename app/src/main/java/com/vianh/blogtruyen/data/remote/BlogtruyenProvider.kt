@@ -1,5 +1,6 @@
 package com.vianh.blogtruyen.data.remote
 
+import android.util.Log
 import com.vianh.blogtruyen.BuildConfig
 import com.vianh.blogtruyen.MvvmApp
 import com.vianh.blogtruyen.data.model.Chapter
@@ -13,6 +14,7 @@ import okhttp3.Request
 import org.jsoup.Jsoup
 import org.jsoup.select.Elements
 import java.io.File
+import java.net.URL
 
 object BlogtruyenProvider : MangaProvider {
 
@@ -34,7 +36,7 @@ object BlogtruyenProvider : MangaProvider {
         return listManga
     }
 
-    override suspend fun fetchDetailManga(manga: Manga): Manga{
+    override suspend fun fetchDetailManga(manga: Manga): Manga {
         val url = BuildConfig.HOST + manga.link
         val request = Request.Builder().url(url).build()
         return withContext(Dispatchers.IO) {
@@ -44,9 +46,8 @@ object BlogtruyenProvider : MangaProvider {
     }
 
     override suspend fun fetchChapterList(manga: Manga): List<Chapter> {
-        val result: MutableList<Chapter> = mutableListOf()
-
-        withContext(Dispatchers.IO) {
+        return withContext(Dispatchers.IO) {
+            val result: MutableList<Chapter> = mutableListOf()
             var lastPage: Int
             var currentPage = 1
             do {
@@ -57,15 +58,26 @@ object BlogtruyenProvider : MangaProvider {
                 val options = docs.getElementsByClass("slcChangePage")
                 lastPage = if (!options.isEmpty()) {
                     options[0].getElementsByTag("option").last().attr("value").toInt()
-                } else{
+                } else {
                     1
                 }
                 val items = docs.getElementById("listChapter").children()
                 result.addAll(parseSingleListChapter(items))
                 currentPage++
             } while (lastPage >= currentPage)
+            Log.d("Fetch chapter list done", System.currentTimeMillis().toString())
+            return@withContext result
         }
-        return result
+    }
+
+    override suspend fun fetchChapterPage(link: String): List<String> {
+        return withContext(Dispatchers.IO) {
+            val url = BuildConfig.HOST + link
+            val request = Request.Builder().url(url).build()
+            val content = client.newCall(request).extractData()
+            val images = parseChapter(content)
+            return@withContext images
+        }
     }
 
     private fun parseSingleListChapter(items: Elements): List<Chapter> {
@@ -87,6 +99,7 @@ object BlogtruyenProvider : MangaProvider {
         val image = details.getElementsByClass("content")[0].child(0).attr("src")
         val id = details.getElementById("MangaId").attr("value").toInt()
         val description = details.getElementsByClass("introduce")[0].text()
+        Log.d("Fetch detail done", System.currentTimeMillis().toString())
         return Manga(image, manga.link, title, manga.uploadTitle, description, id)
     }
 
@@ -105,5 +118,16 @@ object BlogtruyenProvider : MangaProvider {
             listManga.add(manga)
         }
         return listManga
+    }
+
+    fun parseChapter(html: String): List<String> {
+        val images = mutableListOf<String>()
+        val doc = Jsoup.parse(html)
+        val content = doc.getElementsByClass("content")[0]
+        val elements = content.children()
+        for (image in elements) {
+            images.add(image.attr("src"))
+        }
+        return images
     }
 }

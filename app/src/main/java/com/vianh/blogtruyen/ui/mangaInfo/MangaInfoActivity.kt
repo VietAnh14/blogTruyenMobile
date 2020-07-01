@@ -1,11 +1,16 @@
 package com.vianh.blogtruyen.ui.mangaInfo
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.lifecycle.Observer
+import com.google.android.material.appbar.AppBarLayout
 import com.vianh.blogtruyen.BR
+import com.vianh.blogtruyen.Event
 import com.vianh.blogtruyen.R
+import com.vianh.blogtruyen.data.model.Manga
 import com.vianh.blogtruyen.databinding.MangaInfoActivityBinding
 import com.vianh.blogtruyen.ui.base.BaseActivity
+import com.vianh.blogtruyen.ui.mangaViewer.MangaViewerActivity
 
 class MangaInfoActivity : BaseActivity<MangaInfoViewModel, MangaInfoActivityBinding>() {
 
@@ -15,14 +20,35 @@ class MangaInfoActivity : BaseActivity<MangaInfoViewModel, MangaInfoActivityBind
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setUpViews()
-        viewModel.loadData(intent.getParcelableExtra("MANGA")!!)
+        val manga: Manga? = intent.getParcelableExtra("MANGA")
+        manga?.let { viewModel.loadData(it) }
     }
 
     private fun setUpViews() {
-        val adapter = ChapterAdapter()
+        val adapter = ChapterAdapter(viewModel)
         binding.chapterRecycler.setHasFixedSize(true)
         binding.chapterRecycler.adapter = adapter
         viewModel.chapters.observe(this, Observer { adapter.items = it })
+
+        setSupportActionBar(binding.toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
+        binding.appbar.addOnOffsetChangedListener(
+            AppBarLayout.OnOffsetChangedListener { appBarLayout, verticalOffset ->
+                    if (appBarLayout.totalScrollRange + verticalOffset == 0) {
+                        binding.collapsingToolbar.title = viewModel.mangaDetail.value?.title
+                    } else {
+                        binding.collapsingToolbar.title = " "
+                    }
+            })
+
+        viewModel.chapterClickEvent.observe(this, Event.EventObserver {
+            val intent = Intent(this, MangaViewerActivity::class.java)
+
+            // TODO: Put all extra keys in another file
+            intent.putExtra("CHAPTER_LINK", it)
+            startActivity(intent)
+        })
     }
 
     override fun getViewModelClass(): Class<MangaInfoViewModel> = MangaInfoViewModel::class.java

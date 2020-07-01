@@ -1,6 +1,7 @@
 package com.vianh.blogtruyen.ui.base
 
 import android.os.Bundle
+import android.view.MenuItem
 import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -36,5 +37,13 @@ abstract class BaseActivity<V: ViewModel, B: ViewDataBinding>: AppCompatActivity
         mBinding = DataBindingUtil.setContentView(this, getLayoutId())
         mBinding.setVariable(getBindingVariable(), mViewModel)
         mBinding.lifecycleOwner = this
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == android.R.id.home) {
+            finish()
+            return true
+        }
+        return super.onOptionsItemSelected(item)
     }
 }

@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.lifecycle.Observer
 import com.vianh.blogtruyen.BR
+import com.vianh.blogtruyen.Event
 import com.vianh.blogtruyen.R
 import com.vianh.blogtruyen.databinding.ActivityMainBinding
 import com.vianh.blogtruyen.ui.base.BaseActivity
@@ -28,9 +29,9 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>() {
             val adapter = binding.mangaDashboardRecycler.adapter as DashBoardAdapter
             adapter.setItems(it)
         })
-        viewModel.mangaClickEvent.observe(this, Observer {
+        viewModel.mangaClickEvent.observe(this, Event.EventObserver {
             val intent = Intent(this, MangaInfoActivity::class.java).apply {
-                putExtra("MANGA", it?.getContentIfNotHandled())
+                putExtra("MANGA", it)
             }
             startActivity(intent)
         })
