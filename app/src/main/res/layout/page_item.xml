@@ -1,15 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
     <data>
         <variable
             name="link"
             type="String" />
     </data>
-    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="5dp"
         xmlns:app="http://schemas.android.com/apk/res-auto">
+        <ImageView
+            android:src="@drawable/lazy_corgi"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/loading_image_content" />
         <com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
             android:id="@+id/mangaPage"
             app:mangaPageUrl="@{link}"

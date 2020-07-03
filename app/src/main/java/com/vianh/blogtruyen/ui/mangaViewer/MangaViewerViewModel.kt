@@ -13,7 +13,7 @@ class MangaViewerViewModel(dataManager: DataManager) : BaseViewModel(dataManager
     val listImage = MutableLiveData<List<String>>()
 
     val errorHandler = CoroutineExceptionHandler {
-        context, err -> Log.e(TAG, err.stackTrace.toString())
+        _, err -> Log.e(TAG, err.stackTrace.toString())
     }
 
     fun getListImage(link: String) {

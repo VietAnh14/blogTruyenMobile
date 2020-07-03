@@ -5,6 +5,7 @@ import com.vianh.blogtruyen.BuildConfig
 import com.vianh.blogtruyen.MvvmApp
 import com.vianh.blogtruyen.data.model.Chapter
 import com.vianh.blogtruyen.data.model.Manga
+import com.vianh.blogtruyen.utils.BlogTruyenInterceptor
 import com.vianh.blogtruyen.utils.extractData
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -21,7 +22,7 @@ object BlogtruyenProvider : MangaProvider {
         OkHttpClient.Builder().cache(
             // 5 Mb cache
             Cache(File(MvvmApp.app.cacheDir, "http_cache"), 40 * 1024 * 1024)
-        ).build()
+        ).addInterceptor(BlogTruyenInterceptor()).build()
     }
     const val AJAX_LOAD_CHAPTER = BuildConfig.HOST + "/Chapter/LoadListChapter"
 

@@ -24,13 +24,8 @@ fun setItems(recycler: RecyclerView, items: List<String>?) {
 @BindingAdapter("imageUrl")
 fun loadImage(imageView: ImageView, url: String?) {
     url?.let {
-        val glideUrl = GlideUrl(
-            url, LazyHeaders.Builder()
-                .addHeader("Referer", BuildConfig.HOST)
-                .build()
-        )
         GlideApp.with(imageView.context)
-            .load(glideUrl)
+            .load(url)
             .error(R.drawable.ic_sentiment_very_dissatisfied_black_24dp)
             .into(imageView)
     }
@@ -38,10 +33,5 @@ fun loadImage(imageView: ImageView, url: String?) {
 
 @BindingAdapter("mangaPageUrl")
 fun loadImage(view: SubsamplingScaleImageView, url: String) {
-    val glideUrl = GlideUrl(
-        url, LazyHeaders.Builder()
-            .addHeader("Referer", BuildConfig.HOST)
-            .build()
-    )
-    Glide.with(view.context).download(glideUrl).into(SubsamplingScaleImageViewTarget(view))
+    GlideApp.with(view.context).download(url).into(SubsamplingScaleImageViewTarget(view))
 }

@@ -1,5 +1,7 @@
 package com.vianh.blogtruyen.utils
 
+import android.view.Gravity
+import android.view.View
 import okhttp3.Call
 import okhttp3.Response
 import kotlin.coroutines.resume
@@ -34,3 +36,18 @@ fun Call.extractData(): String {
     }
 }
 
+fun View.toggleState(direction: Int) {
+    if (visibility == View.GONE) {
+        visibility = View.VISIBLE
+        animate().setDuration(200).translationY(0f)
+    } else {
+        when (direction) {
+            Gravity.TOP -> animate().setDuration(200).translationY(-height.toFloat()).withEndAction {
+                visibility = View.GONE
+            }
+            Gravity.BOTTOM -> animate().setDuration(200).translationY(height.toFloat()).withEndAction {
+                visibility = View.GONE
+            }
+        }
+    }
+}

@@ -1,5 +1,6 @@
 package com.vianh.blogtruyen.ui.mangaViewer
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -15,6 +16,7 @@ class MangaViewerAdapter(private val viewModel: MangaViewerViewModel):
     }
 
     override fun onBindViewHolder(holder: PageViewHolder, position: Int) {
+        Log.d("ON BIND ", position.toString())
         holder.onBind(getItem(position))
     }
 
@@ -34,8 +36,8 @@ class MangaViewerAdapter(private val viewModel: MangaViewerViewModel):
     }
 
     override fun onViewRecycled(holder: PageViewHolder) {
-        super.onViewRecycled(holder)
         holder.binding.mangaPage.recycle()
+        super.onViewRecycled(holder)
     }
 
     class PageDiffCallBack: DiffUtil.ItemCallback<String>() {
