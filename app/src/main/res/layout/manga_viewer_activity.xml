@@ -15,7 +15,6 @@
         tools:context=".ui.mangaViewer.MangaViewerActivity">
         <com.vianh.blogtruyen.views.TouchGestureRecyclerView
             android:id="@+id/mangaRecycler"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:items="@{viewModel.listImage}"
             tools:listitem="@layout/page_item"
             android:layout_width="match_parent"

@@ -7,18 +7,20 @@ import com.bumptech.glide.request.transition.Transition
 import com.davemorrissey.labs.subscaleview.ImageSource
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
 import com.vianh.blogtruyen.R
+import com.vianh.blogtruyen.ui.mangaViewer.PageLoadCallBack
 import java.io.File
 
-class SubsamplingScaleImageViewTarget(view: SubsamplingScaleImageView)
-    : CustomViewTarget<SubsamplingScaleImageView, File>(view) {
-    override fun onResourceReady(resource: File, transition: Transition<in File>?) {
-        view.setImage(ImageSource.uri(Uri.fromFile(resource)))
-    }
-
+class SubsamplingScaleImageViewTarget<R>(val view: SubsamplingScaleImageView, val pageLoadCallBack: PageLoadCallBack<R>)
+    : CustomViewTarget<SubsamplingScaleImageView, R>(view) {
     override fun onLoadFailed(errorDrawable: Drawable?) {
-        //Todo: Set failed image here
-        view.setImage(ImageSource.resource(R.drawable.lazy_corgi))
+        pageLoadCallBack.onLoadFailed(errorDrawable)
     }
 
-    override fun onResourceCleared(placeholder: Drawable?) {}
+    override fun onResourceCleared(placeholder: Drawable?) {
+        pageLoadCallBack.onLoadCleared(placeholder)
+    }
+
+    override fun onResourceReady(resource: R, transition: Transition<in R>?) {
+        pageLoadCallBack.onResourceReady(resource, transition)
+    }
 }

@@ -85,7 +85,8 @@ object BlogtruyenProvider : MangaProvider {
             val title = row.child(0).child(0).text()
             val link = row.child(0).child(0).attr("href")
             val uploadDate = row.child(1).text()
-            result.add(Chapter(link, title, uploadDate))
+            val id = link.split('/')[1]
+            result.add(Chapter(link, title, uploadDate, id))
         }
         return result
     }
@@ -107,11 +108,14 @@ object BlogtruyenProvider : MangaProvider {
         for (item in items) {
             val title = item.child(1).child(0)
             val image = item.child(0).child(0).attr("src")
+            val link = title.attr("href")
+            val id = link.split('/')[1].toInt()
             val manga = Manga(
-                image,
-                title.attr("href"),
+                imageUrl = image,
+                link = link,
                 uploadTitle = title.text(),
-                title = title.text()
+                title = title.text(),
+                id = id
             )
             listManga.add(manga)
         }
@@ -122,7 +126,7 @@ object BlogtruyenProvider : MangaProvider {
         val images = mutableListOf<String>()
         val doc = Jsoup.parse(html)
         val content = doc.getElementsByClass("content")[0]
-        val elements = content.children()
+        val elements = content.getElementsByTag("img")
         for (image in elements) {
             images.add(image.attr("src"))
         }

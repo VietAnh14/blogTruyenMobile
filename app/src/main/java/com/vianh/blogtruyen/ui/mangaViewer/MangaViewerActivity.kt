@@ -6,10 +6,13 @@ import android.view.GestureDetector
 import android.view.Gravity
 import android.view.MotionEvent
 import android.view.View
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.vianh.blogtruyen.BR
 import com.vianh.blogtruyen.R
 import com.vianh.blogtruyen.databinding.MangaViewerActivityBinding
 import com.vianh.blogtruyen.ui.base.BaseActivity
+import com.vianh.blogtruyen.utils.PreCacheLayoutManager
+import com.vianh.blogtruyen.utils.getDeviceHeight
 import com.vianh.blogtruyen.utils.toggleState
 
 class MangaViewerActivity : BaseActivity<MangaViewerViewModel, MangaViewerActivityBinding>() {
@@ -24,9 +27,14 @@ class MangaViewerActivity : BaseActivity<MangaViewerViewModel, MangaViewerActivi
         link?.let { getViewModel().getListImage(it) }
         val adapter = MangaViewerAdapter(getViewModel())
         detector = GestureDetector(this, TouchListener())
+
+        val layoutManager = PreCacheLayoutManager(this)
+//        layoutManager.extraSpace = 2*getDeviceHeight(this)
+        layoutManager.orientation = LinearLayoutManager.VERTICAL
+
+        getBinding().mangaRecycler.layoutManager = layoutManager
         getBinding().mangaRecycler.gestureDetector = detector
         getBinding().mangaRecycler.adapter = adapter
-        getBinding().mangaRecycler.setItemViewCacheSize(20)
         getBinding().toolbar.setBackgroundColor(Color.parseColor("#99000000"))
     }
 
