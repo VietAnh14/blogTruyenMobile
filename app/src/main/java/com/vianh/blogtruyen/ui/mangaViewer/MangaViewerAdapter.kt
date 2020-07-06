@@ -5,11 +5,11 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 
-class MangaViewerAdapter(private val viewModel: MangaViewerViewModel):
+class MangaViewerAdapter(private val viewModel: MangaViewerViewModel, var activity: MangaViewerActivity?):
     ListAdapter<String, PageViewHolder>(PageDiffCallBack()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PageViewHolder {
-        return PageViewHolder.from(parent)
+        return PageViewHolder.from(parent, activity?.bitmapSize!!)
     }
 
     override fun onBindViewHolder(holder: PageViewHolder, position: Int) {
@@ -30,5 +30,9 @@ class MangaViewerAdapter(private val viewModel: MangaViewerViewModel):
         override fun areContentsTheSame(oldItem: String, newItem: String): Boolean {
             return oldItem == newItem
         }
+    }
+
+    fun onDestroy() {
+        activity = null
     }
 }

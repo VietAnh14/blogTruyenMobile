@@ -12,11 +12,13 @@ import com.vianh.blogtruyen.R
 import com.vianh.blogtruyen.databinding.MangaViewerActivityBinding
 import com.vianh.blogtruyen.ui.base.BaseActivity
 import com.vianh.blogtruyen.utils.PreCacheLayoutManager
-import com.vianh.blogtruyen.utils.getDeviceHeight
+import com.vianh.blogtruyen.utils.getMaxTextureSize
 import com.vianh.blogtruyen.utils.toggleState
 
 class MangaViewerActivity : BaseActivity<MangaViewerViewModel, MangaViewerActivityBinding>() {
     lateinit var detector: GestureDetector
+    val bitmapSize by lazy { getMaxTextureSize() }
+    lateinit var adapter: MangaViewerAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setupViews()
@@ -25,7 +27,7 @@ class MangaViewerActivity : BaseActivity<MangaViewerViewModel, MangaViewerActivi
     private fun setupViews() {
         val link = intent.getStringExtra("CHAPTER_LINK")
         link?.let { getViewModel().getListImage(it) }
-        val adapter = MangaViewerAdapter(getViewModel())
+        adapter = MangaViewerAdapter(getViewModel(), this)
         detector = GestureDetector(this, TouchListener())
 
         val layoutManager = PreCacheLayoutManager(this)
@@ -79,6 +81,10 @@ class MangaViewerActivity : BaseActivity<MangaViewerViewModel, MangaViewerActivi
                 or View.SYSTEM_UI_FLAG_FULLSCREEN)
     }
 
+    override fun onDestroy() {
+        adapter.onDestroy()
+        super.onDestroy()
+    }
 
     override fun getViewModelClass(): Class<MangaViewerViewModel> = MangaViewerViewModel::class.java
 

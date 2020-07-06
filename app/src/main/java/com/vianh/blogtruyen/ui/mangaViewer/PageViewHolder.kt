@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomViewTarget
 import com.bumptech.glide.request.target.Target
 import com.bumptech.glide.request.transition.Transition
@@ -16,7 +17,9 @@ import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
 import com.vianh.blogtruyen.databinding.PageItemBinding
 import com.vianh.blogtruyen.utils.GlideApp
 import com.vianh.blogtruyen.utils.SubsamplingScaleImageViewTarget
+import com.vianh.blogtruyen.utils.getMimeType
 import java.io.File
+import java.lang.Exception
 
 class PageViewHolder(val binding: PageItemBinding) :
     RecyclerView.ViewHolder(binding.root), PageLoadCallBack<File> {
@@ -24,6 +27,15 @@ class PageViewHolder(val binding: PageItemBinding) :
     val bitmapTarget = BitmapTarget(binding.mangaPage)
     var status = NOT_LOAD
     var time = 0L
+    val imageListener = object : SubsamplingScaleImageView.DefaultOnImageEventListener() {
+        override fun onReady() {
+            binding.holderImage.visibility = View.GONE
+        }
+
+        override fun onImageLoadError(e: Exception?) {
+            binding.holderImage.visibility = View.VISIBLE
+        }
+    }
 
     fun onBind(url: String) {
         status = LOADING
@@ -41,12 +53,16 @@ class PageViewHolder(val binding: PageItemBinding) :
     }
 
     fun loadPage(url: String) {
-        time = System.currentTimeMillis()
-        Log.d("PAGE VIEW HOLDER", "START LOAD: $time")
         binding.holderImage.visibility = View.VISIBLE
-        GlideApp.with(binding.root.context).download(url).skipMemoryCache(true)
-            .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL).into(target)
-
+        val extension = url.split(".").last()
+        if (extension == "gif") {
+            binding.mangaPage.visibility = View.GONE
+            GlideApp.with(binding.root.context).asGif().fitCenter().load(url).into(binding.holderImage)
+        } else {
+            binding.mangaPage.setOnImageEventListener(imageListener)
+            GlideApp.with(binding.root.context).download(url).skipMemoryCache(true)
+                .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL).into(target)
+        }
     }
 
     override fun onResourceReady(resource: File, transition: Transition<in File>?) {
@@ -62,7 +78,6 @@ class PageViewHolder(val binding: PageItemBinding) :
 
     override fun onLoadFailed(errorDrawable: Drawable?) {
         status = LOAD_FAILED
-        binding.holderImage.visibility = View.VISIBLE
         Log.d("LOAD FAILED", adapterPosition.toString())
         // Todo: set a failed image here
     }
@@ -76,24 +91,19 @@ class PageViewHolder(val binding: PageItemBinding) :
         const val LOAD_SUCCESS = 2
         const val LOAD_FAILED = 3
 
-        fun from(parent: ViewGroup): PageViewHolder {
+        fun from(parent: ViewGroup, bitmapSize: Int): PageViewHolder {
             val inflater = LayoutInflater.from(parent.context)
             val binding = PageItemBinding.inflate(inflater, parent, false)
             binding.mangaPage.apply {
-                setOnImageEventListener(object :
-                    SubsamplingScaleImageView.DefaultOnImageEventListener() {
-                    override fun onReady() {
-                        Log.d("PAGE VIEW HOLDER", "DONE LOAD: ${System.currentTimeMillis()}")
-                    }
-                })
+                setMaxTileSize(bitmapSize)
             }
             return PageViewHolder(binding)
         }
     }
 
 
-    inner class BitmapTarget(view: SubsamplingScaleImageView)
-        : CustomViewTarget<SubsamplingScaleImageView, Bitmap>(view) {
+    inner class BitmapTarget(view: SubsamplingScaleImageView) :
+        CustomViewTarget<SubsamplingScaleImageView, Bitmap>(view) {
         override fun onLoadFailed(errorDrawable: Drawable?) {
             Log.d("BITMAP TARGET", "LOAD FAILED")
         }
@@ -103,8 +113,7 @@ class PageViewHolder(val binding: PageItemBinding) :
 
         override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
             getView().setImage(ImageSource.cachedBitmap(resource))
-            binding.holderImage.visibility = View.GONE
-            Log.d("BITMAP TARGET", "DONE GET RESOURCE")
+            Log.d("BITMAP TARGET", "DONE GET RESOURCE $")
         }
     }
 }
