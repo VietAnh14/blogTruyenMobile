@@ -21,7 +21,7 @@ class MangaViewerViewModel(dataManager: DataManager) : BaseViewModel(dataManager
             try {
                 listImage.value = dataManager.getMangaProvider().fetchChapterPage(link)
             } catch (e: Exception) {
-                Log.e(TAG, e.stackTrace.toString())
+                e.printStackTrace()
             }
         }
     }

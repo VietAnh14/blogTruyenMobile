@@ -1,5 +1,6 @@
 package com.vianh.blogtruyen.data.remote
 
+import android.util.JsonReader
 import android.util.Log
 import com.vianh.blogtruyen.BuildConfig
 import com.vianh.blogtruyen.MvvmApp
@@ -12,6 +13,8 @@ import kotlinx.coroutines.withContext
 import okhttp3.Cache
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import org.json.JSONArray
+import org.json.JSONObject
 import org.jsoup.Jsoup
 import org.jsoup.select.Elements
 import java.io.File
@@ -71,7 +74,7 @@ object BlogtruyenProvider : MangaProvider {
 
     override suspend fun fetchChapterPage(link: String): List<String> {
         return withContext(Dispatchers.IO) {
-            val url = BuildConfig.HOST + link
+            val url = BuildConfig.HOST_FULL + link
             val request = Request.Builder().url(url).build()
             val content = client.newCall(request).extractData()
             return@withContext parseChapter(content)
@@ -125,10 +128,24 @@ object BlogtruyenProvider : MangaProvider {
     fun parseChapter(html: String): List<String> {
         val images = mutableListOf<String>()
         val doc = Jsoup.parse(html)
-        val content = doc.getElementsByClass("content")[0]
-        val elements = content.getElementsByTag("img")
-        for (image in elements) {
-            images.add(image.attr("src"))
+        val content = doc.getElementById("content")
+
+        // Check if chapter is render by angular
+        val item = content.child(0)
+        if (item.tagName() == "img") {
+            val elements = content.getElementsByTag("img")
+            for (image in elements) {
+                images.add(image.attr("src"))
+            }
+        } else {
+            val script = content.children().last()?.data()
+            script?.let {
+                val listImageCaption = it.split(";")[0].trim().split(" ")[3]
+                val imageArr = JSONArray(listImageCaption)
+                for (i in 0 until imageArr.length()) {
+                    images.add(imageArr.getJSONObject(i).getString("url"))
+                }
+            }
         }
         return images
     }
