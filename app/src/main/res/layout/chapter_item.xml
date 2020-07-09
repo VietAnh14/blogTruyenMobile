@@ -7,6 +7,9 @@
         <variable
             name="viewModel"
             type="com.vianh.blogtruyen.ui.mangaInfo.MangaInfoViewModel" />
+        <variable
+            name="position"
+            type="Integer" />
     </data>
     <FrameLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
@@ -22,7 +25,7 @@
             android:layout_gravity="center_vertical"
             android:clickable="true"
             android:focusable="true"
-            android:onClick="@{() -> viewModel.onChapterClick(chapter.url)}"
+            android:onClick="@{() -> viewModel.onChapterClick(chapter, position)}"
             android:background="?attr/selectableItemBackground"
             android:maxLines="2"
             android:gravity="center_vertical"
@@ -30,7 +33,7 @@
             android:layout_marginEnd="10dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:textColor="@color/colorPrimaryDark"
+            android:textColor="@{chapter.read ? @color/colorAccent : @color/colorPrimaryDark}"
             android:text="@{chapter.name, default=`This is a chapter`}" />
     </FrameLayout>
 </layout>

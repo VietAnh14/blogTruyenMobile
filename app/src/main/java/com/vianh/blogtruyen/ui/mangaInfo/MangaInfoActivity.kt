@@ -21,7 +21,10 @@ class MangaInfoActivity : BaseActivity<MangaInfoViewModel, MangaInfoActivityBind
         super.onCreate(savedInstanceState)
         setUpViews()
         val manga: Manga? = intent.getParcelableExtra("MANGA")
-        manga?.let { viewModel.loadData(it) }
+        manga?.let {
+            viewModel.manga = it
+            viewModel.loadData()
+        }
     }
 
     private fun setUpViews() {
@@ -44,9 +47,9 @@ class MangaInfoActivity : BaseActivity<MangaInfoViewModel, MangaInfoActivityBind
 
         viewModel.chapterClickEvent.observe(this, Event.EventObserver {
             val intent = Intent(this, MangaViewerActivity::class.java)
-
             // TODO: Put all extra keys in another file
-            intent.putExtra("CHAPTER_LINK", it)
+            adapter.notifyItemChanged(it.first)
+            intent.putExtra("CHAPTER_LINK", it.second)
             startActivity(intent)
         })
     }

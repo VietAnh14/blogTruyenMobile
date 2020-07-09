@@ -33,4 +33,11 @@ object AppDbHelper: DbHelper {
         return db.mangaDao().getMangaWithCategories(mangaId)
     }
 
+    override suspend fun getChapterRead(mangaId: Int): List<Chapter> {
+        return db.mangaDao().getChaptersRead(mangaId)
+    }
+
+    override suspend fun updateChapter(chapter: Chapter) {
+        return db.mangaDao().updateChapter(chapter)
+    }
 }

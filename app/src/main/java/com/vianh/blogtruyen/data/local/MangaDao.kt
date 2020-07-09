@@ -8,7 +8,7 @@ import com.vianh.blogtruyen.data.model.MangaWithCategories
 
 @Dao
 interface MangaDao {
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertManga(manga: Manga)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -26,4 +26,10 @@ interface MangaDao {
     @Transaction
     @Query("SELECT * FROM manga WHERE manga.mangaId = :mangaId")
     suspend fun getMangaWithCategories(mangaId: Int): MangaWithCategories
+
+    @Query("SELECT * FROM chapters WHERE chapters.mangaId = :mangaId AND chapters.isRead = 1")
+    suspend fun getChaptersRead(mangaId: Int): List<Chapter>
+
+    @Update
+    suspend fun updateChapter(chapter: Chapter)
 }

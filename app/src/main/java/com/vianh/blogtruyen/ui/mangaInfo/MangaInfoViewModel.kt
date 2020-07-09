@@ -14,12 +14,14 @@ import kotlinx.coroutines.launch
 class MangaInfoViewModel(dataManager: DataManager) : BaseViewModel(dataManager) {
     val chapters: MutableLiveData<List<Chapter>> = MutableLiveData()
     val mangaDetail: MutableLiveData<Manga> = MutableLiveData()
-    val chapterClickEvent = MutableLiveData<Event<String>>()
-    val exceptionHandler = CoroutineExceptionHandler { _, exception ->
+    val chapterClickEvent = MutableLiveData<Event<Pair<Int, String>>>()
+    lateinit var manga: Manga
+
+    private val exceptionHandler = CoroutineExceptionHandler { _, exception ->
         Log.e(TAG, "Exception: ${exception.stackTrace}")
     }
 
-    fun loadData(manga: Manga) {
+    fun loadData() {
         uiScope.launch(exceptionHandler) {
             val chapterDefer = async {
                 Log.d("Start fetch chapters", System.currentTimeMillis().toString())
@@ -30,7 +32,14 @@ class MangaInfoViewModel(dataManager: DataManager) : BaseViewModel(dataManager) 
                 dataManager.getMangaProvider().fetchDetailManga(manga)
             }
             launch {
-                chapters.value = chapterDefer.await()
+                val readChapters = dataManager
+                    .getDbHelper()
+                    .getChapterRead(manga.mangaId).map { it.id }
+
+                chapters.value = chapterDefer.await().map { chapter ->
+                    chapter.isRead = readChapters.contains(chapter.id)
+                    chapter
+                }
             }
             launch {
                 mangaDetail.value = mangaDeferred.await()
@@ -38,7 +47,17 @@ class MangaInfoViewModel(dataManager: DataManager) : BaseViewModel(dataManager) 
         }
     }
 
-    fun onChapterClick(link: String) {
-        chapterClickEvent.value = Event(link)
+    fun onChapterClick(chapter: Chapter, position: Int) {
+        chapter.isRead = true
+
+        ioScope.launch {
+            try {
+                dataManager.getDbHelper().insertManga(manga)
+                dataManager.getDbHelper().insertChapter(chapter)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+        chapterClickEvent.value = Event(Pair(position, chapter.url))
     }
 }

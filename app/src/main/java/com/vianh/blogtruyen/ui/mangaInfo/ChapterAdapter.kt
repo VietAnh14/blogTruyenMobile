@@ -19,6 +19,7 @@ class ChapterAdapter(private val viewModel: MangaInfoViewModel):
         override fun onBind(position: Int) {
             getBinding().viewModel = viewModel
             getBinding().chapter = items[position]
+            getBinding().position = position
         }
     }
 

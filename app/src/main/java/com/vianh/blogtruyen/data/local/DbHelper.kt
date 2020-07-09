@@ -14,4 +14,8 @@ interface DbHelper {
     suspend fun getChapters(mangaId: Int): MutableList<Chapter>
 
     suspend fun getMangaWithCategories(mangaId: Int): MangaWithCategories
+
+    suspend fun getChapterRead(mangaId: Int): List<Chapter>
+
+    suspend fun updateChapter(chapter: Chapter)
 }
