@@ -8,7 +8,7 @@ import com.vianh.blogtruyen.ui.mangaInfo.MangaInfoViewModel
 import com.vianh.blogtruyen.ui.mangaViewer.MangaViewerViewModel
 
 class ViewModelFactory: ViewModelProvider.Factory {
-    val dataManager = AppDataManager.INSTANCE
+    private val dataManager = AppDataManager
 
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         return when {

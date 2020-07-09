@@ -1,6 +1,5 @@
 package com.vianh.blogtruyen.data.remote
 
-import android.util.JsonReader
 import android.util.Log
 import com.vianh.blogtruyen.BuildConfig
 import com.vianh.blogtruyen.MvvmApp
@@ -14,7 +13,6 @@ import okhttp3.Cache
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.json.JSONArray
-import org.json.JSONObject
 import org.jsoup.Jsoup
 import org.jsoup.select.Elements
 import java.io.File
@@ -53,7 +51,7 @@ object BlogtruyenProvider : MangaProvider {
             var lastPage: Int
             var currentPage = 1
             do {
-                val url = "$AJAX_LOAD_CHAPTER?id=${manga.id}&p=${currentPage}"
+                val url = "$AJAX_LOAD_CHAPTER?id=${manga.mangaId}&p=${currentPage}"
                 val request = Request.Builder().url(url).build()
                 val response = client.newCall(request).extractData()
                 val docs = Jsoup.parse(response)
@@ -64,7 +62,7 @@ object BlogtruyenProvider : MangaProvider {
                     1
                 }
                 val items = docs.getElementById("listChapter").children()
-                result.addAll(parseSingleListChapter(items))
+                result.addAll(parseSingleListChapter(items, manga.mangaId))
                 currentPage++
             } while (lastPage >= currentPage)
             Log.d("Fetch chapter list done", System.currentTimeMillis().toString())
@@ -81,15 +79,14 @@ object BlogtruyenProvider : MangaProvider {
         }
     }
 
-    private fun parseSingleListChapter(items: Elements): List<Chapter> {
+    private fun parseSingleListChapter(items: Elements, mangaId: Int): List<Chapter> {
         val result: MutableList<Chapter> = mutableListOf()
         for (element in items) {
             val row = element.child(0)
             val title = row.child(0).child(0).text()
             val link = row.child(0).child(0).attr("href")
-            val uploadDate = row.child(1).text()
             val id = link.split('/')[1]
-            result.add(Chapter(link, title, uploadDate, id))
+            result.add(Chapter(link, title, id, mangaId))
         }
         return result
     }
@@ -118,7 +115,7 @@ object BlogtruyenProvider : MangaProvider {
                 link = link,
                 uploadTitle = title.text(),
                 title = title.text(),
-                id = id
+                mangaId = id
             )
             listManga.add(manga)
         }

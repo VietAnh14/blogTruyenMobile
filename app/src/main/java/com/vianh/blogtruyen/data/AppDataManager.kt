@@ -1,16 +1,12 @@
 package com.vianh.blogtruyen.data
 
+import com.vianh.blogtruyen.data.local.AppDbHelper
+import com.vianh.blogtruyen.data.local.DbHelper
 import com.vianh.blogtruyen.data.remote.BlogtruyenProvider
 import com.vianh.blogtruyen.data.remote.MangaProvider
 
-class AppDataManager private constructor() : DataManager {
+object AppDataManager: DataManager {
 
     override fun getMangaProvider(): MangaProvider = BlogtruyenProvider
-
-    companion object Instance {
-        @JvmStatic
-        val INSTANCE: DataManager by lazy {
-            AppDataManager()
-        }
-    }
+    override fun getDbHelper(): DbHelper = AppDbHelper
 }
