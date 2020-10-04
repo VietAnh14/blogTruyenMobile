@@ -2,9 +2,7 @@ package com.vianh.blogtruyen.ui.main
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.AbsListView
 import androidx.lifecycle.Observer
-import androidx.recyclerview.widget.RecyclerView
 import com.vianh.blogtruyen.BR
 import com.vianh.blogtruyen.Event
 import com.vianh.blogtruyen.R
@@ -38,14 +36,20 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>() {
         binding.mangaDashboardRecycler.adapter = DashBoardAdapter(mutableListOf(), viewModel)
         binding.mangaDashboardRecycler.addItemDecoration(GridItemSpacingDecorator(spacing))
         viewModel.getListManga()
-        viewModel._items.observe(this, Observer {
+        viewModel.item.observe(this, Observer {
             val adapter = binding.mangaDashboardRecycler.adapter as DashBoardAdapter
             adapter.addItems(it)
         })
 
         // scroll to load more
         binding.mangaDashboardRecycler
-            .addOnScrollListener(ScrollLoadMore(4) {viewModel.getListManga()})
+            .addOnScrollListener(ScrollLoadMore(4) { viewModel.getListManga() })
+
+        viewModel.refresh.observe(this, Observer {
+            val adapter = binding.mangaDashboardRecycler.adapter as DashBoardAdapter
+            adapter.setItems(it)
+            binding.swipeRefreshLayout.isRefreshing = false
+        })
     }
 
     override fun getViewModelClass(): Class<MainViewModel> = MainViewModel::class.java

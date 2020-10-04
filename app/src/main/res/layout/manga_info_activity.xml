@@ -59,6 +59,7 @@
 
                 <androidx.appcompat.widget.Toolbar
                     android:id="@+id/toolbar"
+                    app:menu="@menu/manga_details_menu"
                     app:titleTextColor="@android:color/white"
                     app:layout_collapseMode="pin"
                     android:background="@android:color/transparent"

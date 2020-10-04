@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 class PreCacheLayoutManager(val context: Context,
                             orientation: Int = RecyclerView.VERTICAL,
                             reverseLayout: Boolean = false,
-                            var extraSpace: Int = getDeviceHeight(context)):
+                            var extraSpace: Int = getDeviceHeight(context)/2):
     LinearLayoutManager(context, orientation, reverseLayout) {
 
     init {

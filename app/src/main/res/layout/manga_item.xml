@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <data>
         <variable
             name="manga"
@@ -9,18 +11,18 @@
             type="com.vianh.blogtruyen.ui.main.MainViewModel" />
     </data>
     <FrameLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_marginBottom="10dp"
         android:layout_width="match_parent"
         android:onClick="@{() -> viewModel.onMangaItemClick(manga)}"
-        android:layout_height="200dp">
+        android:layout_height="220dp">
         <ImageView
             android:id="@+id/imageCover"
             android:src="@drawable/one_punch"
             android:scaleType="centerCrop"
             app:imageUrl="@{manga.imageUrl}"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:contentDescription="@string/media_image" />
         <TextView
             android:id="@+id/mangaName"
             android:layout_width="match_parent"

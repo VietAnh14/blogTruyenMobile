@@ -1,21 +1,21 @@
 package com.vianh.blogtruyen.ui.main
 
-import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.vianh.blogtruyen.Event
 import com.vianh.blogtruyen.data.DataManager
 import com.vianh.blogtruyen.data.model.Manga
 import com.vianh.blogtruyen.ui.base.BaseViewModel
-import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
-import java.lang.Exception
 
 class MainViewModel(dataManager: DataManager) : BaseViewModel(dataManager) {
-    val _items = MutableLiveData<MutableList<Manga>>()
+    private val _items = MutableLiveData<MutableList<Manga>>()
+    val item: LiveData<MutableList<Manga>> = _items
     val mangaClickEvent = MutableLiveData<Event<Manga>>()
     val isLoading = MutableLiveData<Boolean>()
     var pageNumber = 1
+
+    val refresh = MutableLiveData<MutableList<Manga>>()
 
     fun getListManga() {
         uiScope.launch {
@@ -24,9 +24,8 @@ class MainViewModel(dataManager: DataManager) : BaseViewModel(dataManager) {
                 val data = dataManager.getMangaProvider().fetchNewManga(pageNumber)
                 _items.value = data
                 pageNumber++
-                Log.d(TAG, _items.toString())
             } catch (e: Exception) {
-                Log.e(TAG, e.message!!)
+                e.printStackTrace()
             } finally {
                 isLoading.value = false
             }
@@ -35,5 +34,18 @@ class MainViewModel(dataManager: DataManager) : BaseViewModel(dataManager) {
 
     fun onMangaItemClick(item: Manga) {
         mangaClickEvent.value = Event(item)
+    }
+
+    fun fetchNew() {
+        pageNumber = 1
+        uiScope.launch {
+            try {
+                refresh.value = dataManager.getMangaProvider().fetchNewManga(1)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            } finally {
+
+            }
+        }
     }
 }

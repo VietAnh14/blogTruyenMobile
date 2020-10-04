@@ -23,7 +23,7 @@ class GlideModule : AppGlideModule() {
             RequestOptions().diskCacheStrategy(DiskCacheStrategy.RESOURCE).signature(
                 ObjectKey(System.currentTimeMillis().toShort())
             )
-            // 400 Mb cache
+
             this.setDiskCache(InternalCacheDiskCacheFactory(context, 400 * 1024 * 1024))
         }
     }

@@ -6,22 +6,26 @@ import android.view.GestureDetector
 import android.view.Gravity
 import android.view.MotionEvent
 import android.view.View
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.integration.recyclerview.RecyclerViewPreloader
+import com.bumptech.glide.util.ViewPreloadSizeProvider
 import com.vianh.blogtruyen.BR
 import com.vianh.blogtruyen.R
 import com.vianh.blogtruyen.databinding.MangaViewerActivityBinding
 import com.vianh.blogtruyen.ui.base.BaseActivity
-import com.vianh.blogtruyen.utils.PreCacheLayoutManager
-import com.vianh.blogtruyen.utils.getMaxTextureSize
-import com.vianh.blogtruyen.utils.toggleState
+import com.vianh.blogtruyen.utils.*
+
 
 class MangaViewerActivity : BaseActivity<MangaViewerViewModel, MangaViewerActivityBinding>() {
     lateinit var detector: GestureDetector
-    val bitmapSize by lazy { getMaxTextureSize() }
     lateinit var adapter: MangaViewerAdapter
+    val bitmapSize by lazy { getMaxTextureSize() }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setupViews()
+        observe()
     }
 
     private fun setupViews() {
@@ -29,15 +33,27 @@ class MangaViewerActivity : BaseActivity<MangaViewerViewModel, MangaViewerActivi
         link?.let { getViewModel().getListImage(it) }
         adapter = MangaViewerAdapter(getViewModel(), this)
         detector = GestureDetector(this, TouchListener())
+//        OverScrollDecoratorHelper.setUpOverScroll(getBinding().mangaRecycler, OverScrollDecoratorHelper.ORIENTATION_VERTICAL)
 
         val layoutManager = PreCacheLayoutManager(this)
-//        layoutManager.extraSpace = 2*getDeviceHeight(this)
         layoutManager.orientation = LinearLayoutManager.VERTICAL
 
-        getBinding().mangaRecycler.layoutManager = layoutManager
-        getBinding().mangaRecycler.gestureDetector = detector
-        getBinding().mangaRecycler.adapter = adapter
+        getBinding().mangaRecycler.apply {
+            setHasFixedSize(true)
+            setItemViewCacheSize(0)
+            setLayoutManager(layoutManager)
+            gestureDetector = detector
+            adapter = this@MangaViewerActivity.adapter
+        }
         getBinding().toolbar.setBackgroundColor(Color.parseColor("#99000000"))
+    }
+
+    private fun observe() {
+        getViewModel().listImage.observe(this, Observer {
+            val sizeProvider = ViewPreloadSizeProvider<String>()
+            val preloader = RecyclerViewPreloader<String>(GlideApp.with(this), adapter, sizeProvider, 5)
+            getBinding().mangaRecycler.addOnScrollListener(preloader)
+        })
     }
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
@@ -45,40 +61,14 @@ class MangaViewerActivity : BaseActivity<MangaViewerViewModel, MangaViewerActivi
         if (hasFocus) toggleSystemUI()
     }
 
-    // Shows the system bars by removing all the flags
-    // except for the ones that make the content appear under the system bars.
-    private fun showSystemUI() {
-        //Magic color that make status bar transparent (arbg) first 4 bits are alpha
-        window.statusBarColor = Color.parseColor("#99000000")
-        window.navigationBarColor = Color.parseColor("#99000000")
-        window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN)
-    }
-
     private fun toggleSystemUI() {
         if (getBinding().toolbar.visibility == View.GONE) {
-            showSystemUI()
+            showSystemUI(window)
             getBinding().toolbar.toggleState(Gravity.TOP)
         } else {
-            hideSystemUI()
+            hideSystemUI(window)
             getBinding().toolbar.toggleState(Gravity.TOP)
         }
-    }
-
-    private fun hideSystemUI() {
-        // Enables regular immersive mode.
-        // For "lean back" mode, remove SYSTEM_UI_FLAG_IMMERSIVE.
-        // Or for "sticky immersive," replace it with SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-        window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-                // Set the content to appear under the system bars so that the
-                // content doesn't resize when the system bars hide and show.
-                or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                // Hide the nav bar and status bar
-                or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                or View.SYSTEM_UI_FLAG_FULLSCREEN)
     }
 
     override fun onDestroy() {

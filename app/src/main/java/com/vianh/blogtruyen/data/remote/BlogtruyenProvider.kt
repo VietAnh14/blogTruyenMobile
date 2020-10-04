@@ -16,6 +16,7 @@ import org.json.JSONArray
 import org.jsoup.Jsoup
 import org.jsoup.select.Elements
 import java.io.File
+import java.lang.ArithmeticException
 
 object BlogtruyenProvider : MangaProvider {
 

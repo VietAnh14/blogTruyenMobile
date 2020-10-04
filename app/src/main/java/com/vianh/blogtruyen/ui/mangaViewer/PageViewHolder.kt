@@ -8,7 +8,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomViewTarget
 import com.bumptech.glide.request.target.Target
 import com.bumptech.glide.request.transition.Transition
@@ -17,30 +16,29 @@ import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
 import com.vianh.blogtruyen.databinding.PageItemBinding
 import com.vianh.blogtruyen.utils.GlideApp
 import com.vianh.blogtruyen.utils.SubsamplingScaleImageViewTarget
-import com.vianh.blogtruyen.utils.getMimeType
+import com.vianh.blogtruyen.utils.hide
+import com.vianh.blogtruyen.utils.show
 import java.io.File
-import java.lang.Exception
 
 class PageViewHolder(val binding: PageItemBinding) :
     RecyclerView.ViewHolder(binding.root), PageLoadCallBack<File> {
-    val target = SubsamplingScaleImageViewTarget(binding.mangaPage, this)
-    val bitmapTarget = BitmapTarget(binding.mangaPage)
+    private val target = SubsamplingScaleImageViewTarget(binding.mangaPage, this)
+    private val bitmapTarget = BitmapTarget(binding.mangaPage)
     var status = NOT_LOAD
-    var time = 0L
-    val imageListener = object : SubsamplingScaleImageView.DefaultOnImageEventListener() {
-        override fun onReady() {
-            binding.holderImage.visibility = View.GONE
+    private val imageListener = object : SubsamplingScaleImageView.DefaultOnImageEventListener() {
+        override fun onImageLoaded() {
+            binding.progressCircular.hide()
+            binding.mangaPage.show()
         }
 
         override fun onImageLoadError(e: Exception?) {
-            binding.holderImage.visibility = View.VISIBLE
+//            binding.holderImage.show()
         }
     }
 
     fun onBind(url: String) {
         status = LOADING
         loadPage(url)
-//        loadFromMemory(url)
     }
 
     fun recycle() {
@@ -53,27 +51,29 @@ class PageViewHolder(val binding: PageItemBinding) :
     }
 
     fun loadPage(url: String) {
-        binding.holderImage.visibility = View.VISIBLE
+        binding.progressCircular.show()
         val extension = url.split(".").last()
         if (extension == "gif") {
-            binding.mangaPage.visibility = View.GONE
-            GlideApp.with(binding.root.context).asGif().fitCenter().load(url).into(binding.holderImage)
+            binding.mangaPage.hide()
+//            GlideApp.with(binding.root.context).asGif().fitCenter().load(url).into(binding.holderImage)
         } else {
             binding.mangaPage.setOnImageEventListener(imageListener)
-            GlideApp.with(binding.root.context).download(url).skipMemoryCache(true)
-                .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL).into(target)
+            GlideApp
+                .with(binding.root.context)
+                .asFile()
+                .load(url)
+                .into(target)
         }
     }
 
     override fun onResourceReady(resource: File, transition: Transition<in File>?) {
+        Log.d("ADAPTER","DONE LOAD RESOURCE $adapterPosition")
         status = LOAD_SUCCESS
         resourceReady(resource)
     }
 
     private fun resourceReady(resource: File) {
         binding.mangaPage.setImage(ImageSource.uri(Uri.fromFile(resource)))
-        binding.holderImage.visibility = View.GONE
-        Log.d("ON BIND DONE", adapterPosition.toString())
     }
 
     override fun onLoadFailed(errorDrawable: Drawable?) {
@@ -102,7 +102,7 @@ class PageViewHolder(val binding: PageItemBinding) :
     }
 
 
-    inner class BitmapTarget(view: SubsamplingScaleImageView) :
+    class BitmapTarget(view: SubsamplingScaleImageView) :
         CustomViewTarget<SubsamplingScaleImageView, Bitmap>(view) {
         override fun onLoadFailed(errorDrawable: Drawable?) {
             Log.d("BITMAP TARGET", "LOAD FAILED")
@@ -113,7 +113,6 @@ class PageViewHolder(val binding: PageItemBinding) :
 
         override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
             getView().setImage(ImageSource.cachedBitmap(resource))
-            Log.d("BITMAP TARGET", "DONE GET RESOURCE $")
         }
     }
 }

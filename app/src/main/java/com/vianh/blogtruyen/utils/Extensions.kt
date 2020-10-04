@@ -2,6 +2,7 @@ package com.vianh.blogtruyen.utils
 
 import android.view.Gravity
 import android.view.View
+import android.view.Window
 import okhttp3.Call
 import okhttp3.Response
 import kotlin.coroutines.resume
@@ -49,5 +50,17 @@ fun View.toggleState(direction: Int) {
                 visibility = View.GONE
             }
         }
+    }
+}
+
+fun View.hide() {
+    if (visibility != View.GONE) {
+        visibility = View.GONE
+    }
+}
+
+fun View.show() {
+    if (visibility != View.VISIBLE) {
+        visibility = View.VISIBLE
     }
 }

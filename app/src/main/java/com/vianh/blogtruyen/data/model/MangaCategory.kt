@@ -1,12 +1,22 @@
 package com.vianh.blogtruyen.data.model
 
 import androidx.room.Entity
-import androidx.room.Index
+import androidx.room.ForeignKey
 
 @Entity(
     tableName = "MangaCategory",
     primaryKeys = ["mangaId", "categoryId"],
-    indices = [Index("categoryId")]
+    foreignKeys = [
+        ForeignKey(
+            entity = Manga::class,
+            parentColumns = ["mangaId"],
+            childColumns = ["mangaId"]
+        ), ForeignKey(
+            entity = Category::class,
+            parentColumns = ["categoryId"],
+            childColumns = ["categoryId"]
+        )
+    ]
 )
 data class MangaCategory(
     val mangaId: Int,

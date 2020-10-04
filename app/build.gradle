@@ -56,35 +56,31 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 
-    // recycler view
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
+    implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
 
-    // Networking
     implementation "com.squareup.okhttp3:okhttp:4.7.2"
-
-    // Html parser
     implementation 'org.jsoup:jsoup:1.13.1'
 
     def coroutine_version = '1.0.0'
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutine_version"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutine_version"
 
-    // Image loader
     def glide_version = '4.11.0'
     implementation "com.github.bumptech.glide:glide:$glide_version"
     kapt "com.github.bumptech.glide:compiler:$glide_version"
     implementation "com.github.bumptech.glide:okhttp3-integration:$glide_version"
-
-    // Material design
     implementation 'com.google.android.material:material:1.1.0'
-
-    // For display large images
     implementation 'com.davemorrissey.labs:subsampling-scale-image-view-androidx:3.10.0'
-
-    // Room database
+    
     def room_version = "2.2.5"
     implementation "androidx.room:room-runtime:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
-    // optional - Kotlin Extensions and Coroutines support for Room
     implementation "androidx.room:room-ktx:$room_version"
+    implementation 'me.everything:overscroll-decor-android:1.1.0'
+
+    implementation ("com.github.bumptech.glide:recyclerview-integration:4.11.0") {
+        // Excludes the support library because it's already included by Glide.
+        transitive = false
+    }
 }

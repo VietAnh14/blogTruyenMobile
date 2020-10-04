@@ -1,12 +1,15 @@
 package com.vianh.blogtruyen.ui.mangaViewer
 
-import android.util.Log
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
+import com.bumptech.glide.ListPreloader
+import com.bumptech.glide.RequestBuilder
+import com.bumptech.glide.request.target.Target
+import com.vianh.blogtruyen.utils.GlideApp
 
 class MangaViewerAdapter(private val viewModel: MangaViewerViewModel, var activity: MangaViewerActivity?):
-    ListAdapter<String, PageViewHolder>(PageDiffCallBack()) {
+    ListAdapter<String, PageViewHolder>(PageDiffCallBack()), ListPreloader.PreloadModelProvider<String> {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PageViewHolder {
         return PageViewHolder.from(parent, activity?.bitmapSize!!)
@@ -17,7 +20,6 @@ class MangaViewerAdapter(private val viewModel: MangaViewerViewModel, var activi
     }
 
     override fun onViewRecycled(holder: PageViewHolder) {
-        Log.d("ON RECYCLED ", holder.adapterPosition.toString())
         holder.recycle()
         super.onViewRecycled(holder)
     }
@@ -34,5 +36,11 @@ class MangaViewerAdapter(private val viewModel: MangaViewerViewModel, var activi
 
     fun onDestroy() {
         activity = null
+    }
+
+    override fun getPreloadItems(position: Int): MutableList<String> = currentList.subList(position, position + 1)
+
+    override fun getPreloadRequestBuilder(item: String): RequestBuilder<*>? {
+        return GlideApp.with(activity!!).asFile().load(item).override(Target.SIZE_ORIGINAL)
     }
 }

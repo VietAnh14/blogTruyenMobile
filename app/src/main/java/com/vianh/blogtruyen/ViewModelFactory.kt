@@ -7,6 +7,7 @@ import com.vianh.blogtruyen.ui.main.MainViewModel
 import com.vianh.blogtruyen.ui.mangaInfo.MangaInfoViewModel
 import com.vianh.blogtruyen.ui.mangaViewer.MangaViewerViewModel
 
+@Suppress("UNCHECKED_CAST")
 class ViewModelFactory: ViewModelProvider.Factory {
     private val dataManager = AppDataManager
 

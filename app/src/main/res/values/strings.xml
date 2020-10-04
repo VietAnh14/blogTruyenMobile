@@ -3,4 +3,6 @@
     <string name="lorem_5_sentences" translatable="false">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quam nulla porttitor massa id neque aliquam vestibulum. Posuere lorem ipsum dolor sit amet. Dignissim sodales ut eu sem. Nisl suscipit adipiscing bibendum est ultricies integer.</string>
     <string name="mock_title">This is a title</string>
     <string name="loading_image_content">Loading image content</string>
+    <string name="subscribe">Subscribe</string>
+    <string name="media_image">Media image</string>
 </resources>

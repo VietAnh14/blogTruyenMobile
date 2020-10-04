@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.vianh.blogtruyen.ViewModelFactory
 
 abstract class BaseActivity<V: ViewModel, B: ViewDataBinding>: AppCompatActivity() {
+    val TAG = this::class.java.simpleName
     private val mViewModel: V by lazy {
         createViewModel()
     }

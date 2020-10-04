@@ -6,6 +6,7 @@
             type="String" />
     </data>
     <FrameLayout
+        android:minHeight="200dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="5dp"
@@ -13,13 +14,18 @@
         <com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
             android:id="@+id/mangaPage"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-        <ImageView
-            android:id="@+id/holderImage"
-            android:src="@drawable/lazy_corgi"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="center"
-            android:contentDescription="@string/loading_image_content" />
+            android:layout_height="wrap_content" />
+<!--        <ImageView-->
+<!--            android:id="@+id/holderImage"-->
+<!--            android:src="@drawable/lazy_corgi"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:scaleType="center"-->
+<!--            android:contentDescription="@string/loading_image_content" />-->
+        <ProgressBar
+            android:id="@+id/progress_circular"
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
     </FrameLayout>
 </layout>
