@@ -6,7 +6,7 @@ import android.animation.ObjectAnimator
 import android.view.View
 import android.view.animation.DecelerateInterpolator
 import com.vianh.blogtruyen.R
-import com.vianh.blogtruyen.utils.show
+import com.vianh.blogtruyen.utils.visible
 import me.everything.android.ui.overscroll.IOverScrollDecor
 import me.everything.android.ui.overscroll.IOverScrollUpdateListener
 import kotlin.math.min
@@ -28,7 +28,7 @@ class ThresholdOverScrollListener(private val progressBar: View, val callBack: (
 
     override fun onOverScrollUpdate(decor: IOverScrollDecor?, state: Int, offset: Float) {
         if (offset >= 0 && !isLoading) {
-            progressBar.show()
+            progressBar.visible()
             val faction = min(offset / 200, 1f)
             progressBar.layoutParams.height = (faction * size).toInt()
             progressBar.requestLayout()

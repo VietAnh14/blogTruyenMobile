@@ -5,7 +5,6 @@ import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.request.target.CustomViewTarget
@@ -16,8 +15,8 @@ import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
 import com.vianh.blogtruyen.databinding.PageItemBinding
 import com.vianh.blogtruyen.utils.GlideApp
 import com.vianh.blogtruyen.utils.SubsamplingScaleImageViewTarget
-import com.vianh.blogtruyen.utils.hide
-import com.vianh.blogtruyen.utils.show
+import com.vianh.blogtruyen.utils.gone
+import com.vianh.blogtruyen.utils.visible
 import java.io.File
 
 class PageViewHolder(val binding: PageItemBinding) :
@@ -27,8 +26,8 @@ class PageViewHolder(val binding: PageItemBinding) :
     var status = NOT_LOAD
     private val imageListener = object : SubsamplingScaleImageView.DefaultOnImageEventListener() {
         override fun onImageLoaded() {
-            binding.progressCircular.hide()
-            binding.mangaPage.show()
+            binding.progressCircular.gone()
+            binding.mangaPage.visible()
         }
 
         override fun onImageLoadError(e: Exception?) {
@@ -51,10 +50,10 @@ class PageViewHolder(val binding: PageItemBinding) :
     }
 
     fun loadPage(url: String) {
-        binding.progressCircular.show()
+        binding.progressCircular.visible()
         val extension = url.split(".").last()
         if (extension == "gif") {
-            binding.mangaPage.hide()
+            binding.mangaPage.gone()
 //            GlideApp.with(binding.root.context).asGif().fitCenter().load(url).into(binding.holderImage)
         } else {
             binding.mangaPage.setOnImageEventListener(imageListener)

@@ -28,7 +28,7 @@ class BlogTruyenInterceptor: Interceptor {
             return chain.proceed(request)
         } else {
             val newRequest = request.newBuilder()
-                .header("Referer", BuildConfig.HOST).build()
+                .header("Referer", request.url.host).build()
 
             return chain.proceed(newRequest)
         }

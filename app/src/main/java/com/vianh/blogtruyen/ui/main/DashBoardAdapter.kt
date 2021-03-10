@@ -19,7 +19,7 @@ class DashBoardAdapter(private var items: MutableList<Manga>, val viewModel: Mai
     fun addItems(newItems: List<Manga>) {
         val index = items.size
         items.addAll(newItems)
-        notifyItemRangeInserted(index, items.lastIndex)
+        notifyItemRangeInserted(index, items.size)
     }
 
     inner class DashBoardViewHolder(binding: MangaItemBinding) :

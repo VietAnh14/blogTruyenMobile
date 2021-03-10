@@ -16,12 +16,10 @@
         android:layout_width="match_parent"
         android:fitsSystemWindows="false"
         android:layout_height="50dp"
-        android:background="@drawable/bottom_border"
-        android:paddingStart="@dimen/app_margin"
-        android:paddingEnd="@dimen/app_margin" >
+        android:background="@drawable/bottom_border" >
         <TextView
             android:id="@+id/chapterName"
-            style="@style/TextSmall"
+            style="@style/TextAppearance.AppCompat.Body1"
             android:layout_gravity="center_vertical"
             android:clickable="true"
             android:focusable="true"
@@ -33,7 +31,7 @@
             android:layout_marginEnd="10dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:textColor="@{chapter.read ? @color/colorAccent : @color/colorPrimaryDark}"
+            android:textColor="@{chapter.read ? @color/colorAccent : @color/lightGray}"
             android:text="@{chapter.name, default=`This is a chapter`}" />
     </FrameLayout>
 </layout>

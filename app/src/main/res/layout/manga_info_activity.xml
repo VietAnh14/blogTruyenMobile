@@ -80,6 +80,7 @@
                 <TextView
                     android:id="@+id/description"
                     android:background="@drawable/bottom_border"
+                    style="@style/TextAppearance.AppCompat.Body2"
                     android:textAppearance="@style/NormalBlackText"
                     android:padding="@dimen/app_margin"
                     android:text="@{viewModel.mangaDetail.description, default=`No descriptions`}"

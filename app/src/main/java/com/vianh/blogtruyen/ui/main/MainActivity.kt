@@ -35,21 +35,16 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>() {
         binding.mangaDashboardRecycler.setHasFixedSize(true)
         binding.mangaDashboardRecycler.adapter = DashBoardAdapter(mutableListOf(), viewModel)
         binding.mangaDashboardRecycler.addItemDecoration(GridItemSpacingDecorator(spacing))
-        viewModel.getListManga()
-        viewModel.item.observe(this, Observer {
-            val adapter = binding.mangaDashboardRecycler.adapter as DashBoardAdapter
-            adapter.addItems(it)
-        })
-
-        // scroll to load more
-        binding.mangaDashboardRecycler
-            .addOnScrollListener(ScrollLoadMore(4) { viewModel.getListManga() })
-
-        viewModel.refresh.observe(this, Observer {
+        viewModel.getPage(true)
+        viewModel.items().observe(this, {
             val adapter = binding.mangaDashboardRecycler.adapter as DashBoardAdapter
             adapter.setItems(it)
             binding.swipeRefreshLayout.isRefreshing = false
         })
+
+        // scroll to load more
+        binding.mangaDashboardRecycler
+            .addOnScrollListener(ScrollLoadMore(4) { viewModel.getPage(true) })
     }
 
     override fun getViewModelClass(): Class<MainViewModel> = MainViewModel::class.java
