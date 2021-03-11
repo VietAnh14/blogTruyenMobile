@@ -11,6 +11,22 @@
         <item name="android:textColorPrimary">@color/lightGray</item>
         <item name="colorControlNormal">@android:color/white</item>
         <item name="android:navigationBarColor">@color/colorPrimary</item>
+        <item name="actionMenuTextColor">@color/pureWhite</item>
+        <item name="android:popupMenuStyle">@style/PopupMenu</item>
+        <item name="android:textColor">?attr/colorControlNormal</item>
+    </style>
+
+    <style name="Widget.App.BottomNavigationView" parent="Widget.MaterialComponents.BottomNavigationView.Colored">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.App.BottomNavigationView</item>
+    </style>
+
+    <style name="ThemeOverlay.App.BottomNavigationView" parent="">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorOnPrimary">@color/pureWhite</item>
+    </style>
+
+    <style name="PopupMenu" parent="@android:style/Widget.PopupMenu">
+        <item name="android:popupBackground">@android:color/black</item>
     </style>
 
     <style name="AppTheme.StatusTranslucent" parent="AppTheme">

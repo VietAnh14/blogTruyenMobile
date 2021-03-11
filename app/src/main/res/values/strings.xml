@@ -5,4 +5,8 @@
     <string name="loading_image_content">Loading image content</string>
     <string name="subscribe">Subscribe</string>
     <string name="media_image">Media image</string>
+    <string name="home_menu">Home</string>
+    <string name="history">History</string>
+    <string name="bookmarks">Bookmarks</string>
+    <string name="search">Search</string>
 </resources>
