@@ -2,6 +2,7 @@ package com.vianh.blogtruyen.ui.main
 
 import android.content.Intent
 import android.os.Bundle
+import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.Observer
 import com.vianh.blogtruyen.BR
 import com.vianh.blogtruyen.Event

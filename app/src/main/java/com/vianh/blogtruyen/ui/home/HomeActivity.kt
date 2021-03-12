@@ -1,6 +1,7 @@
 package com.vianh.blogtruyen.ui.home
 
 import android.os.Bundle
+import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import com.vianh.blogtruyen.R
@@ -29,6 +30,13 @@ class HomeActivity : BaseActivityVB<HomeActivityBinding>() {
                     else -> false
                 }
             }
+        }
+    }
+
+    fun setupToolbar(toolbar: Toolbar) {
+        setSupportActionBar(toolbar)
+        supportActionBar?.apply {
+            setDisplayHomeAsUpEnabled(supportFragmentManager.backStackEntryCount > 0)
         }
     }
 

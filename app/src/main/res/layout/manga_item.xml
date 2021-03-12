@@ -10,7 +10,9 @@
             name="viewModel"
             type="com.vianh.blogtruyen.ui.main.MainViewModel" />
     </data>
-    <FrameLayout
+    <com.google.android.material.card.MaterialCardView
+        app:cardCornerRadius="5dp"
+        app:cardElevation="5dp"
         android:layout_marginBottom="10dp"
         android:layout_width="match_parent"
         android:onClick="@{() -> viewModel.onMangaItemClick(manga)}"
@@ -38,5 +40,5 @@
             android:background="@drawable/bottom_shadow_gradient"
             android:textColor="@android:color/white"
             android:layout_gravity="bottom"/>
-    </FrameLayout>
+    </com.google.android.material.card.MaterialCardView>
 </layout>
