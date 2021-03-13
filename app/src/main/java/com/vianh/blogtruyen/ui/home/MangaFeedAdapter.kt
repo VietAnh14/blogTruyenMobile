@@ -5,13 +5,13 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import com.vianh.blogtruyen.databinding.FeedItemBinding
-import com.vianh.blogtruyen.ui.list.BaseVM
+import com.vianh.blogtruyen.ui.list.BaseVH
 import com.vianh.blogtruyen.ui.list.ListItem
 import java.lang.IllegalArgumentException
 
-class MangaFeedAdapter(val onItemClick: MangaItemVH.MangaClick): ListAdapter<ListItem, BaseVM<*>>(DiffCallback()) {
+class MangaFeedAdapter(val onItemClick: MangaItemVH.MangaClick): ListAdapter<ListItem, BaseVH<*>>(DiffCallback()) {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseVM<*> {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseVH<*> {
         val inflater = LayoutInflater.from(parent.context)
         return when(viewType) {
             ListItem.MANGA_ITEM -> MangaItemVH(FeedItemBinding.inflate(inflater, parent, false), onItemClick)
@@ -19,7 +19,7 @@ class MangaFeedAdapter(val onItemClick: MangaItemVH.MangaClick): ListAdapter<Lis
         }
     }
 
-    override fun onBindViewHolder(holder: BaseVM<*>, position: Int) {
+    override fun onBindViewHolder(holder: BaseVH<*>, position: Int) {
         holder.onBind(getItem(position))
     }
 

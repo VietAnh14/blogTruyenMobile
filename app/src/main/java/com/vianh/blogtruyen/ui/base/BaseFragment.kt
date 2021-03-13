@@ -4,9 +4,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toolbar
+import android.widget.Toast
+import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
+import com.vianh.blogtruyen.ui.home.HomeActivity
 
 abstract class BaseFragment<B : ViewBinding> : Fragment() {
     var binding: B? = null
@@ -33,5 +35,13 @@ abstract class BaseFragment<B : ViewBinding> : Fragment() {
     override fun onDestroyView() {
         binding = null
         super.onDestroyView()
+    }
+
+    fun setupToolbar(toolbar: Toolbar) {
+        (activity as HomeActivity).setupToolbar(toolbar)
+    }
+
+    fun showToast(message: String?) {
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
     }
 }

@@ -33,16 +33,22 @@ class HomeActivity : BaseActivityVB<HomeActivityBinding>() {
         }
     }
 
-    fun setupToolbar(toolbar: Toolbar) {
+    fun setupToolbar(toolbar: Toolbar, title: String? = null) {
         setSupportActionBar(toolbar)
         supportActionBar?.apply {
-            setDisplayHomeAsUpEnabled(supportFragmentManager.backStackEntryCount > 0)
+            setDisplayHomeAsUpEnabled(supportFragmentManager.backStackEntryCount > 1)
+            if (title != null) {
+                setTitle(title)
+            }
         }
     }
 
-    fun changeFragment(fragment: Fragment): Boolean {
+    fun changeFragment(fragment: Fragment, addToBackStack: Boolean = false, name: String? = null): Boolean {
         supportFragmentManager.commit {
             setReorderingAllowed(true)
+            if (addToBackStack) {
+                addToBackStack(name)
+            }
             replace(R.id.host_fragment, fragment)
         }
         return true

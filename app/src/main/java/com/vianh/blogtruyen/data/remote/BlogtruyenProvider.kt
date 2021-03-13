@@ -18,18 +18,18 @@ class BlogtruyenProvider(val client: OkHttpClient) : MangaProvider {
     val AJAX_LOAD_CHAPTER = BuildConfig.HOST + "/Chapter/LoadListChapter"
 
     override suspend fun fetchNewManga(pageNumber: Int): MutableList<Manga> {
-        val url = BuildConfig.HOST + "/thumb-$pageNumber"
-        val request = Request.Builder().url(url).build()
         return withContext(Dispatchers.IO) {
+            val url = BuildConfig.HOST + "/thumb-$pageNumber"
+            val request = Request.Builder().url(url).build()
             val response = client.newCall(request).extractData()
             parseManga(response)
         }
     }
 
     override suspend fun fetchDetailManga(manga: Manga): Manga {
-        val url = BuildConfig.HOST + manga.link
-        val request = Request.Builder().url(url).build()
         return withContext(Dispatchers.IO) {
+            val url = BuildConfig.HOST + manga.link
+            val request = Request.Builder().url(url).build()
             val response = client.newCall(request).extractData()
             parseDetailManga(response, manga)
         }

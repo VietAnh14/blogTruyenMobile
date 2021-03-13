@@ -10,6 +10,7 @@ import com.vianh.blogtruyen.R
 import com.vianh.blogtruyen.databinding.HomeFragmentBinding
 import com.vianh.blogtruyen.ui.base.BaseFragment
 import com.vianh.blogtruyen.ui.list.ListItem
+import com.vianh.blogtruyen.ui.mangaDetails.MangaDetailsFragment
 import com.vianh.blogtruyen.utils.GridItemSpacingDecorator
 import com.vianh.blogtruyen.utils.ScrollLoadMore
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -42,10 +43,6 @@ class HomeFragment: BaseFragment<HomeFragmentBinding>(), MangaItemVH.MangaClick 
     fun onContentChange(mangaItems: List<ListItem>) {
         val adapter = requireBinding.feedRecycler.adapter as MangaFeedAdapter
         adapter.submitList(mangaItems)
-    }
-
-    fun showToast(message: String?) {
-        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
     }
 
     fun setup() {
@@ -91,6 +88,7 @@ class HomeFragment: BaseFragment<HomeFragmentBinding>(), MangaItemVH.MangaClick 
     }
 
     override fun onMangaItemClick(mangaItem: MangaItem) {
-        showToast(mangaItem.manga.title)
+        val activity = activity as HomeActivity
+        activity.changeFragment(MangaDetailsFragment.newInstance(mangaItem.manga), true)
     }
 }

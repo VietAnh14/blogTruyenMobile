@@ -1,13 +1,12 @@
 package com.vianh.blogtruyen.ui.home
 
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.vianh.blogtruyen.databinding.FeedItemBinding
-import com.vianh.blogtruyen.ui.list.BaseVM
+import com.vianh.blogtruyen.ui.list.BaseVH
 import com.vianh.blogtruyen.ui.list.ListItem
+import com.vianh.blogtruyen.utils.loadNetWorkImage
 
 class MangaItemVH(binding: FeedItemBinding, clickListener: MangaClick) :
-    BaseVM<FeedItemBinding>(binding) {
+    BaseVH<FeedItemBinding>(binding) {
 
     var data: ListItem? = null
 
@@ -23,10 +22,7 @@ class MangaItemVH(binding: FeedItemBinding, clickListener: MangaClick) :
         val mangaItem = item as MangaItem
         data = mangaItem
         with(binding) {
-            Glide.with(itemView.context)
-                .load(mangaItem.manga.imageUrl)
-                .transition(DrawableTransitionOptions.withCrossFade())
-                .into(imageCover)
+            imageCover.loadNetWorkImage(mangaItem.manga.imageUrl)
 
             mangaName.text = mangaItem.manga.title
         }

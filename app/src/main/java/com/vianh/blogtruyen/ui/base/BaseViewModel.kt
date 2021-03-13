@@ -17,7 +17,7 @@ open class BaseViewModel(val dataManager: DataManager) : ViewModel() {
     val jobs = SupervisorJob()
     val uiScope = CoroutineScope(Dispatchers.Main + jobs)
     val ioScope = CoroutineScope(Dispatchers.IO + jobs)
-    val isLoading = SingleLiveEvent(false)
+    val isLoading = MutableLiveData(false)
     fun isLoading(): LiveData<Boolean> = isLoading
     protected val error = SingleLiveEvent<Throwable>()
     fun error(): LiveData<Throwable> = error
