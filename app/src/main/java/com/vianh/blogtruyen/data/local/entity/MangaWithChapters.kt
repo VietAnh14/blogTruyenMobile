@@ -1,4 +1,4 @@
-package com.vianh.blogtruyen.data.model
+package com.vianh.blogtruyen.data.local.entity
 
 import androidx.room.Embedded
 import androidx.room.Relation

@@ -1,44 +1,50 @@
-<?xml version="1.0" encoding="utf-8"?>
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
-    <data>
-        <variable
-            name="manga"
-            type="com.vianh.blogtruyen.data.model.Manga" />
-        <variable
-            name="viewModel"
-            type="com.vianh.blogtruyen.ui.main.MainViewModel" />
-    </data>
-    <com.google.android.material.card.MaterialCardView
-        app:cardCornerRadius="5dp"
-        app:cardElevation="5dp"
-        android:layout_marginBottom="10dp"
-        android:layout_width="match_parent"
-        android:onClick="@{() -> viewModel.onMangaItemClick(manga)}"
-        android:layout_height="220dp">
-        <ImageView
-            android:id="@+id/imageCover"
-            android:src="@drawable/one_punch"
-            android:scaleType="centerCrop"
-            app:imageUrl="@{manga.imageUrl}"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:contentDescription="@string/media_image" />
-        <TextView
-            android:id="@+id/mangaName"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="bottom"
-            android:paddingStart="5dp"
-            android:paddingBottom="10dp"
-            android:paddingEnd="5dp"
-            android:textSize="12sp"
-            android:maxLines="2"
-            android:ellipsize="end"
-            android:text="@{manga.uploadTitle, default=`This is a title`}"
-            android:background="@drawable/bottom_shadow_gradient"
-            android:textColor="@android:color/white"
-            android:layout_gravity="bottom"/>
-    </com.google.android.material.card.MaterialCardView>
-</layout>
+<!--<?xml version="1.0" encoding="utf-8"?>-->
+<!--<layout-->
+<!--    xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--    xmlns:app="http://schemas.android.com/apk/res-auto">-->
+<!--    <data>-->
+<!--        <variable-->
+<!--            name="manga"-->
+<!--            type="com.vianh.blogtruyen.data.model.Manga" />-->
+<!--        <variable-->
+<!--            name="viewModel"-->
+<!--            type="com.vianh.blogtruyen.ui.main.MainViewModel" />-->
+<!--    </data>-->
+<!--    <com.google.android.material.card.MaterialCardView-->
+<!--        app:cardCornerRadius="5dp"-->
+<!--        app:cardElevation="5dp"-->
+<!--        android:layout_marginBottom="10dp"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:onClick="@{() -> viewModel.onMangaItemClick(manga)}"-->
+<!--        android:layout_height="220dp">-->
+<!--        <ImageView-->
+<!--            android:id="@+id/imageCover"-->
+<!--            android:src="@drawable/one_punch"-->
+<!--            android:scaleType="centerCrop"-->
+<!--            app:imageUrl="@{manga.imageUrl}"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:contentDescription="@string/media_image" />-->
+<!--        <TextView-->
+<!--            android:id="@+id/mangaName"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:gravity="bottom"-->
+<!--            android:paddingStart="5dp"-->
+<!--            android:paddingBottom="10dp"-->
+<!--            android:paddingEnd="5dp"-->
+<!--            android:textSize="12sp"-->
+<!--            android:maxLines="2"-->
+<!--            android:ellipsize="end"-->
+<!--            android:text="@{manga.uploadTitle, default=`This is a title`}"-->
+<!--            android:background="@drawable/bottom_shadow_gradient"-->
+<!--            android:textColor="@android:color/white"-->
+<!--            android:layout_gravity="bottom"/>-->
+<!--    </com.google.android.material.card.MaterialCardView>-->
+<!--</layout>-->
+
+<FrameLayout android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+</FrameLayout>

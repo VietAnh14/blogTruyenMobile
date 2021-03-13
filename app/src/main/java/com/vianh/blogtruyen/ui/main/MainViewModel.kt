@@ -23,7 +23,7 @@ class MainViewModel(dataManager: DataManager) : BaseViewModel(dataManager) {
         }
 
         launchLoading {
-            val newPage = dataManager.getMangaProvider().fetchNewManga(pageNumber)
+            val newPage = dataManager.mangaProvider.fetchNewManga(pageNumber)
             if (append) {
                 items.value?.addAll(newPage)
                 items.value = items.value

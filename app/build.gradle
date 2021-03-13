@@ -97,4 +97,12 @@ dependencies {
         // Excludes the support library because it's already included by Glide.
         transitive = false
     }
+
+    // DI
+    def koin_version = '2.2.2'
+    implementation "org.koin:koin-core:$koin_version"
+    implementation "org.koin:koin-core-ext:$koin_version"
+    testImplementation "org.koin:koin-test:$koin_version"
+    implementation "org.koin:koin-androidx-scope:$koin_version"
+    implementation "org.koin:koin-androidx-viewmodel:$koin_version"
 }

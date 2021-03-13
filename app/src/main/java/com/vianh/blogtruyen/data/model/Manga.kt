@@ -1,19 +1,13 @@
 package com.vianh.blogtruyen.data.model
 
-import android.os.Parcelable
-import androidx.room.Entity
-import kotlinx.android.parcel.Parcelize
-
-@Parcelize
-@Entity(
-    tableName = "manga",
-    primaryKeys = ["mangaId"]
-)
 data class Manga(
-    var imageUrl: String,
-    var link: String,
-    var title: String,
-    var uploadTitle: String,
-    var description: String = "Still update",
-    var mangaId: Int,
-    var subscribed: Boolean = false): Parcelable
+    val id: Int,
+    val imageUrl: String,
+    val title: String,
+    val uploadTitle: String,
+    val description: String,
+    val link: String,
+    val subscribed: Boolean = false,
+    val categories: Set<Category> = setOf(),
+    val chapters: List<Chapter> = listOf()
+)

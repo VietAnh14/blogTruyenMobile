@@ -2,31 +2,20 @@ package com.vianh.blogtruyen.data.remote
 
 import android.util.Log
 import com.vianh.blogtruyen.BuildConfig
-import com.vianh.blogtruyen.MvvmApp
 import com.vianh.blogtruyen.data.model.Chapter
 import com.vianh.blogtruyen.data.model.Manga
-import com.vianh.blogtruyen.utils.BlogTruyenInterceptor
 import com.vianh.blogtruyen.utils.extractData
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import okhttp3.Cache
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.json.JSONArray
 import org.jsoup.Jsoup
 import org.jsoup.select.Elements
-import java.io.File
-import java.lang.ArithmeticException
 
-object BlogtruyenProvider : MangaProvider {
+class BlogtruyenProvider(val client: OkHttpClient) : MangaProvider {
 
-    val client by lazy {
-        OkHttpClient.Builder().cache(
-            // 5 Mb cache
-            Cache(File(MvvmApp.app.cacheDir, "http_cache"), 40 * 1024 * 1024)
-        ).addInterceptor(BlogTruyenInterceptor()).build()
-    }
-    const val AJAX_LOAD_CHAPTER = BuildConfig.HOST + "/Chapter/LoadListChapter"
+    val AJAX_LOAD_CHAPTER = BuildConfig.HOST + "/Chapter/LoadListChapter"
 
     override suspend fun fetchNewManga(pageNumber: Int): MutableList<Manga> {
         val url = BuildConfig.HOST + "/thumb-$pageNumber"
@@ -52,7 +41,7 @@ object BlogtruyenProvider : MangaProvider {
             var lastPage: Int
             var currentPage = 1
             do {
-                val url = "$AJAX_LOAD_CHAPTER?id=${manga.mangaId}&p=${currentPage}"
+                val url = "$AJAX_LOAD_CHAPTER?id=${manga.id}&p=${currentPage}"
                 val request = Request.Builder().url(url).build()
                 val response = client.newCall(request).extractData()
                 val docs = Jsoup.parse(response)
@@ -63,7 +52,7 @@ object BlogtruyenProvider : MangaProvider {
                     1
                 }
                 val items = docs.getElementById("listChapter").children()
-                result.addAll(parseSingleListChapter(items, manga.mangaId))
+                result.addAll(parseSingleListChapter(items, manga.id))
                 currentPage++
             } while (lastPage >= currentPage)
             Log.d("Fetch chapter list done", System.currentTimeMillis().toString())
@@ -87,7 +76,12 @@ object BlogtruyenProvider : MangaProvider {
             val title = row.child(0).child(0).text()
             val link = row.child(0).child(0).attr("href")
             val id = link.split('/')[1]
-            result.add(Chapter(link, title, id, mangaId))
+            result.add(Chapter(
+                id = id,
+                name = title,
+                url = link,
+                mangaId = mangaId.toString()
+            ))
         }
         return result
     }
@@ -100,7 +94,12 @@ object BlogtruyenProvider : MangaProvider {
         val id = details.getElementById("MangaId").attr("value").toInt()
         val description = details.getElementsByClass("introduce")[0].text()
         Log.d("Fetch detail done", System.currentTimeMillis().toString())
-        return Manga(image, manga.link, title, manga.uploadTitle, description, id)
+        return manga.copy(
+            id = id,
+            title = title,
+            description = description,
+            imageUrl = image
+        )
     }
 
     fun parseManga(html: String): MutableList<Manga> {
@@ -116,7 +115,8 @@ object BlogtruyenProvider : MangaProvider {
                 link = link,
                 uploadTitle = title.text(),
                 title = title.text(),
-                mangaId = id
+                id = id,
+                description = "Updating"
             )
             listManga.add(manga)
         }

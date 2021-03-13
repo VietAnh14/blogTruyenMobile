@@ -8,7 +8,12 @@ abstract class BaseViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView
     abstract fun onBind(position: Int)
 }
 
-abstract class BaseBindingViewHolder<out T: ViewDataBinding>(private val binding: T) : RecyclerView.ViewHolder(binding.root) {
-    fun getBinding(): T = binding
+abstract class BaseBindingViewHolder<out B: ViewDataBinding>(val binding: B) :
+    RecyclerView.ViewHolder(binding.root) {
+
     abstract fun onBind(position: Int)
+
+    open fun onRecycle() {
+
+    }
 }
