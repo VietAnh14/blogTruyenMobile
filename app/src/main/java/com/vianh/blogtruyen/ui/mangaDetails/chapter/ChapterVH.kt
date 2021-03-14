@@ -1,4 +1,4 @@
-package com.vianh.blogtruyen.ui.mangaDetails
+package com.vianh.blogtruyen.ui.mangaDetails.chapter
 
 import androidx.recyclerview.widget.RecyclerView
 import com.vianh.blogtruyen.data.model.Chapter

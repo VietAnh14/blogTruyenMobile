@@ -1,4 +1,4 @@
-package com.vianh.blogtruyen.ui.mangaDetails
+package com.vianh.blogtruyen.ui.mangaDetails.chapter
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import com.vianh.blogtruyen.data.model.Chapter
 import com.vianh.blogtruyen.databinding.ChapterPageFragmentBinding
 import com.vianh.blogtruyen.ui.base.BaseFragment
+import com.vianh.blogtruyen.ui.mangaDetails.MangaDetailsViewModel
 import org.koin.androidx.viewmodel.ViewModelOwner
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 

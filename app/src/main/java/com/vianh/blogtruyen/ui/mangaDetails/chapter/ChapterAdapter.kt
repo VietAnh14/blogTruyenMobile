@@ -1,4 +1,4 @@
-package com.vianh.blogtruyen.ui.mangaDetails
+package com.vianh.blogtruyen.ui.mangaDetails.chapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -7,7 +7,9 @@ import androidx.recyclerview.widget.ListAdapter
 import com.vianh.blogtruyen.data.model.Chapter
 import com.vianh.blogtruyen.databinding.ChapterItemBinding
 
-class ChapterAdapter(val chapterClick: ChapterVH.ChapterClick): ListAdapter<Chapter, ChapterVH>(DiffCallback()) {
+class ChapterAdapter(val chapterClick: ChapterVH.ChapterClick): ListAdapter<Chapter, ChapterVH>(
+    DiffCallback()
+) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChapterVH {
         val inflater = LayoutInflater.from(parent.context)

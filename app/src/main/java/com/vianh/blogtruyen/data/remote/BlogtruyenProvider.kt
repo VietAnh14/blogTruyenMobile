@@ -3,6 +3,7 @@ package com.vianh.blogtruyen.data.remote
 import android.util.Log
 import com.vianh.blogtruyen.BuildConfig
 import com.vianh.blogtruyen.data.model.Chapter
+import com.vianh.blogtruyen.data.model.Comment
 import com.vianh.blogtruyen.data.model.Manga
 import com.vianh.blogtruyen.utils.extractData
 import kotlinx.coroutines.Dispatchers
@@ -11,11 +12,16 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.json.JSONArray
 import org.jsoup.Jsoup
+import org.jsoup.nodes.Element
 import org.jsoup.select.Elements
+import org.jsoup.select.Evaluator
+import java.util.*
+import kotlin.collections.ArrayList
 
 class BlogtruyenProvider(val client: OkHttpClient) : MangaProvider {
 
     val AJAX_LOAD_CHAPTER = BuildConfig.HOST + "/Chapter/LoadListChapter"
+    val AJAX_LOAD_COMMENT = BuildConfig.HOST + "/Comment/AjaxLoadComment"
 
     override suspend fun fetchNewManga(pageNumber: Int): MutableList<Manga> {
         return withContext(Dispatchers.IO) {
@@ -67,6 +73,79 @@ class BlogtruyenProvider(val client: OkHttpClient) : MangaProvider {
             val content = client.newCall(request).extractData()
             return@withContext parseChapter(content)
         }
+    }
+
+    override suspend fun fetchComment(mangaId: Int, offset: Int): Map<Comment, List<Comment>> {
+        return withContext(Dispatchers.IO) {
+            val uri = "$AJAX_LOAD_COMMENT?mangaId=$mangaId&p=$offset"
+            val request = Request.Builder().url(uri).build()
+            val content = client.newCall(request).extractData()
+            parseComment(content)
+        }
+    }
+
+    private fun parseComment(html: String): Map<Comment, List<Comment>> {
+        val doc = Jsoup.parse(html)
+        val commentSessions = doc.getElementsByClass("ul-comment")
+        val result = LinkedHashMap<Comment, List<Comment>>()
+        for (session in commentSessions) {
+            val avatar = session
+                .child(0)
+                .child(0)
+                .getElementsByClass("img-avatar")
+                .attr("src")
+            val commentContent = session
+                .getElementsByClass("c-content")
+                .first()
+            val userName = commentContent.getElementsByClass("user")
+                .first()
+                .firstElementSibling()
+                .text()
+            val time = commentContent.getElementsByClass("time")
+                .first()
+                .text()
+            val message = commentContent.getElementsByClass("commment-content")
+                .first()
+                .text()
+            val subCommentsSession = session.getElementsByClass("sub-c-item")
+            val subComments = parseSubComment(subCommentsSession)
+            val rootComment = Comment(
+                userName = userName,
+                avatar = avatar,
+                message = message,
+                time = time,
+                type = Comment.TOP
+            )
+            result[rootComment] = subComments
+        }
+        return result
+    }
+
+    fun parseSubComment(elements: Elements): List<Comment> {
+        val comments = ArrayList<Comment>()
+        for (subComment in elements) {
+            val avatar = subComment.getElementsByClass("img-avatar")
+                .first().attr("src")
+            val userName = subComment.getElementsByClass("user")
+                .first()
+                .text()
+            val time = subComment.getElementsByClass("time")
+                .first()
+                .text()
+            val message = subComment.getElementsByClass("commment-content")
+                .first()
+                .text()
+
+            val comment = Comment(
+                userName = userName,
+                avatar = avatar,
+                message = message,
+                time = time,
+                type = Comment.REPLY
+            )
+            comments.add(comment)
+        }
+        return comments
     }
 
     private fun parseSingleListChapter(items: Elements, mangaId: Int): List<Chapter> {
