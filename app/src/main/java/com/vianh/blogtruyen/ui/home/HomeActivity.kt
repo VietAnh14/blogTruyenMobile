@@ -9,10 +9,13 @@ import com.vianh.blogtruyen.databinding.HomeActivityBinding
 import com.vianh.blogtruyen.ui.base.BaseActivityVB
 import com.vianh.blogtruyen.ui.bookmarks.BookmarksFragment
 import com.vianh.blogtruyen.ui.history.HistoryFragment
+import com.vianh.blogtruyen.views.ViewHeightAnimator
 
 class HomeActivity : BaseActivityVB<HomeActivityBinding>() {
 
     override fun createBinding(): HomeActivityBinding = HomeActivityBinding.inflate(layoutInflater)
+
+    lateinit var bottomNavAnimator: ViewHeightAnimator
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,6 +33,7 @@ class HomeActivity : BaseActivityVB<HomeActivityBinding>() {
                     else -> false
                 }
             }
+            bottomNavAnimator = ViewHeightAnimator(bottomNav)
         }
     }
 

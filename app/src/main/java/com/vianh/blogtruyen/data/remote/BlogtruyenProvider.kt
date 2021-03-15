@@ -15,6 +15,7 @@ import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import org.jsoup.select.Elements
 import org.jsoup.select.Evaluator
+import timber.log.Timber
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -61,7 +62,7 @@ class BlogtruyenProvider(val client: OkHttpClient) : MangaProvider {
                 result.addAll(parseSingleListChapter(items, manga.id))
                 currentPage++
             } while (lastPage >= currentPage)
-            Log.d("Fetch chapter list done", System.currentTimeMillis().toString())
+            Timber.d(System.currentTimeMillis().toString())
             return@withContext result
         }
     }

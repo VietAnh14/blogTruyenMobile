@@ -9,7 +9,7 @@ class ChapterVH(val binding: ChapterItemBinding, clickListener: ChapterClick): R
     var data: Chapter? = null
 
     init {
-        itemView.setOnClickListener {
+        binding.chapterName.setOnClickListener {
             data?.let { clickListener.onChapterClick(it) }
         }
     }

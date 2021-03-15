@@ -105,4 +105,7 @@ dependencies {
     testImplementation "org.koin:koin-test:$koin_version"
     implementation "org.koin:koin-androidx-scope:$koin_version"
     implementation "org.koin:koin-androidx-viewmodel:$koin_version"
+
+    // Logger
+    implementation 'com.jakewharton.timber:timber:4.7.1'
 }

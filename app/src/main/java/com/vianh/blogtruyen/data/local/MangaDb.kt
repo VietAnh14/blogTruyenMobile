@@ -69,18 +69,5 @@ abstract class MangaDb : RoomDatabase() {
                 .build()
             return mangaDb
         }
-
-        val db: MangaDb by lazy {
-            Room.databaseBuilder(MvvmApp.app, MangaDb::class.java, DB_NAME)
-                .addCallback(object : RoomDatabase.Callback() {
-                    override fun onCreate(spDb: SupportSQLiteDatabase) {
-                        super.onCreate(spDb)
-                        GlobalScope.launch(Dispatchers.IO) {
-                            db.mangaDao().inserListCategory(categories)
-                        }
-                    }
-                })
-                .build()
-        }
     }
 }

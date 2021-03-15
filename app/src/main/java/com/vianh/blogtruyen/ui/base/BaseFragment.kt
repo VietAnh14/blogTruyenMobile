@@ -1,5 +1,6 @@
 package com.vianh.blogtruyen.ui.base
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -14,6 +15,8 @@ abstract class BaseFragment<B : ViewBinding> : Fragment() {
     var binding: B? = null
     val requireBinding: B
         get() = checkNotNull(binding)
+
+    var hostActivity: HomeActivity? = null
 
     abstract fun createBinding(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): B
 
@@ -43,5 +46,15 @@ abstract class BaseFragment<B : ViewBinding> : Fragment() {
 
     fun showToast(message: String?) {
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        hostActivity = context as? HomeActivity
+    }
+
+    override fun onDetach() {
+        hostActivity = null
+        super.onDetach()
     }
 }

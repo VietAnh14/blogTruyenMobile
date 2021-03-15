@@ -48,6 +48,7 @@ class HomeFragment: BaseFragment<HomeFragmentBinding>(), MangaItemVH.MangaClick 
     fun setup() {
         val homeActivity = activity as? HomeActivity ?: return
         homeActivity.setupToolbar(requireBinding.toolbar)
+        homeActivity.bottomNavAnimator.show()
 
         with(requireBinding.feedRecycler) {
             setHasFixedSize(true)

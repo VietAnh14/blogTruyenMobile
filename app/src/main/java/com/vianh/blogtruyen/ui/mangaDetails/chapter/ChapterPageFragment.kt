@@ -8,6 +8,7 @@ import com.vianh.blogtruyen.data.model.Chapter
 import com.vianh.blogtruyen.databinding.ChapterPageFragmentBinding
 import com.vianh.blogtruyen.ui.base.BaseFragment
 import com.vianh.blogtruyen.ui.mangaDetails.MangaDetailsViewModel
+import com.vianh.blogtruyen.ui.reader.ReaderFragment
 import org.koin.androidx.viewmodel.ViewModelOwner
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
@@ -57,6 +58,6 @@ class ChapterPageFragment : BaseFragment<ChapterPageFragmentBinding>(), ChapterV
     }
 
     override fun onChapterClick(chapter: Chapter) {
-
+        hostActivity?.changeFragment(ReaderFragment.newInstance(chapter), true)
     }
 }
