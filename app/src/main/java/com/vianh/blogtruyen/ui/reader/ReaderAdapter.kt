@@ -6,12 +6,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
 import com.vianh.blogtruyen.databinding.MangaPageItemBinding
 
-class ReaderAdapter(val requestManager: RequestManager): RecyclerView.Adapter<PageItemVH>() {
+class ReaderAdapter(val requestManager: RequestManager, val tileSize: Int): RecyclerView.Adapter<PageItemVH>() {
     val pages = mutableListOf<String>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PageItemVH {
         val inflater = LayoutInflater.from(parent.context)
-        return PageItemVH(requestManager, MangaPageItemBinding.inflate(inflater, parent, false))
+        return PageItemVH(requestManager, MangaPageItemBinding.inflate(inflater, parent, false), tileSize)
     }
 
     override fun onBindViewHolder(holder: PageItemVH, position: Int) {
@@ -20,6 +20,11 @@ class ReaderAdapter(val requestManager: RequestManager): RecyclerView.Adapter<Pa
 
     override fun getItemCount(): Int {
         return pages.size
+    }
+
+    override fun onViewRecycled(holder: PageItemVH) {
+        holder.onRecycle()
+        super.onViewRecycled(holder)
     }
 
     fun setPages(pages: List<String>) {

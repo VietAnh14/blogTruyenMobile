@@ -70,6 +70,7 @@ dependencies {
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
     implementation 'com.davemorrissey.labs:subsampling-scale-image-view-androidx:3.10.0'
+    implementation 'me.everything:overscroll-decor-android:1.1.0'
 
     // Network
     implementation "com.squareup.okhttp3:okhttp:4.9.0"

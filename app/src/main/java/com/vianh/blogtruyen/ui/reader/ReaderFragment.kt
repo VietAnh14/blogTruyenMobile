@@ -8,6 +8,8 @@ import com.bumptech.glide.Glide
 import com.vianh.blogtruyen.data.model.Chapter
 import com.vianh.blogtruyen.databinding.ReaderFragmentBinding
 import com.vianh.blogtruyen.ui.base.BaseFragment
+import com.vianh.blogtruyen.utils.getMaxTextureSize
+import me.everything.android.ui.overscroll.OverScrollDecoratorHelper
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 import timber.log.Timber
@@ -21,7 +23,10 @@ class ReaderFragment: BaseFragment<ReaderFragmentBinding>() {
         return ReaderFragmentBinding.inflate(inflater, container, false)
     }
 
-    val viewModel by viewModel<ReaderViewModel> { parametersOf(arguments?.getParcelable(CHAPTER_KEY)) }
+    private val viewModel by viewModel<ReaderViewModel> { parametersOf(arguments?.getParcelable(CHAPTER_KEY)) }
+    private val tileSize by lazy { getMaxTextureSize().also {
+        Timber.d("Max textureSize $it")
+    } }
 
 
     var readerAdapter: ReaderAdapter? = null
@@ -44,7 +49,8 @@ class ReaderFragment: BaseFragment<ReaderFragmentBinding>() {
 
     private fun setup() {
         with(requireBinding.readerRecycler) {
-            readerAdapter = ReaderAdapter(Glide.with(this))
+            OverScrollDecoratorHelper.setUpOverScroll(this, OverScrollDecoratorHelper.ORIENTATION_VERTICAL)
+            readerAdapter = ReaderAdapter(Glide.with(this), tileSize)
             adapter = readerAdapter
             setHasFixedSize(true)
         }
