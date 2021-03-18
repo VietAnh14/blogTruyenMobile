@@ -9,16 +9,18 @@ import com.bumptech.glide.RequestManager
 import com.bumptech.glide.request.transition.Transition
 import com.davemorrissey.labs.subscaleview.ImageSource
 import com.vianh.blogtruyen.databinding.MangaPageItemBinding
+import com.vianh.blogtruyen.ui.list.BaseVH
+import com.vianh.blogtruyen.ui.list.ListItem
 import com.vianh.blogtruyen.ui.mangaViewer.PageLoadCallBack
 import com.vianh.blogtruyen.utils.SubsamplingScaleImageViewTarget
 import com.vianh.blogtruyen.utils.gone
 import timber.log.Timber
 import java.io.File
 
-class PageItemVH(val requestManager: RequestManager, val binding: MangaPageItemBinding, tileSize: Int) :
-    RecyclerView.ViewHolder(binding.root), PageLoadCallBack<File> {
+class PageItemVH(val requestManager: RequestManager, binding: MangaPageItemBinding, tileSize: Int) :
+    BaseVH<MangaPageItemBinding>(binding), PageLoadCallBack<File> {
 
-    var uri: String? = null
+    var data: PageItem? = null
 
     init {
         binding.page.setMaxTileSize(tileSize)
@@ -27,13 +29,17 @@ class PageItemVH(val requestManager: RequestManager, val binding: MangaPageItemB
     }
 
     private val target = SubsamplingScaleImageViewTarget(binding.page, this)
-    fun onBind(uri: String) {
+
+
+    override fun onBind(item: ListItem) {
+        val page = item as PageItem
+        data = page
         requestManager
-            .download(uri)
+            .download(page.uri)
             .into(target)
     }
 
-    fun onRecycle() {
+    override fun onRecycle() {
         binding.page.recycle()
     }
 
@@ -50,7 +56,7 @@ class PageItemVH(val requestManager: RequestManager, val binding: MangaPageItemB
     }
 
     override fun onLoadFailed(errorDrawable: Drawable?) {
-        Timber.e("Failed to load $uri")
+        Timber.e("Failed to load ${data?.uri}")
     }
 
     override fun onLoadCleared(placeholder: Drawable?) {

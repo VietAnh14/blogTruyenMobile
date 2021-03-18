@@ -9,5 +9,7 @@ interface ListItem {
         const val EMPTY_TYPE = 3
         const val ERROR_TYPE = 4
         const val CHAPTER_ITEM = 5
+        const val PAGE_ITEM = 6
+        const val TRANSITION_ITEM = 7
     }
 }
