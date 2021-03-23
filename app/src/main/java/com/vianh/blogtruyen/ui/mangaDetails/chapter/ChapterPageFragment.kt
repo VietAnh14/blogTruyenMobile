@@ -58,6 +58,6 @@ class ChapterPageFragment : BaseFragment<ChapterPageFragmentBinding>(), ChapterV
     }
 
     override fun onChapterClick(chapter: Chapter) {
-        hostActivity?.changeFragment(ReaderFragment.newInstance(chapter), true)
+        hostActivity?.changeFragment(ReaderFragment.newInstance(chapter, viewModel.manga), true)
     }
 }

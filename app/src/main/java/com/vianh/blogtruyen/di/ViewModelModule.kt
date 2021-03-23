@@ -10,5 +10,5 @@ val viewModelModule
     get() = module {
         viewModel { HomeViewModel(get()) }
         viewModel { parameters -> MangaDetailsViewModel(get(), manga = parameters.get()) }
-        viewModel { parameters -> ReaderViewModel(get(), chapter = parameters.get()) }
+        viewModel { parameters -> ReaderViewModel(get(), chapter = parameters.get(), parameters.get()) }
     }

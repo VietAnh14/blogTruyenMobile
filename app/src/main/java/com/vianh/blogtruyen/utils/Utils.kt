@@ -112,6 +112,5 @@ fun getMimeType(uri: Uri, context: Context): String? {
 fun ImageView.loadNetWorkImage(url: String) {
     Glide.with(context)
         .load(url)
-        .transition(DrawableTransitionOptions.withCrossFade())
         .into(this)
 }
