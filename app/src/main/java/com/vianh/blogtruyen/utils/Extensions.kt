@@ -9,11 +9,12 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
-class HttpError(private val response: Response): Exception() {
+class HttpError(private val code: Int, message: String?) : Exception(message) {
     override val message: String?
-        get() = "Request response with code: ${response.code}, message: ${response.message}"
+        get() = "Request response with code: ${code}, message: ${super.message}"
+
     fun getErrorCode(): Int {
-        return response.code
+        return code
     }
 }
 
@@ -23,17 +24,22 @@ suspend fun <T> Call.suspendGetResult(): T {
         if (response.isSuccessful && response.body != null) {
             it.resume(response.body?.string() as T)
         } else {
-            it.resumeWithException(HttpError(response))
+            it.resumeWithException(HttpError(response.code, response.message))
         }
+        response.body?.close()
     }
 }
 
 fun Call.extractData(): String {
     val response = execute()
     if (response.isSuccessful && response.body != null) {
-        return response.body!!.string()
+        val content = response.body!!.string()
+        response.body?.close()
+        return content
     } else {
-        throw HttpError(response)
+        throw HttpError(response.code, response.message).also {
+            response.body?.close()
+        }
     }
 }
 
@@ -43,12 +49,14 @@ fun View.toggleState(direction: Int) {
         animate().setDuration(200).translationY(0f)
     } else {
         when (direction) {
-            Gravity.TOP -> animate().setDuration(200).translationY(-height.toFloat()).withEndAction {
-                visibility = View.GONE
-            }
-            Gravity.BOTTOM -> animate().setDuration(200).translationY(height.toFloat()).withEndAction {
-                visibility = View.GONE
-            }
+            Gravity.TOP -> animate().setDuration(200).translationY(-height.toFloat())
+                .withEndAction {
+                    visibility = View.GONE
+                }
+            Gravity.BOTTOM -> animate().setDuration(200).translationY(height.toFloat())
+                .withEndAction {
+                    visibility = View.GONE
+                }
         }
     }
 }

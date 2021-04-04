@@ -8,7 +8,8 @@ import com.vianh.blogtruyen.utils.visible
 import me.everything.android.ui.overscroll.IOverScrollState
 import kotlin.math.min
 
-class TransitionPageVH(binding: TransitionPageBinding, val viewModel: ReaderViewModel): BaseVH<TransitionPageBinding>(binding) {
+class TransitionPageVH(binding: TransitionPageBinding, val viewModel: ReaderViewModel) :
+    BaseVH<TransitionPageBinding>(binding) {
     var data: TransitionPageItem? = null
     var releaseToLaunch = false
 
@@ -22,6 +23,9 @@ class TransitionPageVH(binding: TransitionPageBinding, val viewModel: ReaderView
     }
 
     fun onOverScroll(offset: Int, state: Int) {
+        if (data?.transitionType == TransitionPageItem.NO_NEXT_CHAPTER)
+            return
+
         val progress = min(offset, 100)
         if (state == IOverScrollState.STATE_BOUNCE_BACK && releaseToLaunch) {
             viewModel.toNextChapter()

@@ -13,6 +13,8 @@ class ReaderViewModel(dataManager: DataManager, chapter: Chapter, val manga: Man
     val pages: MutableLiveData<List<ListItem>> = MutableLiveData(listOf())
     val currentChapter: MutableLiveData<Chapter> = MutableLiveData(chapter)
 
+    var currentChapterPos = manga.chapters.indexOf(chapter)
+
     init {
         loadPages()
     }
@@ -24,7 +26,12 @@ class ReaderViewModel(dataManager: DataManager, chapter: Chapter, val manga: Man
                 .fetchChapterPage(currentChapter.value?.url ?: return@launchJob)
                 .map { PageItem(it) }
                 .toMutableList()
-            pageItems.add(TransitionPageItem(TransitionPageItem.END_CURRENT))
+            val transitionItemType = if (currentChapterPos == 0) {
+                TransitionPageItem.NO_NEXT_CHAPTER
+            } else {
+                TransitionPageItem.END_CURRENT
+            }
+            pageItems.add(TransitionPageItem(transitionItemType))
             pages.value = pageItems
         }
     }
@@ -35,7 +42,7 @@ class ReaderViewModel(dataManager: DataManager, chapter: Chapter, val manga: Man
     }
 
     fun toNextChapter() {
-        val currentChapterPos = (manga.chapters.indexOf(currentChapter.value) - 1).coerceAtLeast(0)
+        currentChapterPos = (manga.chapters.indexOf(currentChapter.value) - 1).coerceAtLeast(0)
         currentChapter.value = manga.chapters[currentChapterPos]
         loadPages()
     }
