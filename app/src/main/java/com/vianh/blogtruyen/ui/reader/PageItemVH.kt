@@ -1,107 +1,79 @@
 package com.vianh.blogtruyen.ui.reader
 
-import android.content.Context
 import android.graphics.drawable.Drawable
 import android.net.Uri
-import android.view.ViewGroup
-import android.widget.FrameLayout
+import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import androidx.core.view.updateLayoutParams
 import com.bumptech.glide.RequestManager
 import com.bumptech.glide.request.transition.Transition
 import com.davemorrissey.labs.subscaleview.ImageSource
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
-import com.google.android.material.progressindicator.CircularProgressIndicator
+import com.vianh.blogtruyen.R
 import com.vianh.blogtruyen.databinding.MangaPageItemBinding
-import com.vianh.blogtruyen.ui.list.BaseVH
+import com.vianh.blogtruyen.ui.base.BaseViewHolder
 import com.vianh.blogtruyen.ui.list.ListItem
 import com.vianh.blogtruyen.ui.mangaViewer.PageLoadCallBack
 import com.vianh.blogtruyen.utils.SubsamplingScaleImageViewTarget
+import com.vianh.blogtruyen.utils.invisible
+import com.vianh.blogtruyen.utils.visible
 import timber.log.Timber
 import java.io.File
 
-class PageItemVH(val requestManager: RequestManager, binding: MangaPageItemBinding, tileSize: Int) :
-    BaseVH<MangaPageItemBinding>(binding), PageLoadCallBack<File>, SubsamplingScaleImageView.OnImageEventListener {
+class PageItemVH(
+    val binding: MangaPageItemBinding,
+    val glideRequestManager: RequestManager
+) : BaseViewHolder(binding.root), PageLoadCallBack<File> {
 
+    var loadTime = 0L
     var data: PageItem? = null
-//    val minHeight = itemView.context.resources.getDimensionPixelSize(R.dimen.app_margin)
-    lateinit var imgPage: SubsamplingScaleImageView
-    lateinit var progressBar: CircularProgressIndicator
+    private val imgTarget = SubsamplingScaleImageViewTarget(binding.page, this)
 
-    init {
-        binding.page.setMaxTileSize(tileSize)
-        binding.page.setMinimumDpi(70)
-        Timber.d("Init page VH")
+    private val scaleImageListener = object : SubsamplingScaleImageView.DefaultOnImageEventListener() {
+        override fun onImageLoaded() {
+            val currentTime = System.currentTimeMillis()
+            Timber.d("Load time $adapterPosition: ${currentTime - loadTime}")
+            binding.progressCircular.hide()
+            binding.page.visible()
+            binding.page.updateLayoutParams {
+                height = WRAP_CONTENT
+            }
+            binding.root.updateLayoutParams {
+                height = WRAP_CONTENT
+            }
+        }
     }
 
-    private val target = SubsamplingScaleImageViewTarget(binding.page, this)
-
-
     override fun onBind(item: ListItem) {
-        binding.root.updateLayoutParams {
-            height = 800
-        }
+        val boundItem = item as PageItem
         binding.progressCircular.show()
-        binding.page.setOnImageEventListener(this)
-        val page = item as PageItem
-        data = page
-        requestManager
-            .download(page.uri)
-            .into(target)
+        binding.page.setOnImageEventListener(scaleImageListener)
+        glideRequestManager
+            .download(boundItem.uri)
+            .skipMemoryCache(true)
+            .dontAnimate()
+            .dontTransform()
+            .into(imgTarget)
     }
 
     override fun onRecycle() {
-        binding.page.recycle()
+        with(binding) {
+            page.recycle()
+            page.invisible()
+            binding.root.updateLayoutParams {
+                height =
+                    itemView.context.resources.getDimensionPixelSize(R.dimen.page_item_min_height)
+            }
+            glideRequestManager.clear(imgTarget)
+        }
+        super.onRecycle()
     }
 
     override fun onResourceReady(resource: File, transition: Transition<in File>?) {
-        target.view.setImage(ImageSource.uri(Uri.fromFile(resource)))
+        loadTime = System.currentTimeMillis()
+        binding.page.setImage(ImageSource.uri(Uri.fromFile(resource)))
     }
 
-    override fun onLoadFailed(errorDrawable: Drawable?) {
-        Timber.e("Failed to load ${data?.uri}")
-    }
+    override fun onLoadFailed(errorDrawable: Drawable?) = Unit
 
-    override fun onLoadCleared(placeholder: Drawable?) {
-
-    }
-
-    override fun onReady() {
-        binding.progressCircular.hide()
-    }
-
-    override fun onImageLoaded() {
-        binding.root.updateLayoutParams {
-            height = ViewGroup.LayoutParams.WRAP_CONTENT
-        }
-        itemView.requestLayout()
-    }
-
-    override fun onPreviewLoadError(e: Exception?) {
-
-    }
-
-    override fun onImageLoadError(e: Exception?) {
-
-    }
-
-    override fun onTileLoadError(e: Exception?) {
-
-    }
-
-    override fun onPreviewReleased() {
-
-    }
-
-    companion object {
-        fun initViews(context: Context) {
-            val root = FrameLayout(context)
-            root.updateLayoutParams {
-                height = ViewGroup.LayoutParams.MATCH_PARENT
-                width = ViewGroup.LayoutParams.MATCH_PARENT
-            }
-            val imgPage = SubsamplingScaleImageView(context).apply {
-
-            }
-        }
-    }
+    override fun onLoadCleared(placeholder: Drawable?) = Unit
 }

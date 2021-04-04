@@ -4,18 +4,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.bumptech.glide.integration.recyclerview.RecyclerViewPreloader
-import com.bumptech.glide.util.ViewPreloadSizeProvider
 import com.vianh.blogtruyen.data.model.Chapter
 import com.vianh.blogtruyen.data.model.Manga
 import com.vianh.blogtruyen.databinding.ReaderFragmentBinding
 import com.vianh.blogtruyen.ui.base.BaseFragment
-import com.vianh.blogtruyen.ui.list.ListItem
 import com.vianh.blogtruyen.utils.getMaxTextureSize
 import me.everything.android.ui.overscroll.OverScrollDecoratorHelper
-import org.koin.android.ext.android.bind
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 import timber.log.Timber
@@ -80,11 +75,6 @@ class ReaderFragment : BaseFragment<ReaderFragmentBinding>() {
             readerAdapter = ReaderAdapter(requestManager, viewModel, tileSize)
             adapter = readerAdapter
             setHasFixedSize(true)
-
-            // Preload img
-            val sizeProvider = ViewPreloadSizeProvider<ListItem>()
-            val preloader = RecyclerViewPreloader(requestManager, readerAdapter!! , sizeProvider, 5)
-            addOnScrollListener(preloader)
         }
     }
 
