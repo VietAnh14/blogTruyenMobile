@@ -15,7 +15,7 @@ class HomeActivity : BaseActivityVB<HomeActivityBinding>() {
 
     override fun createBinding(): HomeActivityBinding = HomeActivityBinding.inflate(layoutInflater)
 
-    lateinit var bottomNavAnimator: ViewHeightAnimator
+    private lateinit var bottomNavAnimator: ViewHeightAnimator
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,6 +45,14 @@ class HomeActivity : BaseActivityVB<HomeActivityBinding>() {
                 setTitle(title)
             }
         }
+    }
+
+    fun hideBottomNav() {
+        bottomNavAnimator.hide()
+    }
+
+    fun showBottomNav() {
+        bottomNavAnimator.show()
     }
 
     fun changeFragment(fragment: Fragment, addToBackStack: Boolean = false, name: String? = null): Boolean {

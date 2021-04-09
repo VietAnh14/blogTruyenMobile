@@ -11,6 +11,7 @@ import com.vianh.blogtruyen.databinding.ReaderFragmentBinding
 import com.vianh.blogtruyen.ui.base.BaseFragment
 import com.vianh.blogtruyen.ui.list.ListItem
 import com.vianh.blogtruyen.utils.getMaxTextureSize
+import com.vianh.blogtruyen.views.PinchZoomItemTouchListener
 import me.everything.android.ui.overscroll.OverScrollDecoratorHelper
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
@@ -77,6 +78,8 @@ class ReaderFragment : BaseFragment<ReaderFragmentBinding>() {
             adapter = readerAdapter
             setHasFixedSize(true)
         }
+
+        hostActivity?.hideBottomNav()
     }
 
     override fun onDestroyView() {

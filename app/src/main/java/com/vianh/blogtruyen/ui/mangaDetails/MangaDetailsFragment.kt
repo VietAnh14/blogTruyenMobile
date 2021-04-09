@@ -53,7 +53,7 @@ class MangaDetailsFragment : BaseFragment<MangaDetailsFragmentBinding>() {
                 }
             }.attach()
         }
-        (activity as HomeActivity).bottomNavAnimator.hide()
+        hostActivity?.hideBottomNav()
     }
 
     fun getManga(): Manga {

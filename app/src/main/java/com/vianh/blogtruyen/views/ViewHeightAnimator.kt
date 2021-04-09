@@ -24,6 +24,7 @@ class ViewHeightAnimator(val view: View) {
 
 
     fun hide(duration: Long = 250, interpolator: Interpolator = AccelerateDecelerateInterpolator()) {
+        if (height == 0) return
         view.animate()
             .translationY(height.toFloat())
             .setInterpolator(interpolator)
@@ -32,6 +33,7 @@ class ViewHeightAnimator(val view: View) {
     }
 
     fun show(duration: Long = 250, interpolator: Interpolator = AccelerateDecelerateInterpolator()) {
+        if (height > 0) return
         view.animate()
             .translationY(0f)
             .setInterpolator(interpolator)
