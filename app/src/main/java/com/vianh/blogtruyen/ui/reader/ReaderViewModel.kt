@@ -4,11 +4,11 @@ import androidx.lifecycle.MutableLiveData
 import com.vianh.blogtruyen.data.DataManager
 import com.vianh.blogtruyen.data.model.Chapter
 import com.vianh.blogtruyen.data.model.Manga
-import com.vianh.blogtruyen.ui.base.BaseViewModel
+import com.vianh.blogtruyen.ui.base.BaseVM
 import com.vianh.blogtruyen.ui.list.ListItem
 import com.vianh.blogtruyen.ui.list.LoadingItem
 
-class ReaderViewModel(dataManager: DataManager, chapter: Chapter, val manga: Manga): BaseViewModel(dataManager) {
+class ReaderViewModel(private val dataManager: DataManager, chapter: Chapter, val manga: Manga): BaseVM() {
 
     val pages: MutableLiveData<List<ListItem>> = MutableLiveData(listOf())
     val currentChapter: MutableLiveData<Chapter> = MutableLiveData(chapter)

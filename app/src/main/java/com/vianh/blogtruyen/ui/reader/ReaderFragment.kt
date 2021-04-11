@@ -10,6 +10,7 @@ import com.vianh.blogtruyen.data.model.Manga
 import com.vianh.blogtruyen.databinding.ReaderFragmentBinding
 import com.vianh.blogtruyen.ui.base.BaseFragment
 import com.vianh.blogtruyen.ui.list.ListItem
+import com.vianh.blogtruyen.utils.PreCacheLayoutManager
 import com.vianh.blogtruyen.utils.getMaxTextureSize
 import com.vianh.blogtruyen.views.PinchZoomItemTouchListener
 import me.everything.android.ui.overscroll.OverScrollDecoratorHelper
@@ -51,7 +52,7 @@ class ReaderFragment : BaseFragment<ReaderFragmentBinding>() {
         viewModel.pages.observe(viewLifecycleOwner, {
             readerAdapter?.setPages(it)
         })
-        viewModel.error().observe(viewLifecycleOwner, {
+        viewModel.error.observe(viewLifecycleOwner, {
             Timber.e(it)
             showToast(it.message)
         })
@@ -59,6 +60,7 @@ class ReaderFragment : BaseFragment<ReaderFragmentBinding>() {
 
     private fun setup() {
         with(requireBinding.readerRecycler) {
+            layoutManager = PreCacheLayoutManager(context)
             val overScrollDecor = OverScrollDecoratorHelper.setUpOverScroll(
                 this,
                 OverScrollDecoratorHelper.ORIENTATION_VERTICAL

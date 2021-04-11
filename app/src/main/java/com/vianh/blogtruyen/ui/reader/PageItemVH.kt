@@ -12,27 +12,23 @@ import com.vianh.blogtruyen.R
 import com.vianh.blogtruyen.databinding.MangaPageItemBinding
 import com.vianh.blogtruyen.ui.base.BaseViewHolder
 import com.vianh.blogtruyen.ui.list.ListItem
-import com.vianh.blogtruyen.ui.mangaViewer.PageLoadCallBack
 import com.vianh.blogtruyen.utils.SubsamplingScaleImageViewTarget
+import com.vianh.blogtruyen.utils.gone
 import com.vianh.blogtruyen.utils.invisible
 import com.vianh.blogtruyen.utils.visible
-import timber.log.Timber
 import java.io.File
 
 class PageItemVH(
     val binding: MangaPageItemBinding,
-    val glideRequestManager: RequestManager
+    private val glideRequestManager: RequestManager
 ) : BaseViewHolder(binding.root), PageLoadCallBack<File> {
 
-    var loadTime = 0L
     var data: PageItem? = null
     private val imgTarget = SubsamplingScaleImageViewTarget(binding.page, this)
 
     private val scaleImageListener = object : SubsamplingScaleImageView.DefaultOnImageEventListener() {
         override fun onImageLoaded() {
-            val currentTime = System.currentTimeMillis()
-            Timber.d("Load time $adapterPosition: ${currentTime - loadTime}")
-            binding.progressCircular.hide()
+            binding.progressCircular.gone()
             binding.page.visible()
             binding.page.updateLayoutParams {
                 height = WRAP_CONTENT
@@ -45,7 +41,8 @@ class PageItemVH(
 
     override fun onBind(item: ListItem) {
         val boundItem = item as PageItem
-        binding.progressCircular.show()
+        data = boundItem
+        binding.progressCircular.visible()
         binding.page.setOnImageEventListener(scaleImageListener)
         glideRequestManager
             .download(boundItem.uri)
@@ -69,7 +66,6 @@ class PageItemVH(
     }
 
     override fun onResourceReady(resource: File, transition: Transition<in File>?) {
-        loadTime = System.currentTimeMillis()
         binding.page.setImage(ImageSource.uri(Uri.fromFile(resource)))
     }
 

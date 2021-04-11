@@ -1,4 +1,4 @@
-package com.vianh.blogtruyen.ui.mangaViewer
+package com.vianh.blogtruyen.ui.reader
 
 import android.graphics.drawable.Drawable
 import com.bumptech.glide.request.transition.Transition

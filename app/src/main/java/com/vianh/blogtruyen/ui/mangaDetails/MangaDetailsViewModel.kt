@@ -5,11 +5,11 @@ import com.vianh.blogtruyen.data.DataManager
 import com.vianh.blogtruyen.data.model.Chapter
 import com.vianh.blogtruyen.data.model.Comment
 import com.vianh.blogtruyen.data.model.Manga
-import com.vianh.blogtruyen.ui.base.BaseViewModel
+import com.vianh.blogtruyen.ui.base.BaseVM
 import kotlinx.coroutines.Job
 
-class MangaDetailsViewModel(dataManager: DataManager, var manga: Manga) :
-    BaseViewModel(dataManager) {
+class MangaDetailsViewModel(private val dataManager: DataManager, var manga: Manga) :
+    BaseVM() {
     val mangaLiveData: MutableLiveData<Manga> = MutableLiveData(manga)
     val chapters: MutableLiveData<List<Chapter>> = MutableLiveData(listOf())
     val comments: MutableLiveData<List<Comment>> = MutableLiveData(listOf())
