@@ -19,11 +19,11 @@ class ChapterPageFragment : BaseFragment<ChapterPageFragmentBinding>(), ChapterV
         savedInstanceState: Bundle?
     ): ChapterPageFragmentBinding = ChapterPageFragmentBinding.inflate(inflater, container, false)
 
-    val viewModel by sharedViewModel<MangaDetailsViewModel>(
+    private val viewModel by sharedViewModel<MangaDetailsViewModel>(
         owner = {
             ViewModelOwner.from(
                 requireParentFragment(),
-                parentFragment
+                requireParentFragment()
             )
         }
     )

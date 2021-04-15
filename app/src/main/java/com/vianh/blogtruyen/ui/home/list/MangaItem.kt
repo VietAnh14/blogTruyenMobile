@@ -1,4 +1,4 @@
-package com.vianh.blogtruyen.ui.home
+package com.vianh.blogtruyen.ui.home.list
 
 import com.vianh.blogtruyen.data.model.Manga
 import com.vianh.blogtruyen.ui.list.ListItem

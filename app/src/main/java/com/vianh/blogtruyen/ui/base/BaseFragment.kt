@@ -3,6 +3,7 @@ package com.vianh.blogtruyen.ui.base
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
@@ -38,6 +39,14 @@ abstract class BaseFragment<B : ViewBinding> : Fragment() {
     override fun onDestroyView() {
         binding = null
         super.onDestroyView()
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == android.R.id.home) {
+            hostActivity?.navigateUp()
+            return true
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     fun setupToolbar(toolbar: Toolbar) {

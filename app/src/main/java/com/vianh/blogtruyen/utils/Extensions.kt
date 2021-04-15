@@ -2,9 +2,7 @@ package com.vianh.blogtruyen.utils
 
 import android.view.Gravity
 import android.view.View
-import android.view.Window
 import okhttp3.Call
-import okhttp3.Response
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
@@ -32,14 +30,14 @@ suspend fun <T> Call.suspendGetResult(): T {
 
 fun Call.extractData(): String {
     val response = execute()
-    if (response.isSuccessful && response.body != null) {
-        val content = response.body!!.string()
-        response.body?.close()
-        return content
-    } else {
-        throw HttpError(response.code, response.message).also {
-            response.body?.close()
+    try {
+        if (response.isSuccessful && response.body != null) {
+            return response.body!!.string()
+        } else {
+            throw HttpError(response.code, response.message)
         }
+    } finally {
+        response.close()
     }
 }
 

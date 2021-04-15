@@ -9,10 +9,10 @@ import com.vianh.blogtruyen.data.model.Chapter
 import com.vianh.blogtruyen.data.model.Manga
 import com.vianh.blogtruyen.databinding.ReaderFragmentBinding
 import com.vianh.blogtruyen.ui.base.BaseFragment
-import com.vianh.blogtruyen.ui.list.ListItem
+import com.vianh.blogtruyen.ui.reader.list.ReaderAdapter
+import com.vianh.blogtruyen.ui.reader.list.TransitionPageVH
 import com.vianh.blogtruyen.utils.PreCacheLayoutManager
 import com.vianh.blogtruyen.utils.getMaxTextureSize
-import com.vianh.blogtruyen.views.PinchZoomItemTouchListener
 import me.everything.android.ui.overscroll.OverScrollDecoratorHelper
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
@@ -39,7 +39,6 @@ class ReaderFragment : BaseFragment<ReaderFragmentBinding>() {
         }
     }
 
-
     var readerAdapter: ReaderAdapter? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -59,6 +58,8 @@ class ReaderFragment : BaseFragment<ReaderFragmentBinding>() {
     }
 
     private fun setup() {
+        hostActivity?.hideSystemUI()
+
         with(requireBinding.readerRecycler) {
             layoutManager = PreCacheLayoutManager(context)
             val overScrollDecor = OverScrollDecoratorHelper.setUpOverScroll(
@@ -87,6 +88,11 @@ class ReaderFragment : BaseFragment<ReaderFragmentBinding>() {
     override fun onDestroyView() {
         readerAdapter = null
         super.onDestroyView()
+    }
+
+    override fun onDestroy() {
+        hostActivity?.showSystemUI()
+        super.onDestroy()
     }
 
     companion object {

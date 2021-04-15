@@ -4,6 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import com.vianh.blogtruyen.data.DataManager
 import com.vianh.blogtruyen.data.model.Manga
 import com.vianh.blogtruyen.ui.base.BaseVM
+import com.vianh.blogtruyen.ui.home.list.MangaItem
 import com.vianh.blogtruyen.ui.list.ListItem
 import com.vianh.blogtruyen.utils.SingleLiveEvent
 

@@ -17,6 +17,7 @@
         <item name="searchViewStyle">@style/SearchViewTheme</item>
         <item name="android:textColorHint">@color/darkGray</item>
         <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
     </style>
 
     <style name="SearchViewTheme" parent="Widget.AppCompat.SearchView">

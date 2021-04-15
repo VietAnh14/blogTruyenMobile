@@ -1,4 +1,4 @@
-package com.vianh.blogtruyen.ui.home
+package com.vianh.blogtruyen.ui.home.list
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -9,7 +9,9 @@ import com.vianh.blogtruyen.ui.list.BaseVH
 import com.vianh.blogtruyen.ui.list.ListItem
 import java.lang.IllegalArgumentException
 
-class MangaFeedAdapter(val onItemClick: MangaItemVH.MangaClick): ListAdapter<ListItem, BaseVH<*>>(DiffCallback()) {
+class MangaFeedAdapter(val onItemClick: MangaItemVH.MangaClick): ListAdapter<ListItem, BaseVH<*>>(
+    DiffCallback()
+) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseVH<*> {
         val inflater = LayoutInflater.from(parent.context)

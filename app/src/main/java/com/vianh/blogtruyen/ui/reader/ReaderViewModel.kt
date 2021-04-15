@@ -7,6 +7,8 @@ import com.vianh.blogtruyen.data.model.Manga
 import com.vianh.blogtruyen.ui.base.BaseVM
 import com.vianh.blogtruyen.ui.list.ListItem
 import com.vianh.blogtruyen.ui.list.LoadingItem
+import com.vianh.blogtruyen.ui.reader.list.PageItem
+import com.vianh.blogtruyen.ui.reader.list.TransitionPageItem
 
 class ReaderViewModel(private val dataManager: DataManager, chapter: Chapter, val manga: Manga): BaseVM() {
 

@@ -1,8 +1,9 @@
-package com.vianh.blogtruyen.ui.reader
+package com.vianh.blogtruyen.ui.reader.list
 
 import com.vianh.blogtruyen.databinding.TransitionPageBinding
 import com.vianh.blogtruyen.ui.list.BaseVH
 import com.vianh.blogtruyen.ui.list.ListItem
+import com.vianh.blogtruyen.ui.reader.ReaderViewModel
 import com.vianh.blogtruyen.utils.gone
 import com.vianh.blogtruyen.utils.visible
 import me.everything.android.ui.overscroll.IOverScrollState

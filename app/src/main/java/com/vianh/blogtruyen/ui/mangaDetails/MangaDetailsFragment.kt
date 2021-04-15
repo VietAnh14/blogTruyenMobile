@@ -56,7 +56,7 @@ class MangaDetailsFragment : BaseFragment<MangaDetailsFragmentBinding>() {
         hostActivity?.hideBottomNav()
     }
 
-    fun getManga(): Manga {
+    private fun getManga(): Manga {
         val manga: Manga? = arguments?.getParcelable(MANGA_BUNDLE_KEY)
         return if (manga == null) {
             showToast("Failed to get manga details :(")

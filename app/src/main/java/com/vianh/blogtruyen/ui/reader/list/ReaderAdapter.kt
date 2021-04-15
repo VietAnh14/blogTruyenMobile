@@ -1,4 +1,4 @@
-package com.vianh.blogtruyen.ui.reader
+package com.vianh.blogtruyen.ui.reader.list
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -10,6 +10,7 @@ import com.vianh.blogtruyen.databinding.MangaPageItemBinding
 import com.vianh.blogtruyen.databinding.TransitionPageBinding
 import com.vianh.blogtruyen.ui.base.BaseViewHolder
 import com.vianh.blogtruyen.ui.list.ListItem
+import com.vianh.blogtruyen.ui.reader.ReaderViewModel
 import timber.log.Timber
 import java.io.File
 

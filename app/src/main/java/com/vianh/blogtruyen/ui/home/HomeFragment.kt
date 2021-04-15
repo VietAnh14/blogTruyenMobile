@@ -4,11 +4,13 @@ import android.app.SearchManager
 import android.content.Context
 import android.os.Bundle
 import android.view.*
-import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import com.vianh.blogtruyen.R
 import com.vianh.blogtruyen.databinding.HomeFragmentBinding
 import com.vianh.blogtruyen.ui.base.BaseFragment
+import com.vianh.blogtruyen.ui.home.list.MangaFeedAdapter
+import com.vianh.blogtruyen.ui.home.list.MangaItem
+import com.vianh.blogtruyen.ui.home.list.MangaItemVH
 import com.vianh.blogtruyen.ui.list.ListItem
 import com.vianh.blogtruyen.ui.mangaDetails.MangaDetailsFragment
 import com.vianh.blogtruyen.utils.GridItemSpacingDecorator

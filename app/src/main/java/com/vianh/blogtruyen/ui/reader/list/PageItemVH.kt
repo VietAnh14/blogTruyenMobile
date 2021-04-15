@@ -1,4 +1,4 @@
-package com.vianh.blogtruyen.ui.reader
+package com.vianh.blogtruyen.ui.reader.list
 
 import android.graphics.drawable.Drawable
 import android.net.Uri

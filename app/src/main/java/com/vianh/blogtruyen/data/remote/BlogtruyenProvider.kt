@@ -1,6 +1,5 @@
 package com.vianh.blogtruyen.data.remote
 
-import android.util.Log
 import com.vianh.blogtruyen.BuildConfig
 import com.vianh.blogtruyen.data.model.Chapter
 import com.vianh.blogtruyen.data.model.Comment
@@ -12,17 +11,17 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.json.JSONArray
 import org.jsoup.Jsoup
-import org.jsoup.nodes.Element
 import org.jsoup.select.Elements
-import org.jsoup.select.Evaluator
 import timber.log.Timber
 import java.util.*
 import kotlin.collections.ArrayList
 
-class BlogtruyenProvider(val client: OkHttpClient) : MangaProvider {
+class BlogtruyenProvider(private val client: OkHttpClient) : MangaProvider {
 
-    val AJAX_LOAD_CHAPTER = BuildConfig.HOST + "/Chapter/LoadListChapter"
-    val AJAX_LOAD_COMMENT = BuildConfig.HOST + "/Comment/AjaxLoadComment"
+    companion object {
+        private const val AJAX_LOAD_CHAPTER = BuildConfig.HOST + "/Chapter/LoadListChapter"
+        private const val AJAX_LOAD_COMMENT = BuildConfig.HOST + "/Comment/AjaxLoadComment"
+    }
 
     override suspend fun fetchNewManga(pageNumber: Int): MutableList<Manga> {
         return withContext(Dispatchers.IO) {
@@ -122,7 +121,7 @@ class BlogtruyenProvider(val client: OkHttpClient) : MangaProvider {
         return result
     }
 
-    fun parseSubComment(elements: Elements): List<Comment> {
+    private fun parseSubComment(elements: Elements): List<Comment> {
         val comments = ArrayList<Comment>()
         for (subComment in elements) {
             val avatar = subComment.getElementsByClass("img-avatar")
@@ -166,14 +165,13 @@ class BlogtruyenProvider(val client: OkHttpClient) : MangaProvider {
         return result
     }
 
-    fun parseDetailManga(html: String, manga: Manga): Manga {
+    private fun parseDetailManga(html: String, manga: Manga): Manga {
         val doc = Jsoup.parse(html)
         val details = doc.getElementsByClass("manga-detail")[0]
         val title = details.getElementsByClass("title")[0].text()
         val image = details.getElementsByClass("content")[0].child(0).attr("src")
         val id = details.getElementById("MangaId").attr("value").toInt()
         val description = details.getElementsByClass("introduce")[0].text()
-        Log.d("Fetch detail done", System.currentTimeMillis().toString())
         return manga.copy(
             id = id,
             title = title,
@@ -182,7 +180,7 @@ class BlogtruyenProvider(val client: OkHttpClient) : MangaProvider {
         )
     }
 
-    fun parseManga(html: String): MutableList<Manga> {
+    private fun parseManga(html: String): MutableList<Manga> {
         val items = Jsoup.parse(html).getElementsByClass("ps-relative")
         val listManga = mutableListOf<Manga>()
         for (item in items) {
@@ -203,7 +201,7 @@ class BlogtruyenProvider(val client: OkHttpClient) : MangaProvider {
         return listManga
     }
 
-    fun parseChapter(html: String): List<String> {
+    private fun parseChapter(html: String): List<String> {
         val images = mutableListOf<String>()
         val doc = Jsoup.parse(html)
         val content = doc.getElementById("content")

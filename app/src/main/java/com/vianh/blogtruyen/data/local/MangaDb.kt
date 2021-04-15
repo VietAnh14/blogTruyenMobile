@@ -38,20 +38,6 @@ abstract class MangaDb : RoomDatabase() {
         }
 
         fun provideDb(context: Context): MangaDb {
-            // Todo: finish this list
-            val categories: List<Category> by lazy {
-                listOf(
-                    Category("action", "Action", "/theloai/action"),
-                    Category("Adventure", "Adventure", "/theloai/adventure"),
-                    Category("Comedy", "Comedy", "/theloai/comedy"),
-                    Category("Shounnen", "Shounen", "/theloai/shounen"),
-                    Category("Magic", "Magic", "/theloai/magic"),
-                    Category("Fantasy", "Fantasy", "/theloai/adventure/fantasy-new"),
-                    Category("Manga", "Manga", "/theloai/manga"),
-                    Category("FullColor", "Full màu", "/theloai/full-mau")
-                )
-            }
-
             var mangaDb: MangaDb? = null
             val callback = object: RoomDatabase.Callback() {
                 override fun onCreate(db: SupportSQLiteDatabase) {

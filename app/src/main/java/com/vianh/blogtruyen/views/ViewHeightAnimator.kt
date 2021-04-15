@@ -4,6 +4,8 @@ import android.view.View
 import android.view.ViewTreeObserver
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.Interpolator
+import com.vianh.blogtruyen.utils.gone
+import com.vianh.blogtruyen.utils.visible
 
 class ViewHeightAnimator(val view: View) {
     var height = 0
@@ -24,16 +26,18 @@ class ViewHeightAnimator(val view: View) {
 
 
     fun hide(duration: Long = 250, interpolator: Interpolator = AccelerateDecelerateInterpolator()) {
-        if (height == 0) return
         view.animate()
             .translationY(height.toFloat())
             .setInterpolator(interpolator)
+            .withEndAction {
+                view.gone()
+            }
             .setDuration(duration)
             .start()
     }
 
     fun show(duration: Long = 250, interpolator: Interpolator = AccelerateDecelerateInterpolator()) {
-        if (height > 0) return
+        view.visible()
         view.animate()
             .translationY(0f)
             .setInterpolator(interpolator)

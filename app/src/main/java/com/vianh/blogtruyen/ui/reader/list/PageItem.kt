@@ -1,4 +1,4 @@
-package com.vianh.blogtruyen.ui.reader
+package com.vianh.blogtruyen.ui.reader.list
 
 import com.vianh.blogtruyen.ui.list.ListItem
 
