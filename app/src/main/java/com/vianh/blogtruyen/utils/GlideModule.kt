@@ -13,10 +13,15 @@ import com.bumptech.glide.module.AppGlideModule
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.signature.ObjectKey
 import com.vianh.blogtruyen.data.remote.BlogtruyenProvider
+import okhttp3.OkHttpClient
+import org.koin.core.component.KoinApiExtension
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 import java.io.InputStream
 
+@KoinApiExtension
 @GlideModule
-class GlideModule : AppGlideModule() {
+class GlideModule : AppGlideModule(), KoinComponent {
     override fun applyOptions(context: Context, builder: GlideBuilder) {
         super.applyOptions(context, builder)
         builder.apply {
@@ -29,7 +34,7 @@ class GlideModule : AppGlideModule() {
     }
 
     override fun registerComponents(context: Context, glide: Glide, registry: Registry) {
-        val client = BlogtruyenProvider.client
+        val client by inject<OkHttpClient>()
         registry.replace(
             GlideUrl::class.java,
             InputStream::class.java,

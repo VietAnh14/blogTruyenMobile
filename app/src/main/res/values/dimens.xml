@@ -3,4 +3,7 @@
     <dimen name="app_margin">15dp</dimen>
     <dimen name="small_margin">5dp</dimen>
     <dimen name="progress_bar_height">50dp</dimen>
+    <dimen name="comment_margin">10dp</dimen>
+    <dimen name="reply_comment_margin">30dp</dimen>
+    <dimen name="page_item_min_height">300dp</dimen>
 </resources>

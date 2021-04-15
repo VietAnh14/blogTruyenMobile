@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item android:id="@+id/home_menu"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/home_menu_bg"
+        android:title="@string/home_menu" />
+
+    <item android:id="@+id/history"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/ic_history_24"
+        android:title="@string/history" />
+
+    <item android:id="@+id/bookmarks"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/ic_bookmarks_24"
+        android:title="@string/bookmarks" />
+</menu>

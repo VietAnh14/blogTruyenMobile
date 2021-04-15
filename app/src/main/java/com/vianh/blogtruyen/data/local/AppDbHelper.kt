@@ -1,13 +1,11 @@
 package com.vianh.blogtruyen.data.local
 
-import com.vianh.blogtruyen.data.model.Category
-import com.vianh.blogtruyen.data.model.Chapter
-import com.vianh.blogtruyen.data.model.Manga
-import com.vianh.blogtruyen.data.model.MangaWithCategories
+import com.vianh.blogtruyen.data.local.entity.Category
+import com.vianh.blogtruyen.data.local.entity.Chapter
+import com.vianh.blogtruyen.data.local.entity.Manga
+import com.vianh.blogtruyen.data.local.entity.MangaWithCategories
 
-object AppDbHelper: DbHelper {
-
-    private val db by lazy { MangaDb.db }
+class AppDbHelper(val db: MangaDb): DbHelper {
 
     override suspend fun insertManga(manga: Manga) {
         db.mangaDao().insertManga(manga)

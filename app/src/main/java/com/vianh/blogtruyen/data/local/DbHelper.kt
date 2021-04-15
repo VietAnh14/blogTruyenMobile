@@ -1,6 +1,6 @@
 package com.vianh.blogtruyen.data.local
 
-import com.vianh.blogtruyen.data.model.*
+import com.vianh.blogtruyen.data.local.entity.*
 
 interface DbHelper {
     suspend fun insertManga(manga: Manga)

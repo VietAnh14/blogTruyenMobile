@@ -1,46 +1,41 @@
 package com.vianh.blogtruyen.data.remote
 
-import android.util.Log
 import com.vianh.blogtruyen.BuildConfig
-import com.vianh.blogtruyen.MvvmApp
 import com.vianh.blogtruyen.data.model.Chapter
+import com.vianh.blogtruyen.data.model.Comment
 import com.vianh.blogtruyen.data.model.Manga
-import com.vianh.blogtruyen.utils.BlogTruyenInterceptor
 import com.vianh.blogtruyen.utils.extractData
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import okhttp3.Cache
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.json.JSONArray
 import org.jsoup.Jsoup
 import org.jsoup.select.Elements
-import java.io.File
-import java.lang.ArithmeticException
+import timber.log.Timber
+import java.util.*
+import kotlin.collections.ArrayList
 
-object BlogtruyenProvider : MangaProvider {
+class BlogtruyenProvider(private val client: OkHttpClient) : MangaProvider {
 
-    val client by lazy {
-        OkHttpClient.Builder().cache(
-            // 5 Mb cache
-            Cache(File(MvvmApp.app.cacheDir, "http_cache"), 40 * 1024 * 1024)
-        ).addInterceptor(BlogTruyenInterceptor()).build()
+    companion object {
+        private const val AJAX_LOAD_CHAPTER = BuildConfig.HOST + "/Chapter/LoadListChapter"
+        private const val AJAX_LOAD_COMMENT = BuildConfig.HOST + "/Comment/AjaxLoadComment"
     }
-    const val AJAX_LOAD_CHAPTER = BuildConfig.HOST + "/Chapter/LoadListChapter"
 
     override suspend fun fetchNewManga(pageNumber: Int): MutableList<Manga> {
-        val url = BuildConfig.HOST + "/thumb-$pageNumber"
-        val request = Request.Builder().url(url).build()
         return withContext(Dispatchers.IO) {
+            val url = BuildConfig.HOST + "/thumb-$pageNumber"
+            val request = Request.Builder().url(url).build()
             val response = client.newCall(request).extractData()
             parseManga(response)
         }
     }
 
     override suspend fun fetchDetailManga(manga: Manga): Manga {
-        val url = BuildConfig.HOST + manga.link
-        val request = Request.Builder().url(url).build()
         return withContext(Dispatchers.IO) {
+            val url = BuildConfig.HOST + manga.link
+            val request = Request.Builder().url(url).build()
             val response = client.newCall(request).extractData()
             parseDetailManga(response, manga)
         }
@@ -52,7 +47,7 @@ object BlogtruyenProvider : MangaProvider {
             var lastPage: Int
             var currentPage = 1
             do {
-                val url = "$AJAX_LOAD_CHAPTER?id=${manga.mangaId}&p=${currentPage}"
+                val url = "$AJAX_LOAD_CHAPTER?id=${manga.id}&p=${currentPage}"
                 val request = Request.Builder().url(url).build()
                 val response = client.newCall(request).extractData()
                 val docs = Jsoup.parse(response)
@@ -63,10 +58,10 @@ object BlogtruyenProvider : MangaProvider {
                     1
                 }
                 val items = docs.getElementById("listChapter").children()
-                result.addAll(parseSingleListChapter(items, manga.mangaId))
+                result.addAll(parseSingleListChapter(items, manga.id))
                 currentPage++
             } while (lastPage >= currentPage)
-            Log.d("Fetch chapter list done", System.currentTimeMillis().toString())
+            Timber.d(System.currentTimeMillis().toString())
             return@withContext result
         }
     }
@@ -80,6 +75,79 @@ object BlogtruyenProvider : MangaProvider {
         }
     }
 
+    override suspend fun fetchComment(mangaId: Int, offset: Int): Map<Comment, List<Comment>> {
+        return withContext(Dispatchers.IO) {
+            val uri = "$AJAX_LOAD_COMMENT?mangaId=$mangaId&p=$offset"
+            val request = Request.Builder().url(uri).build()
+            val content = client.newCall(request).extractData()
+            parseComment(content)
+        }
+    }
+
+    private fun parseComment(html: String): Map<Comment, List<Comment>> {
+        val doc = Jsoup.parse(html)
+        val commentSessions = doc.getElementsByClass("ul-comment")
+        val result = LinkedHashMap<Comment, List<Comment>>()
+        for (session in commentSessions) {
+            val avatar = session
+                .child(0)
+                .child(0)
+                .getElementsByClass("img-avatar")
+                .attr("src")
+            val commentContent = session
+                .getElementsByClass("c-content")
+                .first()
+            val userName = commentContent.getElementsByClass("user")
+                .first()
+                .firstElementSibling()
+                .text()
+            val time = commentContent.getElementsByClass("time")
+                .first()
+                .text()
+            val message = commentContent.getElementsByClass("commment-content")
+                .first()
+                .text()
+            val subCommentsSession = session.getElementsByClass("sub-c-item")
+            val subComments = parseSubComment(subCommentsSession)
+            val rootComment = Comment(
+                userName = userName,
+                avatar = avatar,
+                message = message,
+                time = time,
+                type = Comment.TOP
+            )
+            result[rootComment] = subComments
+        }
+        return result
+    }
+
+    private fun parseSubComment(elements: Elements): List<Comment> {
+        val comments = ArrayList<Comment>()
+        for (subComment in elements) {
+            val avatar = subComment.getElementsByClass("img-avatar")
+                .first().attr("src")
+            val userName = subComment.getElementsByClass("user")
+                .first()
+                .text()
+            val time = subComment.getElementsByClass("time")
+                .first()
+                .text()
+            val message = subComment.getElementsByClass("commment-content")
+                .first()
+                .text()
+
+            val comment = Comment(
+                userName = userName,
+                avatar = avatar,
+                message = message,
+                time = time,
+                type = Comment.REPLY
+            )
+            comments.add(comment)
+        }
+        return comments
+    }
+
     private fun parseSingleListChapter(items: Elements, mangaId: Int): List<Chapter> {
         val result: MutableList<Chapter> = mutableListOf()
         for (element in items) {
@@ -87,23 +155,32 @@ object BlogtruyenProvider : MangaProvider {
             val title = row.child(0).child(0).text()
             val link = row.child(0).child(0).attr("href")
             val id = link.split('/')[1]
-            result.add(Chapter(link, title, id, mangaId))
+            result.add(Chapter(
+                id = id,
+                name = title,
+                url = link,
+                mangaId = mangaId.toString()
+            ))
         }
         return result
     }
 
-    fun parseDetailManga(html: String, manga: Manga): Manga {
+    private fun parseDetailManga(html: String, manga: Manga): Manga {
         val doc = Jsoup.parse(html)
         val details = doc.getElementsByClass("manga-detail")[0]
         val title = details.getElementsByClass("title")[0].text()
         val image = details.getElementsByClass("content")[0].child(0).attr("src")
         val id = details.getElementById("MangaId").attr("value").toInt()
         val description = details.getElementsByClass("introduce")[0].text()
-        Log.d("Fetch detail done", System.currentTimeMillis().toString())
-        return Manga(image, manga.link, title, manga.uploadTitle, description, id)
+        return manga.copy(
+            id = id,
+            title = title,
+            description = description,
+            imageUrl = image
+        )
     }
 
-    fun parseManga(html: String): MutableList<Manga> {
+    private fun parseManga(html: String): MutableList<Manga> {
         val items = Jsoup.parse(html).getElementsByClass("ps-relative")
         val listManga = mutableListOf<Manga>()
         for (item in items) {
@@ -116,14 +193,15 @@ object BlogtruyenProvider : MangaProvider {
                 link = link,
                 uploadTitle = title.text(),
                 title = title.text(),
-                mangaId = id
+                id = id,
+                description = "Updating"
             )
             listManga.add(manga)
         }
         return listManga
     }
 
-    fun parseChapter(html: String): List<String> {
+    private fun parseChapter(html: String): List<String> {
         val images = mutableListOf<String>()
         val doc = Jsoup.parse(html)
         val content = doc.getElementById("content")
