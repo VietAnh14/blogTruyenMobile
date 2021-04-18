@@ -9,6 +9,7 @@ import com.vianh.blogtruyen.ui.list.ListItem
 import com.vianh.blogtruyen.ui.list.LoadingItem
 import com.vianh.blogtruyen.ui.reader.list.PageItem
 import com.vianh.blogtruyen.ui.reader.list.TransitionPageItem
+import timber.log.Timber
 
 class ReaderViewModel(private val dataManager: DataManager, chapter: Chapter, val manga: Manga): BaseVM() {
 
@@ -18,6 +19,7 @@ class ReaderViewModel(private val dataManager: DataManager, chapter: Chapter, va
     var currentChapterPos = manga.chapters.indexOf(chapter)
 
     init {
+        Timber.e("Chapter size: ${manga.chapters.size}")
         loadPages()
     }
 

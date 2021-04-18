@@ -14,6 +14,7 @@ import com.vianh.blogtruyen.ui.reader.list.TransitionPageVH
 import com.vianh.blogtruyen.utils.PreCacheLayoutManager
 import com.vianh.blogtruyen.utils.getMaxTextureSize
 import me.everything.android.ui.overscroll.OverScrollDecoratorHelper
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 import timber.log.Timber

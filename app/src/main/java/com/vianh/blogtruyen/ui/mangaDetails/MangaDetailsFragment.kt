@@ -22,7 +22,7 @@ class MangaDetailsFragment : BaseFragment<MangaDetailsFragmentBinding>() {
         savedInstanceState: Bundle?
     ): MangaDetailsFragmentBinding = MangaDetailsFragmentBinding.inflate(inflater, container, false)
 
-    val viewModel by viewModel<MangaDetailsViewModel> { parametersOf(getManga()) }
+    private val viewModel by viewModel<MangaDetailsViewModel> { parametersOf(getManga()) }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

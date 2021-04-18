@@ -13,15 +13,16 @@ class MangaDetailsViewModel(private val dataManager: DataManager, var manga: Man
     val mangaLiveData: MutableLiveData<Manga> = MutableLiveData(manga)
     val chapters: MutableLiveData<List<Chapter>> = MutableLiveData(listOf())
     val comments: MutableLiveData<List<Comment>> = MutableLiveData(listOf())
-    var commentPage = 1
-    var hasNextCommentPage = true
-    var commentJob: Job? = null
+
+    private var commentPage = 1
+    private var hasNextCommentPage = true
+    private var commentJob: Job? = null
 
     init {
         loadDetails()
     }
 
-    fun loadDetails() {
+    private fun loadDetails() {
         launchLoading {
             val detailsManga = dataManager.mangaProvider.fetchDetailManga(manga)
             manga = detailsManga
@@ -38,7 +39,7 @@ class MangaDetailsViewModel(private val dataManager: DataManager, var manga: Man
     }
 
     fun loadComments(offset: Int = commentPage) {
-        if (commentJob?.isCompleted == false) {
+        if (commentJob?.isCompleted == false || !hasNextCommentPage) {
             return
         }
         commentJob = launchJob {

@@ -5,12 +5,14 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
 import com.bumptech.glide.request.FutureTarget
+import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
 import com.vianh.blogtruyen.databinding.LoadingPageItemBinding
 import com.vianh.blogtruyen.databinding.MangaPageItemBinding
 import com.vianh.blogtruyen.databinding.TransitionPageBinding
 import com.vianh.blogtruyen.ui.base.BaseViewHolder
 import com.vianh.blogtruyen.ui.list.ListItem
 import com.vianh.blogtruyen.ui.reader.ReaderViewModel
+import com.vianh.blogtruyen.utils.SubsamplingScaleImageViewTarget
 import timber.log.Timber
 import java.io.File
 
@@ -55,9 +57,11 @@ class ReaderAdapter(
         val inflater = LayoutInflater.from(parent.context)
         return when (viewType) {
             ListItem.PAGE_ITEM -> {
-                Timber.e("Create page view holder")
                 val binding = MangaPageItemBinding.inflate(inflater, parent, false)
                 binding.page.setMaxTileSize(tileSize)
+                binding.page.setMinimumScaleType(SubsamplingScaleImageView.SCALE_TYPE_CENTER_CROP)
+                binding.page.setMinimumDpi(90)
+                binding.page.setMinimumTileDpi(180)
                 PageItemVH(binding, requestManager)
             }
 

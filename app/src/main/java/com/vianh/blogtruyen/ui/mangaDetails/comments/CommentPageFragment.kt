@@ -8,8 +8,7 @@ import com.vianh.blogtruyen.databinding.CommentPageFragmentBinding
 import com.vianh.blogtruyen.ui.base.BaseFragment
 import com.vianh.blogtruyen.ui.mangaDetails.MangaDetailsViewModel
 import com.vianh.blogtruyen.utils.ScrollLoadMore
-import org.koin.androidx.viewmodel.ViewModelOwner
-import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import org.koin.androidx.viewmodel.ext.android.getViewModel
 
 class CommentPageFragment: BaseFragment<CommentPageFragmentBinding>() {
     override fun createBinding(
@@ -20,14 +19,9 @@ class CommentPageFragment: BaseFragment<CommentPageFragmentBinding>() {
         return CommentPageFragmentBinding.inflate(inflater, container, false)
     }
 
-    val viewModel by sharedViewModel<MangaDetailsViewModel>(
-        owner = {
-            ViewModelOwner.from(
-                requireParentFragment(),
-                parentFragment
-            )
-        }
-    )
+    private val viewModel: MangaDetailsViewModel by lazy {
+        requireParentFragment().getViewModel()
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

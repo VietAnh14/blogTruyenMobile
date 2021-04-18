@@ -9,8 +9,7 @@ import com.vianh.blogtruyen.databinding.ChapterPageFragmentBinding
 import com.vianh.blogtruyen.ui.base.BaseFragment
 import com.vianh.blogtruyen.ui.mangaDetails.MangaDetailsViewModel
 import com.vianh.blogtruyen.ui.reader.ReaderFragment
-import org.koin.androidx.viewmodel.ViewModelOwner
-import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import org.koin.androidx.viewmodel.ext.android.getViewModel
 
 class ChapterPageFragment : BaseFragment<ChapterPageFragmentBinding>(), ChapterVH.ChapterClick {
     override fun createBinding(
@@ -19,14 +18,9 @@ class ChapterPageFragment : BaseFragment<ChapterPageFragmentBinding>(), ChapterV
         savedInstanceState: Bundle?
     ): ChapterPageFragmentBinding = ChapterPageFragmentBinding.inflate(inflater, container, false)
 
-    private val viewModel by sharedViewModel<MangaDetailsViewModel>(
-        owner = {
-            ViewModelOwner.from(
-                requireParentFragment(),
-                requireParentFragment()
-            )
-        }
-    )
+    private val viewModel: MangaDetailsViewModel by lazy {
+        requireParentFragment().getViewModel()
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

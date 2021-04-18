@@ -13,6 +13,7 @@ import okhttp3.Cache
 import okhttp3.OkHttpClient
 import org.koin.dsl.module
 import java.io.File
+import java.util.concurrent.TimeUnit
 
 val appModule
     get() = module {
@@ -28,5 +29,7 @@ private fun provideClient(context: Context): OkHttpClient {
         .Builder()
         .cache(Cache(File(context.cacheDir, "http_cache"), 40 * 1024 * 1024))
         .addInterceptor(BlogTruyenInterceptor())
+        .readTimeout(30, TimeUnit.SECONDS)
+        .writeTimeout(30, TimeUnit.SECONDS)
         .build()
 }
