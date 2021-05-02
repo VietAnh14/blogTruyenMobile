@@ -24,7 +24,7 @@ class HomeFragment: BaseFragment<HomeFragmentBinding>(), MangaItemVH.MangaClick 
         savedInstanceState: Bundle?
     ): HomeFragmentBinding = HomeFragmentBinding.inflate(inflater, container, false)
 
-    val viewModel by viewModel<HomeViewModel>()
+    private val viewModel by viewModel<HomeViewModel>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -32,22 +32,22 @@ class HomeFragment: BaseFragment<HomeFragmentBinding>(), MangaItemVH.MangaClick 
         observe()
     }
 
-    fun observe() {
-        viewModel.listContent.observe(viewLifecycleOwner, { onContentChange(it) })
+    private fun observe() {
+        viewModel.listContent.observe(viewLifecycleOwner, this::onContentChange)
+        viewModel.pageReload.observe(viewLifecycleOwner, this::onPageReload)
         viewModel.error.observe(viewLifecycleOwner, { showToast(it.message) })
-        viewModel.pageReload.observe(viewLifecycleOwner, { onPageReload(it) })
     }
 
     private fun onPageReload(reload: Boolean?) {
         requireBinding.swipeRefreshLayout.isRefreshing = reload ?: false
     }
 
-    fun onContentChange(mangaItems: List<ListItem>) {
+    private fun onContentChange(mangaItems: List<ListItem>) {
         val adapter = requireBinding.feedRecycler.adapter as MangaFeedAdapter
         adapter.submitList(mangaItems)
     }
 
-    fun setup() {
+    private fun setup() {
         val homeActivity = activity as? HomeActivity ?: return
         homeActivity.setupToolbar(requireBinding.toolbar)
         homeActivity.showBottomNav()

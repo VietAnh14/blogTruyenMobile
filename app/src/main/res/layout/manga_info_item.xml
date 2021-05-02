@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/header_cover"
+        android:layout_width="0dp"
+        android:layout_height="250dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/lazy_corgi"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/bg"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="#A11C1C1C"
+        app:layout_constraintBottom_toBottomOf="@+id/header_cover"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/small_cover"
+        android:layout_width="120dp"
+        android:layout_height="180dp"
+        android:layout_marginBottom="20dp"
+        android:layout_marginStart="10dp"
+        android:background="@android:color/white"
+        android:cropToPadding="true"
+        android:scaleType="centerCrop"
+        app:layout_constraintBottom_toBottomOf="@+id/header_cover"
+
+        app:layout_constraintStart_toStartOf="parent"
+        app:shapeAppearanceOverlay="@style/RoundCornerShape"
+        app:srcCompat="@drawable/one_punch" />
+
+    <TextView
+        android:id="@+id/manga_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginBottom="20dp"
+        android:text="Some manga name"
+        android:textColor="@color/pureWhite"
+        android:textSize="25sp"
+        app:layout_constraintBottom_toBottomOf="@+id/small_cover"
+        app:layout_constraintEnd_toEndOf="@+id/header_cover"
+        app:layout_constraintStart_toEndOf="@+id/small_cover" />
+
+    <TextView
+        android:id="@+id/textView5"
+        style="@style/TextAppearance.AppCompat.Medium"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="@string/summary"
+        android:textColor="@color/pureWhite"
+        app:layout_constraintStart_toStartOf="@+id/favoriteAction"
+        app:layout_constraintTop_toBottomOf="@+id/favoriteAction" />
+
+    <Button
+        android:id="@+id/favoriteAction"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:elevation="0dp"
+        android:text="@string/add_to_favorite"
+        android:textAllCaps="false"
+        android:textSize="12sp"
+        app:drawableTopCompat="@drawable/ic_favorite_border_24dp"
+        app:layout_constraintEnd_toStartOf="@+id/webViewAction"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@+id/small_cover"
+        app:layout_constraintTop_toBottomOf="@+id/header_cover" />
+
+    <Button
+        android:id="@+id/webViewAction"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textAllCaps="false"
+        android:textSize="12sp"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_marginEnd="20dp"
+        android:layout_marginStart="10dp"
+        android:text="@string/add_to_favorite"
+        app:drawableTopCompat="@drawable/ic_search_24"
+        app:layout_constraintBaseline_toBaselineOf="@+id/favoriteAction"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/favoriteAction" />
+
+    <TextView
+        android:id="@+id/summary"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
+        android:text="@string/lorem_5_sentences"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/textView5"
+        app:layout_constraintTop_toBottomOf="@+id/textView5" />
+
+    <com.google.android.material.chip.ChipGroup
+        android:id="@+id/category_group"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="@+id/summary"
+        app:layout_constraintStart_toStartOf="@+id/summary"
+        app:layout_constraintTop_toBottomOf="@+id/summary">
+
+        <com.google.android.material.chip.Chip
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Comedy"
+            android:textColor="@color/colorAccent"
+            android:textSize="12sp"
+            app:chipStrokeColor="@color/colorAccent"
+            app:chipStrokeWidth="1dp"
+            app:chipSurfaceColor="@android:color/transparent" />
+    </com.google.android.material.chip.ChipGroup>
+
+    <TextView
+        android:id="@+id/textView7"
+        style="@style/TextAppearance.AppCompat.Medium"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/chapter"
+        android:textColor="@color/pureWhite"
+        app:layout_constraintStart_toStartOf="@+id/summary"
+        app:layout_constraintTop_toBottomOf="@+id/category_group" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

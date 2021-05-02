@@ -8,6 +8,7 @@ import android.view.Window
 import android.widget.ImageView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
+import com.bumptech.glide.request.transition.DrawableCrossFadeFactory
 import com.vianh.blogtruyen.BuildConfig
 import okhttp3.Interceptor
 import okhttp3.Response

@@ -23,9 +23,8 @@ class MangaDetailsViewModel(private val dataManager: DataManager, var manga: Man
     }
 
     private fun loadDetails() {
-        launchLoading {
-            val detailsManga = dataManager.mangaProvider.fetchDetailManga(manga)
-            manga = detailsManga
+        launchJob {
+            manga = dataManager.mangaProvider.fetchDetailManga(manga)
             mangaLiveData.value = manga
         }
     }
@@ -44,7 +43,7 @@ class MangaDetailsViewModel(private val dataManager: DataManager, var manga: Man
         }
         commentJob = launchJob {
             val commentMap = dataManager.mangaProvider.fetchComment(manga.id, offset)
-            hasNextCommentPage = commentMap.isEmpty()
+            hasNextCommentPage = commentMap.isNotEmpty()
             val flattenComments = ArrayList(comments.value!!)
             for (comment in commentMap) {
                 flattenComments.add(comment.key)
@@ -53,5 +52,9 @@ class MangaDetailsViewModel(private val dataManager: DataManager, var manga: Man
             comments.value = flattenComments
             ++commentPage
         }
+    }
+
+    fun addToFavorite() {
+        //TODO: Implement
     }
 }

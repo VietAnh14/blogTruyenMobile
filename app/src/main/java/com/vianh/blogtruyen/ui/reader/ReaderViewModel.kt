@@ -30,7 +30,7 @@ class ReaderViewModel(private val dataManager: DataManager, chapter: Chapter, va
                 .fetchChapterPage(currentChapter.value?.url ?: return@launchJob)
                 .map { PageItem(it) }
                 .toMutableList()
-            val transitionItemType = if (currentChapterPos == 0) {
+            val transitionItemType = if (currentChapterPos <= 0) {
                 TransitionPageItem.NO_NEXT_CHAPTER
             } else {
                 TransitionPageItem.END_CURRENT

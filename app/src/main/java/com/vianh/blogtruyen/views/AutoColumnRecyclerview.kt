@@ -8,8 +8,7 @@ import kotlin.math.max
 
 class AutoColumnRecyclerview @JvmOverloads constructor(
     context: Context,
-    attributeSet: AttributeSet? = null,
-    defStyle: Int = 0) : RecyclerView(context, attributeSet, defStyle) {
+    attributeSet: AttributeSet? = null) : RecyclerView(context, attributeSet) {
 
     private var columnWidth: Int = -1
 

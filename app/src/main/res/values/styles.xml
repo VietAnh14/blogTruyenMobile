@@ -7,6 +7,7 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="android:windowBackground">@color/colorPrimary</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorControlHighlight">@color/colorAccent</item>
         <item name="titleTextColor">@android:color/white</item>
         <item name="android:textColorPrimary">@color/lightGray</item>
         <item name="colorControlNormal">@color/lightGray</item>
@@ -55,6 +56,11 @@
     <style name="NormalBlackText">
         <item name="android:textSize">14sp</item>
         <item name="android:textColor">@android:color/black</item>
+    </style>
+
+    <style name="RoundCornerShape" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">5dp</item>
     </style>
 
 </resources>

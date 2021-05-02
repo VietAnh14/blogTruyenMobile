@@ -2,9 +2,9 @@ package com.vianh.blogtruyen.ui.reader.list
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
-import com.bumptech.glide.request.FutureTarget
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
 import com.vianh.blogtruyen.databinding.LoadingPageItemBinding
 import com.vianh.blogtruyen.databinding.MangaPageItemBinding
@@ -12,18 +12,18 @@ import com.vianh.blogtruyen.databinding.TransitionPageBinding
 import com.vianh.blogtruyen.ui.base.BaseViewHolder
 import com.vianh.blogtruyen.ui.list.ListItem
 import com.vianh.blogtruyen.ui.reader.ReaderViewModel
-import com.vianh.blogtruyen.utils.SubsamplingScaleImageViewTarget
-import timber.log.Timber
-import java.io.File
+import com.vianh.blogtruyen.utils.preloadSuspend
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 
 class ReaderAdapter(
-    val requestManager: RequestManager,
-    val viewModel: ReaderViewModel,
-    val tileSize: Int
+    private val requestManager: RequestManager,
+    private val viewModel: ReaderViewModel,
+    private val tileSize: Int
 ) : RecyclerView.Adapter<BaseViewHolder>() {
 
     private val pages = mutableListOf<ListItem>()
-    var loadFutures: MutableList<FutureTarget<File>> = mutableListOf()
+    private var preloadJob: Job? = null
 
     override fun getItemCount(): Int {
         return pages.size
@@ -35,22 +35,18 @@ class ReaderAdapter(
         this.pages.addAll(pages)
 
         // Preload images
-        for (page in pages) {
-            if (page is PageItem) {
-                val requestFuture = requestManager
-                    .asFile()
-                    .load(page.uri)
-                    .submit()
-                loadFutures.add(requestFuture)
+        preloadJob = viewModel.viewModelScope.launch {
+            for (page in pages) {
+                if (page is PageItem) {
+                    requestManager.preloadSuspend(page.uri)
+                }
             }
         }
         notifyDataSetChanged()
     }
 
     private fun cancelImagePreloads() {
-        loadFutures.forEach {
-            requestManager.clear(it)
-        }
+        preloadJob?.cancel()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {

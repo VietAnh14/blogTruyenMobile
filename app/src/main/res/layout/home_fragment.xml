@@ -15,12 +15,11 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/appbar">
-        <androidx.recyclerview.widget.RecyclerView
+        <com.vianh.blogtruyen.views.AutoColumnRecyclerview
             android:id="@+id/feedRecycler"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-            app:spanCount="2"
+            android:columnWidth="140dp"
             tools:listitem="@layout/feed_item" />
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 

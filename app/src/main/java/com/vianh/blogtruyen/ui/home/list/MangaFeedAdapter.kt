@@ -17,7 +17,7 @@ class MangaFeedAdapter(val onItemClick: MangaItemVH.MangaClick): ListAdapter<Lis
         val inflater = LayoutInflater.from(parent.context)
         return when(viewType) {
             ListItem.MANGA_ITEM -> MangaItemVH(FeedItemBinding.inflate(inflater, parent, false), onItemClick)
-            else -> throw IllegalArgumentException("Unknown view type $viewType")
+            else -> throw IllegalArgumentException("ViewType not supported: $viewType")
         }
     }
 

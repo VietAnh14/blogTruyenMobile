@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.vianh.blogtruyen.utils.SingleLiveEvent
 import kotlinx.coroutines.*
+import timber.log.Timber
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.EmptyCoroutineContext
 
@@ -37,6 +38,7 @@ open class BaseVM: ViewModel() {
     protected fun createExceptionHandler() =
         CoroutineExceptionHandler { _, throwable ->
             if (throwable !is CancellationException) {
+                Timber.e(throwable)
                 error.postValue(throwable)
             }
         }

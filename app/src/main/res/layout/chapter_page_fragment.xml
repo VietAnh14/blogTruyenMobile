@@ -8,7 +8,8 @@
         android:id="@+id/chapter_recycler"
         android:nestedScrollingEnabled="true"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        tools:listitem="@layout/chapter_item"
+        tools:itemCount="1"
+        tools:listitem="@layout/manga_info_item"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 </FrameLayout>

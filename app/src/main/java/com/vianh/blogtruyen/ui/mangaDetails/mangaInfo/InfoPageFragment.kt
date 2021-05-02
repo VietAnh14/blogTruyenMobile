@@ -1,17 +1,21 @@
-package com.vianh.blogtruyen.ui.mangaDetails.chapter
+package com.vianh.blogtruyen.ui.mangaDetails.mangaInfo
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.ConcatAdapter
 import com.vianh.blogtruyen.data.model.Chapter
+import com.vianh.blogtruyen.data.model.Manga
 import com.vianh.blogtruyen.databinding.ChapterPageFragmentBinding
 import com.vianh.blogtruyen.ui.base.BaseFragment
 import com.vianh.blogtruyen.ui.mangaDetails.MangaDetailsViewModel
+import com.vianh.blogtruyen.ui.mangaDetails.mangaInfo.adapter.ChapterAdapter
+import com.vianh.blogtruyen.ui.mangaDetails.mangaInfo.adapter.InfoHeaderAdapter
 import com.vianh.blogtruyen.ui.reader.ReaderFragment
 import org.koin.androidx.viewmodel.ext.android.getViewModel
 
-class ChapterPageFragment : BaseFragment<ChapterPageFragmentBinding>(), ChapterVH.ChapterClick {
+class InfoPageFragment : BaseFragment<ChapterPageFragmentBinding>(), ChapterVH.ChapterClick {
     override fun createBinding(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -22,6 +26,9 @@ class ChapterPageFragment : BaseFragment<ChapterPageFragmentBinding>(), ChapterV
         requireParentFragment().getViewModel()
     }
 
+    private var chapterAdapter: ChapterAdapter? = null
+    private var headerAdapter: InfoHeaderAdapter? = null
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setup()
@@ -29,25 +36,37 @@ class ChapterPageFragment : BaseFragment<ChapterPageFragmentBinding>(), ChapterV
     }
 
     private fun observe() {
-        viewModel.chapters.observe(viewLifecycleOwner, ::onNewChapters)
+        viewModel.chapters.observe(viewLifecycleOwner, this::onNewChapters)
+        viewModel.mangaLiveData.observe(viewLifecycleOwner, this::onMangaChange)
+    }
+
+    private fun onMangaChange(manga: Manga) {
+        headerAdapter?.submitItem(manga)
     }
 
     private fun onNewChapters(chapters: List<Chapter>) {
-        val adapter = requireBinding.chapterRecycler.adapter as ChapterAdapter
-        adapter.submitList(chapters)
+        chapterAdapter?.submitList(chapters)
     }
 
     private fun setup() {
+        chapterAdapter = ChapterAdapter(this)
+        headerAdapter = InfoHeaderAdapter(viewModel)
         with(requireBinding.chapterRecycler) {
-            adapter = ChapterAdapter(this@ChapterPageFragment)
+            adapter = ConcatAdapter(headerAdapter, chapterAdapter)
             setHasFixedSize(true)
         }
         viewModel.loadChapters()
     }
 
+    override fun onDestroyView() {
+        chapterAdapter = null
+        headerAdapter = null
+        super.onDestroyView()
+    }
+
     companion object {
-        fun newInstance(): ChapterPageFragment {
-            return ChapterPageFragment()
+        fun newInstance(): InfoPageFragment {
+            return InfoPageFragment()
         }
     }
 

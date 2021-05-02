@@ -11,4 +11,9 @@
     <string name="search">Search</string>
     <string name="search_hint">Search manga</string>
     <string name="manga_details">Manga details</string>
+    <string name="summary">Sơ lược</string>
+    <string name="chapter">Danh sách chương:</string>
+    <string name="comment">Bình luận</string>
+    <string name="add_to_favorite">Theo dõi</string>
+    <string name="manga_info">Thông tin</string>
 </resources>

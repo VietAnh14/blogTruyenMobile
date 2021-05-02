@@ -2,7 +2,14 @@ package com.vianh.blogtruyen.utils
 
 import android.view.Gravity
 import android.view.View
+import com.bumptech.glide.RequestManager
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.target.Target
+import kotlinx.coroutines.suspendCancellableCoroutine
 import okhttp3.Call
+import java.io.File
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
@@ -29,15 +36,13 @@ suspend fun <T> Call.suspendGetResult(): T {
 }
 
 fun Call.extractData(): String {
-    val response = execute()
-    try {
+    val httpResponse = execute()
+    httpResponse.use { response ->
         if (response.isSuccessful && response.body != null) {
             return response.body!!.string()
         } else {
             throw HttpError(response.code, response.message)
         }
-    } finally {
-        response.close()
     }
 }
 
@@ -56,6 +61,35 @@ fun View.toggleState(direction: Int) {
                     visibility = View.GONE
                 }
         }
+    }
+}
+
+suspend fun RequestManager.preloadSuspend(uri: String) {
+    suspendCancellableCoroutine<Unit> {
+        this.asFile()
+            .load(uri)
+            .listener(object: RequestListener<File> {
+                override fun onLoadFailed(
+                    e: GlideException?,
+                    model: Any?,
+                    target: Target<File>?,
+                    isFirstResource: Boolean
+                ): Boolean {
+                    it.resume(Unit)
+                    return false
+                }
+
+                override fun onResourceReady(
+                    resource: File?,
+                    model: Any?,
+                    target: Target<File>?,
+                    dataSource: DataSource?,
+                    isFirstResource: Boolean
+                ): Boolean {
+                    it.resume(Unit)
+                    return false
+                }
+            }).submit()
     }
 }
 

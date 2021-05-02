@@ -5,13 +5,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
-import com.bumptech.glide.Glide
 import com.google.android.material.tabs.TabLayoutMediator
+import com.vianh.blogtruyen.R
 import com.vianh.blogtruyen.data.model.Manga
 import com.vianh.blogtruyen.databinding.MangaDetailsFragmentBinding
 import com.vianh.blogtruyen.ui.base.BaseFragment
-import com.vianh.blogtruyen.ui.home.HomeActivity
-import com.vianh.blogtruyen.utils.loadNetWorkImage
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 
@@ -37,18 +35,18 @@ class MangaDetailsFragment : BaseFragment<MangaDetailsFragmentBinding>() {
 
     private fun onContentChange(manga: Manga) {
         with(requireBinding) {
-            largeCover.loadNetWorkImage(manga.imageUrl)
             toolbar.title = manga.title
         }
     }
 
     private fun setup() {
         with(requireBinding) {
+            hostActivity?.setupToolbar(toolbar)
             pager.adapter = ContentPagerAdapter(this@MangaDetailsFragment)
             TabLayoutMediator(tabLayout, pager) { tab, position ->
                 tab.text = when (position) {
-                    0 -> "Chapters"
-                    1 -> "Comments"
+                    0 -> getString(R.string.manga_info)
+                    1 -> getString(R.string.comment)
                     else -> "Unknown"
                 }
             }.attach()

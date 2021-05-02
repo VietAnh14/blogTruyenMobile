@@ -1,4 +1,4 @@
-package com.vianh.blogtruyen.ui.mangaDetails.chapter
+package com.vianh.blogtruyen.ui.mangaDetails.mangaInfo.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import com.vianh.blogtruyen.data.model.Chapter
 import com.vianh.blogtruyen.databinding.ChapterItemBinding
+import com.vianh.blogtruyen.ui.mangaDetails.mangaInfo.ChapterVH
 
 class ChapterAdapter(val chapterClick: ChapterVH.ChapterClick): ListAdapter<Chapter, ChapterVH>(
     DiffCallback()
