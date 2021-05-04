@@ -4,7 +4,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.ConcatAdapter
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.vianh.blogtruyen.data.model.Chapter
 import com.vianh.blogtruyen.data.model.Manga
 import com.vianh.blogtruyen.databinding.ChapterPageFragmentBinding
@@ -15,7 +17,8 @@ import com.vianh.blogtruyen.features.mangaDetails.mangaInfo.adapter.InfoHeaderAd
 import com.vianh.blogtruyen.features.reader.ReaderFragment
 import org.koin.androidx.viewmodel.ext.android.getViewModel
 
-class InfoPageFragment : BaseFragment<ChapterPageFragmentBinding>(), ChapterVH.ChapterClick {
+class InfoPageFragment : BaseFragment<ChapterPageFragmentBinding>(), ChapterVH.ChapterClick,
+    SwipeRefreshLayout.OnRefreshListener {
     override fun createBinding(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -38,6 +41,8 @@ class InfoPageFragment : BaseFragment<ChapterPageFragmentBinding>(), ChapterVH.C
     private fun observe() {
         viewModel.chapters.observe(viewLifecycleOwner, this::onNewChapters)
         viewModel.mangaLiveData.observe(viewLifecycleOwner, this::onMangaChange)
+        viewModel.isLoading.observe(viewLifecycleOwner, this::onLoadingChange)
+        viewModel.error.observe(viewLifecycleOwner, Observer { showToast(it.message) })
     }
 
     private fun onMangaChange(manga: Manga) {
@@ -55,7 +60,12 @@ class InfoPageFragment : BaseFragment<ChapterPageFragmentBinding>(), ChapterVH.C
             adapter = ConcatAdapter(headerAdapter, chapterAdapter)
             setHasFixedSize(true)
         }
-        viewModel.loadChapters()
+
+        requireBinding.swipeRefreshLayout.setOnRefreshListener(this)
+    }
+
+    private fun onLoadingChange(isLoading: Boolean) {
+        requireBinding.swipeRefreshLayout.isRefreshing = isLoading
     }
 
     override fun onDestroyView() {
@@ -73,5 +83,9 @@ class InfoPageFragment : BaseFragment<ChapterPageFragmentBinding>(), ChapterVH.C
     override fun onChapterClick(chapter: Chapter) {
         viewModel.markChapterAsRead(chapter)
         hostActivity?.changeFragment(ReaderFragment.newInstance(chapter, viewModel.manga), true)
+    }
+
+    override fun onRefresh() {
+        viewModel.loadMangaInfo()
     }
 }

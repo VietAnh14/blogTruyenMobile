@@ -6,6 +6,7 @@ import com.vianh.blogtruyen.data.model.Chapter
 import com.vianh.blogtruyen.data.model.Comment
 import com.vianh.blogtruyen.data.model.Manga
 import com.vianh.blogtruyen.features.base.BaseVM
+import com.vianh.blogtruyen.features.list.ListItem
 import kotlinx.coroutines.Job
 
 class MangaDetailsViewModel(private val dataManager: DataManager, var manga: Manga): BaseVM() {
@@ -18,11 +19,16 @@ class MangaDetailsViewModel(private val dataManager: DataManager, var manga: Man
     private var commentJob: Job? = null
 
     init {
+        loadMangaInfo()
+    }
+
+    fun loadMangaInfo() {
         loadDetails()
+        loadChapters()
     }
 
     private fun loadDetails() {
-        launchJob {
+        launchLoading {
             manga = dataManager.mangaProvider.fetchDetailManga(manga)
             dataManager.dbHelper.upsertManga(manga)
             mangaLiveData.value = manga
