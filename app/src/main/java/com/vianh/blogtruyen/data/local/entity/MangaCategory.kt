@@ -20,5 +20,5 @@ import androidx.room.ForeignKey
 )
 data class MangaCategory(
     val mangaId: Int,
-    val categoryId: String
+    val categoryId: Int
 )

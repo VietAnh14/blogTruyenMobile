@@ -1,6 +1,7 @@
 package com.vianh.blogtruyen.data.local
 
 import com.vianh.blogtruyen.data.local.entity.*
+import com.vianh.blogtruyen.data.model.Category
 import com.vianh.blogtruyen.data.model.Chapter
 import com.vianh.blogtruyen.data.model.Manga
 
@@ -21,7 +22,7 @@ interface DbHelper {
 //
 //    suspend fun updateChapter(chapter: Chapter)
 
-    suspend fun upsertManga(manga: Manga)
+    suspend fun upsertManga(manga: Manga, updateCategories: Boolean = true)
 
     suspend fun findAllReadChapter(mangaId: Int): List<ChapterEntity>
 

@@ -1,30 +1,40 @@
 package com.vianh.blogtruyen.data.local
 
 import androidx.room.withTransaction
-import com.vianh.blogtruyen.data.local.entity.ChapterEntity
-import com.vianh.blogtruyen.data.local.entity.HistoryEntity
-import com.vianh.blogtruyen.data.local.entity.MangaEntity
+import com.vianh.blogtruyen.data.local.entity.*
 import com.vianh.blogtruyen.data.model.Chapter
 import com.vianh.blogtruyen.data.model.Manga
 
 class AppDbHelper(val db: MangaDb) : DbHelper {
-    override suspend fun upsertManga(manga: Manga) {
-        return db.mangaDao().upsert(MangaEntity.fromManga(manga))
+    override suspend fun upsertManga(manga: Manga, updateCategories: Boolean) {
+        db.withTransaction {
+            val mangaId = manga.id
+            db.mangaDao.upsert(MangaEntity.fromManga(manga))
+            if (updateCategories) {
+                db.mangaDao.deleteCategoryRelation(mangaId)
+                val categoryEntities = manga.categories.map { CategoryEntity.fromCategory(it) }
+                db.categoryDao.upsert(categoryEntities)
+                val relations = categoryEntities.map { MangaCategory(mangaId, it.categoryId) }
+                db.mangaDao.insertCategoryRelation(relations)
+            }
+        }
     }
 
     override suspend fun findAllReadChapter(mangaId: Int): List<ChapterEntity> {
-        return db.chapterDao().findReadChapterByMangaId(mangaId)
+        return db.chapterDao.findReadChapterByMangaId(mangaId)
     }
 
     override suspend fun markChapterAsRead(chapter: Chapter) {
         db.withTransaction {
             chapter.read = true
-            db.chapterDao().upsert(ChapterEntity.fromChapter(chapter))
-            db.historyDao().upsert(HistoryEntity(
-                mangaId = chapter.mangaId,
-                chapterId = chapter.id,
-                lastRead = System.currentTimeMillis()
-            ))
+            db.chapterDao.upsert(ChapterEntity.fromChapter(chapter))
+            db.historyDao.upsert(
+                HistoryEntity(
+                    mangaId = chapter.mangaId,
+                    chapterId = chapter.id,
+                    lastRead = System.currentTimeMillis()
+                )
+            )
         }
     }
 
