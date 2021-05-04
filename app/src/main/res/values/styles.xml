@@ -10,11 +10,11 @@
         <item name="colorControlHighlight">@color/colorAccent</item>
         <item name="titleTextColor">@android:color/white</item>
         <item name="android:textColorPrimary">@color/lightGray</item>
-        <item name="colorControlNormal">@color/lightGray</item>
+        <item name="colorControlNormal">@color/darkGray</item>
         <item name="android:navigationBarColor">@color/colorPrimary</item>
         <item name="actionMenuTextColor">@color/pureWhite</item>
         <item name="android:popupMenuStyle">@style/PopupMenu</item>
-        <item name="android:textColor">?attr/colorControlNormal</item>
+        <item name="android:textColor">@color/lightGray</item>
         <item name="searchViewStyle">@style/SearchViewTheme</item>
         <item name="android:textColorHint">@color/darkGray</item>
         <item name="android:windowTranslucentStatus">true</item>

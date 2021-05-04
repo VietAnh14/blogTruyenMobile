@@ -7,11 +7,11 @@ import androidx.room.Relation
 
 data class MangaWithCategories(
     @Embedded
-    val manga: Manga,
+    val manga: MangaEntity,
     @Relation(
         parentColumn = "mangaId",
         entityColumn = "categoryId",
         associateBy = Junction(MangaCategory::class)
     )
-    val categories: List<Category>
+    val categories: List<CategoryEntity>
 )

@@ -8,7 +8,7 @@ data class Chapter(
     val id: String,
     val url: String,
     val name: String,
-    val mangaId: String,
+    val mangaId: Int,
     val pages: List<String> = listOf(),
-    val read: Boolean = false
+    var read: Boolean = false
 ): Parcelable

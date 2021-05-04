@@ -161,7 +161,7 @@ class BlogtruyenProvider(private val client: OkHttpClient) : MangaProvider {
                     id = id,
                     name = title,
                     url = link,
-                    mangaId = mangaId.toString()
+                    mangaId = mangaId
                 )
             )
         }

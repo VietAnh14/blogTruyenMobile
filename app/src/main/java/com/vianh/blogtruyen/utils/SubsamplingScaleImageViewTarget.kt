@@ -4,7 +4,7 @@ import android.graphics.drawable.Drawable
 import com.bumptech.glide.request.target.CustomViewTarget
 import com.bumptech.glide.request.transition.Transition
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
-import com.vianh.blogtruyen.ui.reader.list.PageLoadCallBack
+import com.vianh.blogtruyen.features.reader.list.PageLoadCallBack
 
 class SubsamplingScaleImageViewTarget<R>(val view: SubsamplingScaleImageView, val pageLoadCallBack: PageLoadCallBack<R>)
     : CustomViewTarget<SubsamplingScaleImageView, R>(view) {

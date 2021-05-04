@@ -1,7 +1,11 @@
 package com.vianh.blogtruyen.utils
 
+import android.content.Context
+import android.util.TypedValue
 import android.view.Gravity
 import android.view.View
+import androidx.annotation.AttrRes
+import androidx.annotation.ColorInt
 import com.bumptech.glide.RequestManager
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
@@ -109,4 +113,14 @@ fun View.invisible() {
     if (visibility != View.INVISIBLE) {
         visibility = View.INVISIBLE
     }
+}
+
+@ColorInt
+fun Context.getColorFromAttr(
+    @AttrRes attrColor: Int,
+    typedValue: TypedValue = TypedValue(),
+    resolveRefs: Boolean = true
+): Int {
+    theme.resolveAttribute(attrColor, typedValue, resolveRefs)
+    return typedValue.data
 }
