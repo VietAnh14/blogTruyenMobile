@@ -4,6 +4,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
+import androidx.core.view.ViewCompat
+import androidx.core.view.updateLayoutParams
 import com.bumptech.glide.Glide
 import com.vianh.blogtruyen.data.model.Chapter
 import com.vianh.blogtruyen.data.model.Manga
@@ -11,8 +14,9 @@ import com.vianh.blogtruyen.databinding.ReaderFragmentBinding
 import com.vianh.blogtruyen.features.base.BaseFragment
 import com.vianh.blogtruyen.features.reader.list.ReaderAdapter
 import com.vianh.blogtruyen.features.reader.list.TransitionPageVH
-import com.vianh.blogtruyen.utils.PreCacheLayoutManager
-import com.vianh.blogtruyen.utils.getMaxTextureSize
+import com.vianh.blogtruyen.utils.*
+import com.vianh.blogtruyen.views.PinchRecyclerView
+import kotlinx.android.synthetic.main.reader_fragment.view.*
 import me.everything.android.ui.overscroll.OverScrollDecoratorHelper
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
@@ -27,19 +31,22 @@ class ReaderFragment : BaseFragment<ReaderFragmentBinding>() {
         return ReaderFragmentBinding.inflate(inflater, container, false)
     }
 
-    private val viewModel by viewModel<ReaderViewModel> {
-        parametersOf(
-            arguments?.getParcelable(CHAPTER_KEY),
-            arguments?.getParcelable(MANGA_KEY)
-        )
-    }
     private val tileSize by lazy {
         getMaxTextureSize().also {
             Timber.d("Max textureSize $it")
         }
     }
 
-    var readerAdapter: ReaderAdapter? = null
+    private val viewModel by viewModel<ReaderViewModel> {
+        parametersOf(
+            arguments?.getParcelable(CHAPTER_KEY),
+            arguments?.getParcelable(MANGA_KEY)
+        )
+    }
+
+    private val readerDelegate: ReaderDelegate by lazy {
+        ReaderDelegate(this, viewModel)
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -48,45 +55,25 @@ class ReaderFragment : BaseFragment<ReaderFragmentBinding>() {
     }
 
     private fun observe() {
-        viewModel.pages.observe(viewLifecycleOwner, {
-            readerAdapter?.setPages(it)
-        })
-        viewModel.error.observe(viewLifecycleOwner, {
+        viewModel.content.observe(viewLifecycleOwner) { onContentChange(it) }
+        viewModel.toast.observe(viewLifecycleOwner) { showToast(it) }
+        viewModel.error.observe(viewLifecycleOwner) {
             Timber.e(it)
             showToast(it.message)
-        })
+        }
     }
 
     private fun setup() {
-        hostActivity?.hideSystemUI()
+        hostActivity?.setupToolbar(requireBinding.toolbar)
+        readerDelegate.setUpReader(tileSize)
+    }
 
-        with(requireBinding.readerRecycler) {
-            layoutManager = PreCacheLayoutManager(context)
-            val overScrollDecor = OverScrollDecoratorHelper.setUpOverScroll(
-                this,
-                OverScrollDecoratorHelper.ORIENTATION_VERTICAL
-            )
-
-            overScrollDecor.setOverScrollUpdateListener { _, state, offset ->
-                if (offset <= 0) {
-                    val pos = adapter?.itemCount ?: return@setOverScrollUpdateListener
-                    val transitionVH =
-                        findViewHolderForAdapterPosition(pos - 1) as? TransitionPageVH
-                    transitionVH?.onOverScroll((-1 * offset).toInt(), state)
-                }
-            }
-
-            val requestManager = Glide.with(this)
-            readerAdapter = ReaderAdapter(requestManager, viewModel, tileSize)
-            adapter = readerAdapter
-            setHasFixedSize(true)
-        }
-
-        hostActivity?.hideBottomNav()
+    private fun onContentChange(content: ReaderModel) {
+        readerDelegate.setContent(content)
     }
 
     override fun onDestroyView() {
-        readerAdapter = null
+        readerDelegate.cleanUp()
         super.onDestroyView()
     }
 

@@ -1,9 +1,13 @@
 package com.vianh.blogtruyen.utils
 
+import android.animation.TimeInterpolator
 import android.content.Context
 import android.util.TypedValue
 import android.view.Gravity
 import android.view.View
+import android.view.animation.AccelerateInterpolator
+import android.view.animation.AnimationUtils
+import android.view.animation.Interpolator
 import androidx.annotation.AttrRes
 import androidx.annotation.ColorInt
 import com.bumptech.glide.RequestManager
@@ -11,6 +15,7 @@ import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
+import com.vianh.blogtruyen.R
 import kotlinx.coroutines.suspendCancellableCoroutine
 import okhttp3.Call
 import java.io.File
@@ -113,6 +118,30 @@ fun View.invisible() {
     if (visibility != View.INVISIBLE) {
         visibility = View.INVISIBLE
     }
+}
+
+fun View.slideDown(duration: Long = 400, interpolator: Interpolator = AccelerateInterpolator()) {
+    animate()
+        .translationY(height.toFloat())
+        .setInterpolator(interpolator)
+        .setDuration(duration)
+        .start()
+}
+
+fun View.slideUp(duration: Long = 400, interpolator: Interpolator = AccelerateInterpolator()) {
+    animate()
+        .translationY(height * -1f)
+        .setInterpolator(interpolator)
+        .setDuration(duration)
+        .start()
+}
+
+fun View.resetPos(duration: Long = 400, interpolator: Interpolator = AccelerateInterpolator()) {
+    animate()
+        .translationY(0f)
+        .setInterpolator(interpolator)
+        .setDuration(duration)
+        .start()
 }
 
 @ColorInt

@@ -6,7 +6,6 @@ import com.vianh.blogtruyen.data.model.Chapter
 import com.vianh.blogtruyen.data.model.Comment
 import com.vianh.blogtruyen.data.model.Manga
 import com.vianh.blogtruyen.features.base.BaseVM
-import com.vianh.blogtruyen.features.list.ListItem
 import kotlinx.coroutines.Job
 
 class MangaDetailsViewModel(private val dataManager: DataManager, var manga: Manga): BaseVM() {
@@ -70,13 +69,6 @@ class MangaDetailsViewModel(private val dataManager: DataManager, var manga: Man
             }
             comments.value = flattenComments
             ++commentPage
-        }
-    }
-
-    fun markChapterAsRead(chapter: Chapter) {
-        launchJob {
-            chapter.read = true
-            dataManager.dbHelper.markChapterAsRead(chapter)
         }
     }
 

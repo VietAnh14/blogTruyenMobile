@@ -11,6 +11,7 @@ import kotlin.coroutines.EmptyCoroutineContext
 open class BaseVM: ViewModel() {
     val isLoading = SingleLiveEvent<Boolean>()
     val error = SingleLiveEvent<Throwable>()
+    val toast = SingleLiveEvent<String>()
 
     fun launchLoading(
         coroutineContext: CoroutineContext = EmptyCoroutineContext,

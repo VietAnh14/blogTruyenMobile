@@ -23,7 +23,7 @@ class PageItemVH(
     private val glideRequestManager: RequestManager
 ) : BaseViewHolder(binding.root), PageLoadCallBack<File> {
 
-    var data: PageItem? = null
+    var data: ReaderItem.PageItem? = null
     private val imgTarget = SubsamplingScaleImageViewTarget(binding.page, this)
 
     private val scaleImageListener = object : SubsamplingScaleImageView.DefaultOnImageEventListener() {
@@ -40,7 +40,7 @@ class PageItemVH(
     }
 
     override fun onBind(item: ListItem) {
-        val boundItem = item as PageItem
+        val boundItem = item as ReaderItem.PageItem
         data = boundItem
         binding.progressCircular.visible()
         binding.page.setOnImageEventListener(scaleImageListener)

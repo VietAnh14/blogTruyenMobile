@@ -6,17 +6,14 @@ import com.vianh.blogtruyen.data.model.Chapter
 import com.vianh.blogtruyen.data.model.Manga
 import com.vianh.blogtruyen.features.base.BaseVM
 import com.vianh.blogtruyen.features.list.ListItem
-import com.vianh.blogtruyen.features.list.LoadingItem
-import com.vianh.blogtruyen.features.reader.list.PageItem
-import com.vianh.blogtruyen.features.reader.list.TransitionPageItem
+import com.vianh.blogtruyen.features.reader.list.ReaderItem
 import timber.log.Timber
 
 class ReaderViewModel(private val dataManager: DataManager, chapter: Chapter, val manga: Manga): BaseVM() {
 
-    val pages: MutableLiveData<List<ListItem>> = MutableLiveData(listOf())
-    val currentChapter: MutableLiveData<Chapter> = MutableLiveData(chapter)
+    private val currentChapter: MutableLiveData<Chapter> = MutableLiveData(chapter)
 
-    var currentChapterPos = manga.chapters.indexOf(chapter)
+    val content = MutableLiveData<ReaderModel>()
 
     init {
         Timber.e("Chapter size: ${manga.chapters.size}")
@@ -25,29 +22,55 @@ class ReaderViewModel(private val dataManager: DataManager, chapter: Chapter, va
 
     fun loadPages() {
         launchJob {
-            pages.value = listOf(LoadingItem)
+            val chapter = currentChapter.value ?: return@launchJob
+
+            content.value = ReaderModel(
+                manga = manga,
+                chapter = chapter,
+                listOf(ReaderItem.LoadingItem)
+            )
+
             val pageItems: MutableList<ListItem> = dataManager.mangaProvider
-                .fetchChapterPage(currentChapter.value?.url ?: return@launchJob)
-                .map { PageItem(it) }
+                .fetchChapterPage(chapter.url)
+                .map { ReaderItem.PageItem(it) }
                 .toMutableList()
-            val transitionItemType = if (currentChapterPos <= 0) {
-                TransitionPageItem.NO_NEXT_CHAPTER
+
+            val transitionItemType = if (getCurrentChapterPos() <= 0) {
+                ReaderItem.TransitionItem.NO_NEXT_CHAPTER
             } else {
-                TransitionPageItem.END_CURRENT
+                ReaderItem.TransitionItem.END_CURRENT
             }
-            pageItems.add(TransitionPageItem(transitionItemType))
-            pages.value = pageItems
+
+            pageItems.add(ReaderItem.TransitionItem(transitionItemType))
+            content.value = ReaderModel(manga, chapter, pageItems)
+            dataManager.dbHelper.markChapterAsRead(chapter)
         }
     }
 
-    fun hasNextChapter(): Boolean {
-        val nextChapterPos = manga.chapters.indexOf(currentChapter.value) + 1
-        return nextChapterPos < manga.chapters.size
+    // Todo: Add chapter pos in series
+    fun toPreviousChapter() {
+        val currentChapterPos = getCurrentChapterPos()
+        if (currentChapterPos in 0 until manga.chapters.lastIndex) {
+            currentChapter.value = manga.chapters[currentChapterPos + 1]
+            loadPages()
+        } else {
+            toast.call("No previous chapter available")
+        }
     }
 
     fun toNextChapter() {
-        currentChapterPos = (manga.chapters.indexOf(currentChapter.value) - 1).coerceAtLeast(0)
-        currentChapter.value = manga.chapters[currentChapterPos]
-        loadPages()
+        Timber.d("To next chapter called")
+        val currentChapterPos = getCurrentChapterPos()
+        if (currentChapterPos in 1..manga.chapters.lastIndex) {
+            currentChapter.value = manga.chapters[currentChapterPos - 1]
+            loadPages()
+        } else {
+            toast.call("No next chapter available")
+        }
+    }
+
+    private fun getCurrentChapterPos(): Int {
+        val chapterId = currentChapter.value?.id ?: return -1
+        return manga.chapters.indexOfFirst { it.id == chapterId}
     }
 }

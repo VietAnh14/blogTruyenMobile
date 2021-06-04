@@ -81,7 +81,6 @@ class InfoPageFragment : BaseFragment<ChapterPageFragmentBinding>(), ChapterVH.C
     }
 
     override fun onChapterClick(chapter: Chapter) {
-        viewModel.markChapterAsRead(chapter)
         hostActivity?.changeFragment(ReaderFragment.newInstance(chapter, viewModel.manga), true)
     }
 

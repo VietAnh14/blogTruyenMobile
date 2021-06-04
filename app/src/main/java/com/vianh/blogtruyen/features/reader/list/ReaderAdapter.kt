@@ -37,7 +37,7 @@ class ReaderAdapter(
         // Preload images
         preloadJob = viewModel.viewModelScope.launch {
             for (page in pages) {
-                if (page is PageItem) {
+                if (page is ReaderItem.PageItem) {
                     requestManager.preloadSuspend(page.uri)
                 }
             }
@@ -51,6 +51,7 @@ class ReaderAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
         val inflater = LayoutInflater.from(parent.context)
+
         return when (viewType) {
             ListItem.PAGE_ITEM -> {
                 val binding = MangaPageItemBinding.inflate(inflater, parent, false)

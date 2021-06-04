@@ -1,5 +1,6 @@
 package com.vianh.blogtruyen.features.reader.list
 
+import android.util.Log
 import com.vianh.blogtruyen.databinding.TransitionPageBinding
 import com.vianh.blogtruyen.features.list.BaseVH
 import com.vianh.blogtruyen.features.list.ListItem
@@ -11,24 +12,25 @@ import kotlin.math.min
 
 class TransitionPageVH(binding: TransitionPageBinding, val viewModel: ReaderViewModel) :
     BaseVH<TransitionPageBinding>(binding) {
-    var data: TransitionPageItem? = null
-    var releaseToLaunch = false
+    var data: ReaderItem.TransitionItem? = null
+    private var releaseToLaunch = false
 
     override fun onBind(item: ListItem) {
-        val transitionItem = item as TransitionPageItem
+        val transitionItem = item as ReaderItem.TransitionItem
         data = transitionItem
         when (transitionItem.transitionType) {
-            TransitionPageItem.END_CURRENT -> endChapter()
-            TransitionPageItem.NO_NEXT_CHAPTER -> endNoNextChapter()
+            ReaderItem.TransitionItem.END_CURRENT -> endChapter()
+            ReaderItem.TransitionItem.NO_NEXT_CHAPTER -> endNoNextChapter()
         }
     }
 
     fun onOverScroll(offset: Int, state: Int) {
-        if (data?.transitionType == TransitionPageItem.NO_NEXT_CHAPTER)
+        if (data?.transitionType == ReaderItem.TransitionItem.NO_NEXT_CHAPTER)
             return
 
         val progress = min(offset, 100)
         if (state == IOverScrollState.STATE_BOUNCE_BACK && releaseToLaunch) {
+            releaseToLaunch = false
             viewModel.toNextChapter()
         } else {
             binding.progressCircular.progress = offset

@@ -7,4 +7,5 @@
     <color name="pureBlack">#000000</color>
     <color name="pureWhite">#FFF</color>
     <color name="lightGray">#F8F8F8</color>
+    <color name="navigationBarFullScreenColor">#B7000000</color>
 </resources>

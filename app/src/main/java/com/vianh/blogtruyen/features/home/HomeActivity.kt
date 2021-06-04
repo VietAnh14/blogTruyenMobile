@@ -8,12 +8,12 @@ import androidx.fragment.app.FragmentTransaction
 import androidx.fragment.app.commit
 import com.vianh.blogtruyen.R
 import com.vianh.blogtruyen.databinding.HomeActivityBinding
-import com.vianh.blogtruyen.features.base.BaseActivityVB
+import com.vianh.blogtruyen.features.base.BaseActivity
 import com.vianh.blogtruyen.features.bookmarks.BookmarksFragment
 import com.vianh.blogtruyen.features.history.HistoryFragment
 import com.vianh.blogtruyen.views.ViewHeightAnimator
 
-class HomeActivity : BaseActivityVB<HomeActivityBinding>() {
+class HomeActivity : BaseActivity<HomeActivityBinding>() {
 
     override fun createBinding(): HomeActivityBinding = HomeActivityBinding.inflate(layoutInflater)
 

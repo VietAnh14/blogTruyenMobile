@@ -4,11 +4,13 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Canvas
 import android.util.AttributeSet
+import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.ScaleGestureDetector
 import android.view.ScaleGestureDetector.SimpleOnScaleGestureListener
 import androidx.recyclerview.widget.RecyclerView
 import timber.log.Timber
+import javax.security.auth.callback.Callback
 import kotlin.math.max
 import kotlin.math.min
 
@@ -22,7 +24,11 @@ class PinchRecyclerView @JvmOverloads constructor(
 
     private var mActivePointerId = INVALID_POINTER_ID
 
-    private lateinit var mScaleDetector: ScaleGestureDetector
+    private val mScaleDetector: ScaleGestureDetector
+    private val gestureDetector: GestureDetector
+
+    var callBack: ReaderCallBack? = null
+
     private var mScaleFactor = 1f
 
     private var maxOffsetX = 0.0f
@@ -38,7 +44,8 @@ class PinchRecyclerView @JvmOverloads constructor(
     private var height = 0f
 
     init {
-        if (!isInEditMode) mScaleDetector = ScaleGestureDetector(getContext(), ScaleListener())
+        gestureDetector = GestureDetector(context, GestureListener())
+        mScaleDetector = ScaleGestureDetector(getContext(), ScaleListener())
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -47,18 +54,10 @@ class PinchRecyclerView @JvmOverloads constructor(
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
     }
 
-    override fun onInterceptTouchEvent(ev: MotionEvent): Boolean {
-        try {
-            return super.onInterceptTouchEvent(ev)
-        } catch (ex: IllegalArgumentException) {
-            ex.printStackTrace()
-        }
-        return false
-    }
-
     @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(ev: MotionEvent): Boolean {
         mScaleDetector.onTouchEvent(ev)
+        gestureDetector.onTouchEvent(ev)
 
         val action = ev.action
         when (action and MotionEvent.ACTION_MASK) {
@@ -151,6 +150,20 @@ class PinchRecyclerView @JvmOverloads constructor(
             invalidate()
             return true
         }
+    }
+
+    private inner class GestureListener: GestureDetector.SimpleOnGestureListener() {
+        override fun onSingleTapConfirmed(e: MotionEvent?): Boolean {
+            return callBack?.onSingleTap() ?: false || super.onSingleTapConfirmed(e)
+        }
+
+        override fun onDoubleTap(e: MotionEvent?): Boolean {
+            return super.onDoubleTap(e)
+        }
+    }
+
+    interface ReaderCallBack {
+        fun onSingleTap(): Boolean
     }
 
     companion object {

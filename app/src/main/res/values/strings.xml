@@ -16,4 +16,5 @@
     <string name="comment">Bình luận</string>
     <string name="add_to_favorite">Theo dõi</string>
     <string name="manga_info">Thông tin</string>
+    <string name="search_by_google">Tìm kiếm trên google</string>
 </resources>

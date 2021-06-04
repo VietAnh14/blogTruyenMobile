@@ -91,7 +91,7 @@
         style="?android:attr/borderlessButtonStyle"
         android:layout_marginEnd="20dp"
         android:layout_marginStart="10dp"
-        android:text="@string/add_to_favorite"
+        android:text="@string/search_by_google"
         app:drawableTopCompat="@drawable/ic_search_24"
         app:layout_constraintBaseline_toBaselineOf="@+id/favoriteAction"
         app:layout_constraintEnd_toEndOf="parent"
