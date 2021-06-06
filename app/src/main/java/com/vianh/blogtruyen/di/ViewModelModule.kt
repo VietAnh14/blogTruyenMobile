@@ -1,5 +1,6 @@
 package com.vianh.blogtruyen.di
 
+import com.vianh.blogtruyen.features.history.HistoryViewModel
 import com.vianh.blogtruyen.features.home.HomeActivityViewModel
 import com.vianh.blogtruyen.features.home.HomeViewModel
 import com.vianh.blogtruyen.features.mangaDetails.MangaDetailsViewModel
@@ -13,4 +14,5 @@ val viewModelModule
         viewModel { HomeViewModel(get()) }
         viewModel { parameters -> MangaDetailsViewModel(get(), manga = parameters.get()) }
         viewModel { parameters -> ReaderViewModel(get(), chapter = parameters.get(), parameters.get()) }
+        viewModel { HistoryViewModel(get()) }
     }

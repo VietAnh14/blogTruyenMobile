@@ -15,4 +15,6 @@ interface DbHelper {
     suspend fun findAllReadChapter(mangaId: Int): List<ChapterEntity>
 
     suspend fun markChapterAsRead(chapter: Chapter, mangaId: Int)
+
+    suspend fun observeHistory(): Flow<List<History>>
 }

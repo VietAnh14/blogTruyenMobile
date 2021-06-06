@@ -43,4 +43,13 @@ class AppDbHelper(val db: MangaDb) : DbHelper {
             )
         }
     }
+
+    override suspend fun observeHistory(): Flow<List<History>> {
+        return db.historyDao
+            .observeFullHistory()
+            .map {
+                it.map { fullHistory -> fullHistory.toHistory() }
+            }
+            .flowOn(Dispatchers.IO)
+    }
 }

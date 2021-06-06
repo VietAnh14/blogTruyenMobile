@@ -7,5 +7,5 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 abstract class HistoryDao: BaseDao<HistoryEntity>() {
-    abstract fun observeFullHistory(): Flow<FullHistory>
+    abstract fun observeFullHistory(): Flow<List<FullHistory>>
 }
