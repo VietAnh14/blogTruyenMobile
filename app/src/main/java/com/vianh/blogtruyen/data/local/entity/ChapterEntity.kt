@@ -24,17 +24,17 @@ data class ChapterEntity(
     val mangaId: Int,
     val isRead: Boolean = false
 ) {
-    fun toChapter() {
-        //TODO: Implement
+    fun toChapter(): Chapter {
+        return Chapter(id, url, name)
     }
 
     companion object {
-        fun fromChapter(chapter: Chapter): ChapterEntity {
+        fun fromChapter(chapter: Chapter, mangaId: Int): ChapterEntity {
             return ChapterEntity(
                 url = chapter.url,
                 name = chapter.name,
                 id =  chapter.id,
-                mangaId = chapter.mangaId,
+                mangaId = mangaId,
                 isRead = chapter.read
             )
         }

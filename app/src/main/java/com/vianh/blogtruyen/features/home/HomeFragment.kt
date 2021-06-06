@@ -15,6 +15,7 @@ import com.vianh.blogtruyen.features.list.ListItem
 import com.vianh.blogtruyen.features.mangaDetails.MangaDetailsFragment
 import com.vianh.blogtruyen.utils.GridItemSpacingDecorator
 import com.vianh.blogtruyen.utils.ScrollLoadMore
+import com.vianh.blogtruyen.utils.observeAsLiveData
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class HomeFragment: BaseFragment<HomeFragmentBinding>(), MangaItemVH.MangaClick {
@@ -26,6 +27,8 @@ class HomeFragment: BaseFragment<HomeFragmentBinding>(), MangaItemVH.MangaClick 
 
     private val viewModel by viewModel<HomeViewModel>()
 
+    private var feedAdapter: MangaFeedAdapter? = null
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setup()
@@ -33,7 +36,7 @@ class HomeFragment: BaseFragment<HomeFragmentBinding>(), MangaItemVH.MangaClick 
     }
 
     private fun observe() {
-        viewModel.listContent.observe(viewLifecycleOwner, this::onContentChange)
+        viewModel.listContent.observeAsLiveData(viewLifecycleOwner, this::onContentChange)
         viewModel.pageReload.observe(viewLifecycleOwner, this::onPageReload)
         viewModel.error.observe(viewLifecycleOwner, { showToast(it.message) })
     }
@@ -42,9 +45,8 @@ class HomeFragment: BaseFragment<HomeFragmentBinding>(), MangaItemVH.MangaClick 
         requireBinding.swipeRefreshLayout.isRefreshing = reload ?: false
     }
 
-    private fun onContentChange(mangaItems: List<ListItem>) {
-        val adapter = requireBinding.feedRecycler.adapter as MangaFeedAdapter
-        adapter.submitList(mangaItems)
+    private fun onContentChange(mangaItems: List<MangaItem>) {
+        feedAdapter?.submitList(mangaItems)
     }
 
     private fun setup() {
@@ -55,9 +57,9 @@ class HomeFragment: BaseFragment<HomeFragmentBinding>(), MangaItemVH.MangaClick 
         with(requireBinding.feedRecycler) {
             setHasFixedSize(true)
             addItemDecoration(GridItemSpacingDecorator(30))
-            adapter = MangaFeedAdapter(this@HomeFragment)
+            adapter = MangaFeedAdapter(this@HomeFragment).also { feedAdapter = it }
             addOnScrollListener(ScrollLoadMore(2) {
-                viewModel.loadPage(append = true)
+                viewModel.loadPage()
             })
         }
 
@@ -86,12 +88,13 @@ class HomeFragment: BaseFragment<HomeFragmentBinding>(), MangaItemVH.MangaClick 
         }
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-    }
-
     override fun onMangaItemClick(mangaItem: MangaItem) {
         val activity = activity as HomeActivity
         activity.changeFragment(MangaDetailsFragment.newInstance(mangaItem.manga), true)
+    }
+
+    override fun onDestroyView() {
+        feedAdapter = null
+        super.onDestroyView()
     }
 }

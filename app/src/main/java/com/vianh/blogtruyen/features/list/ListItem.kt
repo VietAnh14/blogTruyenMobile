@@ -5,7 +5,7 @@ interface ListItem {
 
     companion object {
         const val LOADING_ITEM = 1
-        const val MANGA_ITEM = 2
+        const val SINGLE_ITEM_TYPE = 2
         const val EMPTY_TYPE = 3
         const val ERROR_TYPE = 4
         const val CHAPTER_ITEM = 5

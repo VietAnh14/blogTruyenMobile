@@ -1,38 +1,40 @@
 package com.vianh.blogtruyen.features.home.list
 
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.viewbinding.ViewBinding
 import com.vianh.blogtruyen.databinding.FeedItemBinding
+import com.vianh.blogtruyen.features.base.AbstractViewHolder
 import com.vianh.blogtruyen.features.list.BaseVH
 import com.vianh.blogtruyen.features.list.ListItem
 import com.vianh.blogtruyen.utils.loadNetWorkImage
 
-class MangaItemVH(binding: FeedItemBinding, clickListener: MangaClick) :
-    BaseVH<FeedItemBinding>(binding) {
-
-    var data: ListItem? = null
+class MangaItemVH(private val binding: FeedItemBinding, clickListener: MangaClick) :
+    AbstractViewHolder<MangaItem, Unit>(binding.root) {
 
     init {
         itemView.setOnClickListener {
-            data?.let {
-                clickListener.onMangaItemClick(it as MangaItem)
+            boundData?.let {
+                clickListener.onMangaItemClick(it)
             }
         }
     }
 
-    override fun onBind(item: ListItem) {
-        val mangaItem = item as MangaItem
-        data = mangaItem
+    override fun onBind(data: MangaItem, extra: Unit) {
         with(binding) {
-            imageCover.loadNetWorkImage(mangaItem.manga.imageUrl)
-
-            mangaName.text = mangaItem.manga.title
+            imageCover.loadNetWorkImage(data.manga.imageUrl)
+            mangaName.text = data.manga.title
         }
     }
 
-    override fun onRecycle() {
-        super.onRecycle()
+    companion object {
+        fun create(inflater: LayoutInflater, parent: ViewGroup, listener: MangaClick): MangaItemVH {
+            return MangaItemVH(FeedItemBinding.inflate(inflater, parent, false), listener)
+        }
     }
 
-    public interface MangaClick {
+    interface MangaClick {
         fun onMangaItemClick(mangaItem: MangaItem)
     }
 }

@@ -43,7 +43,7 @@ class ReaderViewModel(private val dataManager: DataManager, chapter: Chapter, va
 
             pageItems.add(ReaderItem.TransitionItem(transitionItemType))
             content.value = ReaderModel(manga, chapter, pageItems)
-            dataManager.dbHelper.markChapterAsRead(chapter)
+            dataManager.dbHelper.markChapterAsRead(chapter, manga.id)
         }
     }
 

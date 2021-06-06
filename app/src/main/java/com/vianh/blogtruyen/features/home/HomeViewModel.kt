@@ -1,16 +1,17 @@
 package com.vianh.blogtruyen.features.home
 
-import androidx.lifecycle.MutableLiveData
+import com.github.michaelbull.result.map
+import com.github.michaelbull.result.onFailure
+import com.github.michaelbull.result.onSuccess
 import com.vianh.blogtruyen.data.DataManager
-import com.vianh.blogtruyen.data.model.Manga
 import com.vianh.blogtruyen.features.base.BaseVM
 import com.vianh.blogtruyen.features.home.list.MangaItem
-import com.vianh.blogtruyen.features.list.ListItem
 import com.vianh.blogtruyen.utils.SingleLiveEvent
+import kotlinx.coroutines.flow.MutableStateFlow
 
-class HomeViewModel(private val dataManager: DataManager): BaseVM() {
+class HomeViewModel(private val dataManager: DataManager) : BaseVM() {
 
-    val listContent: MutableLiveData<List<ListItem>> = MutableLiveData(mutableListOf())
+    val listContent: MutableStateFlow<List<MangaItem>> = MutableStateFlow(mutableListOf())
     val pageReload = SingleLiveEvent(false)
     var page: Int = 1
 
@@ -19,42 +20,30 @@ class HomeViewModel(private val dataManager: DataManager): BaseVM() {
     }
 
 
-    fun loadPage(offset: Int = page, append: Boolean = false) {
+    fun loadPage(offset: Int = page, reload: Boolean = false) {
         if (isLoading.value == true) {
             return
         }
 
         launchLoading {
-            try {
-                if (offset == 1) {
-                    pageReload.postValue(true)
-                }
-                val items = dataManager.mangaProvider.fetchNewManga(offset).map { MangaItem(it) }
-                if (append) {
-                    val newList = listContent.value?.plus(items)
-                    listContent.value = newList
-                } else {
-                    listContent.value = ArrayList(items)
-                }
-                page = offset + 1
-            } finally {
-                pageReload.postValue(false)
+            if (offset == 1) {
+                pageReload.setValue(true)
             }
+
+            dataManager
+                .mangaProvider
+                .fetchNewManga(offset)
+                .map { items ->
+                    items.map { MangaItem(it) }
+                }.onSuccess {
+                    page = offset + 1
+                    val newList = if (reload) it else listContent.value + it
+                    listContent.value = newList
+                }.onFailure {
+                    error.call(it)
+                }
+
+            pageReload.setValue(false)
         }
-    }
-
-
-    fun com.vianh.blogtruyen.data.local.entity.MangaEntity.toModel(): Manga {
-        return Manga(
-            id = mangaId,
-            imageUrl = imageUrl,
-            title = title,
-            uploadTitle = uploadTitle,
-            description = description,
-            link = link,
-            subscribed = false,
-            categories = setOf(),
-            chapters = listOf()
-        )
     }
 }
