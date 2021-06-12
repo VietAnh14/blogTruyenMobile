@@ -10,6 +10,8 @@
     <com.google.android.material.progressindicator.CircularProgressIndicator
         android:id="@+id/progress_circular"
         android:indeterminate="true"
+        app:trackCornerRadius="10dp"
+        android:indeterminateDuration="1500"
         app:indicatorColor="?attr/colorAccent"
         android:layout_gravity="center"
         android:layout_width="wrap_content"

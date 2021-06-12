@@ -8,11 +8,11 @@ import androidx.room.ForeignKey
     primaryKeys = ["mangaId", "categoryId"],
     foreignKeys = [
         ForeignKey(
-            entity = Manga::class,
+            entity = MangaEntity::class,
             parentColumns = ["mangaId"],
             childColumns = ["mangaId"]
         ), ForeignKey(
-            entity = Category::class,
+            entity = CategoryEntity::class,
             parentColumns = ["categoryId"],
             childColumns = ["categoryId"]
         )
@@ -20,5 +20,5 @@ import androidx.room.ForeignKey
 )
 data class MangaCategory(
     val mangaId: Int,
-    val categoryId: String
+    val categoryId: Int
 )

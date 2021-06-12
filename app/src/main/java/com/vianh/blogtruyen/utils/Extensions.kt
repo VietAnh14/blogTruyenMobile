@@ -1,8 +1,24 @@
 package com.vianh.blogtruyen.utils
 
+import android.animation.TimeInterpolator
+import android.content.Context
+import android.util.TypedValue
 import android.view.Gravity
 import android.view.View
+import android.view.animation.AccelerateInterpolator
+import android.view.animation.AnimationUtils
+import android.view.animation.Interpolator
+import androidx.annotation.AttrRes
+import androidx.annotation.ColorInt
+import com.bumptech.glide.RequestManager
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.target.Target
+import com.vianh.blogtruyen.R
+import kotlinx.coroutines.suspendCancellableCoroutine
 import okhttp3.Call
+import java.io.File
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
@@ -29,15 +45,13 @@ suspend fun <T> Call.suspendGetResult(): T {
 }
 
 fun Call.extractData(): String {
-    val response = execute()
-    try {
+    val httpResponse = execute()
+    httpResponse.use { response ->
         if (response.isSuccessful && response.body != null) {
             return response.body!!.string()
         } else {
             throw HttpError(response.code, response.message)
         }
-    } finally {
-        response.close()
     }
 }
 
@@ -59,6 +73,35 @@ fun View.toggleState(direction: Int) {
     }
 }
 
+suspend fun RequestManager.preloadSuspend(uri: String) {
+    suspendCancellableCoroutine<Unit> {
+        this.asFile()
+            .load(uri)
+            .listener(object: RequestListener<File> {
+                override fun onLoadFailed(
+                    e: GlideException?,
+                    model: Any?,
+                    target: Target<File>?,
+                    isFirstResource: Boolean
+                ): Boolean {
+                    it.resume(Unit)
+                    return false
+                }
+
+                override fun onResourceReady(
+                    resource: File?,
+                    model: Any?,
+                    target: Target<File>?,
+                    dataSource: DataSource?,
+                    isFirstResource: Boolean
+                ): Boolean {
+                    it.resume(Unit)
+                    return false
+                }
+            }).submit()
+    }
+}
+
 fun View.gone() {
     if (visibility != View.GONE) {
         visibility = View.GONE
@@ -75,4 +118,38 @@ fun View.invisible() {
     if (visibility != View.INVISIBLE) {
         visibility = View.INVISIBLE
     }
+}
+
+fun View.slideDown(duration: Long = 400, interpolator: Interpolator = AccelerateInterpolator()) {
+    animate()
+        .translationY(height.toFloat())
+        .setInterpolator(interpolator)
+        .setDuration(duration)
+        .start()
+}
+
+fun View.slideUp(duration: Long = 400, interpolator: Interpolator = AccelerateInterpolator()) {
+    animate()
+        .translationY(height * -1f)
+        .setInterpolator(interpolator)
+        .setDuration(duration)
+        .start()
+}
+
+fun View.resetPos(duration: Long = 400, interpolator: Interpolator = AccelerateInterpolator()) {
+    animate()
+        .translationY(0f)
+        .setInterpolator(interpolator)
+        .setDuration(duration)
+        .start()
+}
+
+@ColorInt
+fun Context.getColorFromAttr(
+    @AttrRes attrColor: Int,
+    typedValue: TypedValue = TypedValue(),
+    resolveRefs: Boolean = true
+): Int {
+    theme.resolveAttribute(attrColor, typedValue, resolveRefs)
+    return typedValue.data
 }

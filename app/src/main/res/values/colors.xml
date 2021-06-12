@@ -4,7 +4,9 @@
     <color name="colorPrimaryDark">#000000</color>
     <color name="colorAccent">#03A9F4</color>
     <color name="darkGray">#757575</color>
+    <color name="secondaryTextColor">#B3B4B5</color>
     <color name="pureBlack">#000000</color>
     <color name="pureWhite">#FFF</color>
     <color name="lightGray">#F8F8F8</color>
+    <color name="navigationBarFullScreenColor">#B7000000</color>
 </resources>

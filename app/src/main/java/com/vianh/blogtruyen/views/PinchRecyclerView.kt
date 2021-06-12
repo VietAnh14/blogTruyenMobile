@@ -1,12 +1,16 @@
 package com.vianh.blogtruyen.views
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Canvas
 import android.util.AttributeSet
+import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.ScaleGestureDetector
 import android.view.ScaleGestureDetector.SimpleOnScaleGestureListener
 import androidx.recyclerview.widget.RecyclerView
+import timber.log.Timber
+import javax.security.auth.callback.Callback
 import kotlin.math.max
 import kotlin.math.min
 
@@ -20,13 +24,15 @@ class PinchRecyclerView @JvmOverloads constructor(
 
     private var mActivePointerId = INVALID_POINTER_ID
 
-    private lateinit var mScaleDetector: ScaleGestureDetector
-    private var mScaleFactor = 1f
-    private var scaleFocusX = 0f
-    private var scaleFocusY = 0f
+    private val mScaleDetector: ScaleGestureDetector
+    private val gestureDetector: GestureDetector
 
-    private var maxWidth = 0.0f
-    private var maxHeight = 0.0f
+    var callBack: ReaderCallBack? = null
+
+    private var mScaleFactor = 1f
+
+    private var maxOffsetX = 0.0f
+    private var maxOffsetY = 0.0f
 
     private var mLastTouchX = 0f
     private var mLastTouchY = 0f
@@ -38,7 +44,8 @@ class PinchRecyclerView @JvmOverloads constructor(
     private var height = 0f
 
     init {
-        if (!isInEditMode) mScaleDetector = ScaleGestureDetector(getContext(), ScaleListener())
+        gestureDetector = GestureDetector(context, GestureListener())
+        mScaleDetector = ScaleGestureDetector(getContext(), ScaleListener())
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -47,18 +54,10 @@ class PinchRecyclerView @JvmOverloads constructor(
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
     }
 
-    override fun onInterceptTouchEvent(ev: MotionEvent): Boolean {
-        try {
-            return super.onInterceptTouchEvent(ev)
-        } catch (ex: IllegalArgumentException) {
-            ex.printStackTrace()
-        }
-        return false
-    }
-
+    @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(ev: MotionEvent): Boolean {
-        super.onTouchEvent(ev)
         mScaleDetector.onTouchEvent(ev)
+        gestureDetector.onTouchEvent(ev)
 
         val action = ev.action
         when (action and MotionEvent.ACTION_MASK) {
@@ -83,8 +82,8 @@ class PinchRecyclerView @JvmOverloads constructor(
                 val dy = y - mLastTouchY
                 mPosX += dx
                 mPosY += dy
-                if (mPosX > 0.0f) mPosX = 0.0f else if (mPosX < maxWidth) mPosX = maxWidth
-                if (mPosY > 0.0f) mPosY = 0.0f else if (mPosY < maxHeight) mPosY = maxHeight
+                if (mPosX > 0.0f) mPosX = 0.0f else if (mPosX < maxOffsetX) mPosX = maxOffsetX
+                if (mPosY > 0.0f) mPosY = 0.0f else if (mPosY < maxOffsetY) mPosY = maxOffsetY
                 mLastTouchX = x
                 mLastTouchY = y
                 invalidate()
@@ -107,18 +106,9 @@ class PinchRecyclerView @JvmOverloads constructor(
                 }
             }
         }
-        return true
+        return super.onTouchEvent(ev)
     }
 
-    override fun onDraw(canvas: Canvas) {
-        super.onDraw(canvas)
-        canvas.apply {
-            save()
-            translate(mPosX, mPosY)
-            scale(mScaleFactor, mScaleFactor)
-            restore()
-        }
-    }
 
     override fun dispatchDraw(canvas: Canvas) {
         canvas.apply {
@@ -136,16 +126,44 @@ class PinchRecyclerView @JvmOverloads constructor(
     }
 
     private inner class ScaleListener : SimpleOnScaleGestureListener() {
+        private var scaleFocusBeginX = 0f
+        private var scaleFocusBeginY = 0f
+
+        override fun onScaleBegin(detector: ScaleGestureDetector?): Boolean {
+            detector?.let {
+                scaleFocusBeginX = it.focusX
+                scaleFocusBeginY = it.focusY
+            }
+            return super.onScaleBegin(detector)
+        }
+
         override fun onScale(detector: ScaleGestureDetector): Boolean {
             mScaleFactor *= detector.scaleFactor
             mScaleFactor = max(1.0f, min(mScaleFactor, 3.0f))
-            scaleFocusX = detector.focusX
-            scaleFocusY = detector.focusY
-            maxWidth = width - width * mScaleFactor
-            maxHeight = height - height * mScaleFactor
+            maxOffsetX = width - width * mScaleFactor
+            maxOffsetY = height - height * mScaleFactor
+
+            val scaleDiffX = width/2 - mScaleFactor*detector.focusX
+            val scaleDiffY = height/2 - mScaleFactor*detector.focusY
+            mPosX = scaleDiffX
+            mPosY = scaleDiffY
             invalidate()
             return true
         }
+    }
+
+    private inner class GestureListener: GestureDetector.SimpleOnGestureListener() {
+        override fun onSingleTapConfirmed(e: MotionEvent?): Boolean {
+            return callBack?.onSingleTap() ?: false || super.onSingleTapConfirmed(e)
+        }
+
+        override fun onDoubleTap(e: MotionEvent?): Boolean {
+            return super.onDoubleTap(e)
+        }
+    }
+
+    interface ReaderCallBack {
+        fun onSingleTap(): Boolean
     }
 
     companion object {

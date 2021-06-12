@@ -1,6 +1,9 @@
 package com.vianh.blogtruyen.data.remote
 
+import com.github.michaelbull.result.runCatching
 import com.vianh.blogtruyen.BuildConfig
+import com.vianh.blogtruyen.data.MonadResult
+import com.vianh.blogtruyen.data.model.Category
 import com.vianh.blogtruyen.data.model.Chapter
 import com.vianh.blogtruyen.data.model.Comment
 import com.vianh.blogtruyen.data.model.Manga
@@ -23,12 +26,14 @@ class BlogtruyenProvider(private val client: OkHttpClient) : MangaProvider {
         private const val AJAX_LOAD_COMMENT = BuildConfig.HOST + "/Comment/AjaxLoadComment"
     }
 
-    override suspend fun fetchNewManga(pageNumber: Int): MutableList<Manga> {
+    override suspend fun fetchNewManga(pageNumber: Int): MonadResult<MutableList<Manga>> {
         return withContext(Dispatchers.IO) {
-            val url = BuildConfig.HOST + "/thumb-$pageNumber"
-            val request = Request.Builder().url(url).build()
-            val response = client.newCall(request).extractData()
-            parseManga(response)
+            runCatching {
+                val url = BuildConfig.HOST + "/thumb-$pageNumber"
+                val request = Request.Builder().url(url).build()
+                val response = client.newCall(request).extractData()
+                parseManga(response)
+            }
         }
     }
 
@@ -155,12 +160,13 @@ class BlogtruyenProvider(private val client: OkHttpClient) : MangaProvider {
             val title = row.child(0).child(0).text()
             val link = row.child(0).child(0).attr("href")
             val id = link.split('/')[1]
-            result.add(Chapter(
-                id = id,
-                name = title,
-                url = link,
-                mangaId = mangaId.toString()
-            ))
+            result.add(
+                Chapter(
+                    id = id,
+                    name = title,
+                    url = link
+                )
+            )
         }
         return result
     }
@@ -172,11 +178,23 @@ class BlogtruyenProvider(private val client: OkHttpClient) : MangaProvider {
         val image = details.getElementsByClass("content")[0].child(0).attr("src")
         val id = details.getElementById("MangaId").attr("value").toInt()
         val description = details.getElementsByClass("introduce")[0].text()
+        val category = details.getElementsByClass("catetgory")[0]
+            .child(0)
+            .children()
+            .filter { !it.hasClass("first") }
+            .map {
+                Category(
+                    name = it.text(),
+                    query = it.child(0).attr("href")
+                )
+            }
+            .toSet()
         return manga.copy(
             id = id,
             title = title,
             description = description,
-            imageUrl = image
+            imageUrl = image,
+            categories = category
         )
     }
 

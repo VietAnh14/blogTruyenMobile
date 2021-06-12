@@ -1,21 +1,24 @@
 package com.vianh.blogtruyen.data.local
 
 import com.vianh.blogtruyen.data.local.entity.*
+import com.vianh.blogtruyen.data.model.Category
+import com.vianh.blogtruyen.data.model.Chapter
+import com.vianh.blogtruyen.data.model.History
+import com.vianh.blogtruyen.data.model.Manga
+import kotlinx.coroutines.flow.Flow
 
+// TODO: Split to multiple interfaces
 interface DbHelper {
-    suspend fun insertManga(manga: Manga)
 
-    suspend fun insertChapter(chapter: Chapter)
+    suspend fun upsertManga(manga: Manga, updateCategories: Boolean = true)
 
-    suspend fun insertChapters(chapters: List<Chapter>)
+    suspend fun findAllReadChapter(mangaId: Int): List<ChapterEntity>
 
-    suspend fun inserListCategory(category: List<Category>)
+    suspend fun markChapterAsRead(chapter: Chapter, mangaId: Int)
 
-    suspend fun getChapters(mangaId: Int): MutableList<Chapter>
+    fun observeHistory(): Flow<List<History>>
 
-    suspend fun getMangaWithCategories(mangaId: Int): MangaWithCategories
+    suspend fun clearAllHistory()
 
-    suspend fun getChapterRead(mangaId: Int): List<Chapter>
-
-    suspend fun updateChapter(chapter: Chapter)
+    suspend fun deleteHistory(history: History)
 }

@@ -5,46 +5,55 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
-import com.vianh.blogtruyen.MvvmApp
-import com.vianh.blogtruyen.data.local.entity.Category
-import com.vianh.blogtruyen.data.local.entity.Chapter
-import com.vianh.blogtruyen.data.local.entity.Manga
-import com.vianh.blogtruyen.data.local.entity.MangaCategory
+import com.vianh.blogtruyen.data.local.dao.CategoryDao
+import com.vianh.blogtruyen.data.local.dao.ChapterDao
+import com.vianh.blogtruyen.data.local.dao.HistoryDao
+import com.vianh.blogtruyen.data.local.dao.MangaDao
+import com.vianh.blogtruyen.data.local.entity.*
 import kotlinx.coroutines.*
 
 @Database(
-    entities = [Manga::class, Chapter::class, MangaCategory::class, Category::class],
+    entities = [
+        MangaEntity::class,
+        ChapterEntity::class,
+        MangaCategory::class,
+        CategoryEntity::class,
+        HistoryEntity::class
+    ],
     exportSchema = false,
     version = 1
 )
 abstract class MangaDb : RoomDatabase() {
-    abstract fun mangaDao(): MangaDao
+    abstract val mangaDao: MangaDao
+    abstract val categoryDao: CategoryDao
+    abstract val chapterDao: ChapterDao
+    abstract val historyDao: HistoryDao
 
     companion object {
         private const val DB_NAME = "MangaDB.db"
 
-        // Todo: finish this list
-        val categories: List<Category> by lazy {
-            listOf(
-                Category("action", "Action", "/theloai/action"),
-                Category("Adventure", "Adventure", "/theloai/adventure"),
-                Category("Comedy", "Comedy", "/theloai/comedy"),
-                Category("Shounnen", "Shounen", "/theloai/shounen"),
-                Category("Magic", "Magic", "/theloai/magic"),
-                Category("Fantasy", "Fantasy", "/theloai/adventure/fantasy-new"),
-                Category("Manga", "Manga", "/theloai/manga"),
-                Category("FullColor", "Full màu", "/theloai/full-mau")
-            )
-        }
+//        // Todo: finish this list
+//        val categories: List<CategoryEntity> by lazy {
+//            listOf(
+//                CategoryEntity("Action", "/theloai/action"),
+//                CategoryEntity("Adventure", "/theloai/adventure"),
+//                CategoryEntity("Comedy", "/theloai/comedy"),
+//                CategoryEntity("Shounen", "/theloai/shounen"),
+//                CategoryEntity("Magic", "/theloai/magic"),
+//                CategoryEntity("Fantasy", "/theloai/adventure/fantasy-new"),
+//                CategoryEntity("Manga", "/theloai/manga"),
+//                CategoryEntity("Full màu", "/theloai/full-mau")
+//            )
+//        }
 
         fun provideDb(context: Context): MangaDb {
             var mangaDb: MangaDb? = null
-            val callback = object: RoomDatabase.Callback() {
+            val callback = object : RoomDatabase.Callback() {
                 override fun onCreate(db: SupportSQLiteDatabase) {
                     super.onCreate(db)
                     mangaDb?.let {
                         GlobalScope.launch(Dispatchers.IO) {
-                            it.mangaDao().inserListCategory(categories)
+//                            it.categoryDao().insert(categories)
                         }
                     }
                 }

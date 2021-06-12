@@ -7,13 +7,14 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="android:windowBackground">@color/colorPrimary</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorControlHighlight">@color/lightGray</item>
         <item name="titleTextColor">@android:color/white</item>
         <item name="android:textColorPrimary">@color/lightGray</item>
-        <item name="colorControlNormal">@color/lightGray</item>
+        <item name="colorControlNormal">@color/darkGray</item>
         <item name="android:navigationBarColor">@color/colorPrimary</item>
         <item name="actionMenuTextColor">@color/pureWhite</item>
         <item name="android:popupMenuStyle">@style/PopupMenu</item>
-        <item name="android:textColor">?attr/colorControlNormal</item>
+        <item name="android:textColor">@color/lightGray</item>
         <item name="searchViewStyle">@style/SearchViewTheme</item>
         <item name="android:textColorHint">@color/darkGray</item>
         <item name="android:windowTranslucentStatus">true</item>
@@ -55,6 +56,11 @@
     <style name="NormalBlackText">
         <item name="android:textSize">14sp</item>
         <item name="android:textColor">@android:color/black</item>
+    </style>
+
+    <style name="RoundCornerShape" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">5dp</item>
     </style>
 
 </resources>

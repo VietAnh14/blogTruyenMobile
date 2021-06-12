@@ -5,10 +5,10 @@ import androidx.room.Relation
 
 data class MangaWithChapters(
     @Embedded
-    val manga: Manga,
+    val manga: MangaEntity,
     @Relation(
         parentColumn = "id",
         entityColumn = "mangaId"
     )
-    val chapter: List<Chapter>
+    val chapter: List<ChapterEntity>
 )
