@@ -37,7 +37,7 @@ class HomeViewModel(private val dataManager: DataManager) : BaseVM() {
                     items.map { MangaItem(it) }
                 }.onSuccess {
                     page = offset + 1
-                    val newList = if (reload) it else listContent.value + it
+                    val newList = if (reload) it else listContent.value.plus(it)
                     listContent.value = newList
                 }.onFailure {
                     error.call(it)

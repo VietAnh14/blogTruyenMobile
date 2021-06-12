@@ -1,29 +1,73 @@
 package com.vianh.blogtruyen.features.history
 
+import androidx.lifecycle.asLiveData
+import androidx.lifecycle.viewModelScope
 import com.vianh.blogtruyen.data.DataManager
+import com.vianh.blogtruyen.data.model.History
 import com.vianh.blogtruyen.features.base.BaseVM
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.*
+import java.text.SimpleDateFormat
+import java.util.*
 
-class HistoryViewModel(private val dataManager: DataManager): BaseVM() {
+class HistoryViewModel(private val dataManager: DataManager) : BaseVM() {
 
-    val content: MutableStateFlow<List<HistoryListItem>> = MutableStateFlow(listOf())
+    private val historyItems = dataManager.dbHelper.observeHistory()
 
-    init {
-        launchJob {
-            dataManager.dbHelper
-                .observeHistory()
-                .onEach {
-                    val items = it.map { history -> HistoryListItem.HistoryItem(history) }
-                    content.value = items
-                }
-                .catch {
-                    error.call(it)
-                    content.value = listOf(HistoryListItem.EmptyItem)
-                }
-                .collect()
+    private val query = MutableStateFlow("")
+
+    val content = combine(historyItems, query) { items, query -> filterItems(items, query) }
+        .map { mapHistoryToListItem(it) }
+        .flowOn(Dispatchers.Default)
+        .onEmpty { listOf(HistoryListItem.EmptyItem) }
+        .catch {
+            error.call(it)
+            listOf(HistoryListItem.EmptyItem)
         }
+
+    private fun filterItems(histories: List<History>, query: String): List<History> {
+        return if (query.isBlank())
+            histories
+        else
+            histories.filter { it.manga.title.contains(query, true) }
+    }
+
+
+    private val dateFormat = "d MMM ',' yyyy"
+    private val timeFormat = "hh:mm"
+    private fun mapHistoryToListItem(items: List<History>): List<HistoryListItem> {
+        val timeMap = items.asSequence()
+            .map { HistoryListItem.HistoryItem(it, timeStampToTime(it.lastRead, timeFormat)) }
+            .groupBy { timeStampToTime(it.history.lastRead, dateFormat) }
+
+        val finalList = mutableListOf<HistoryListItem>()
+        for (entry in timeMap) {
+            finalList.add(HistoryListItem.TimeItem(entry.key))
+            finalList.addAll(entry.value)
+        }
+
+        return finalList
+    }
+
+    private fun timeStampToTime(timestamp: Long, dateFormat: String): String {
+        val calendar = Calendar.getInstance()
+        calendar.timeInMillis = timestamp
+        return SimpleDateFormat(dateFormat, Locale.ROOT).format(calendar.time)
+    }
+
+    fun clearAllHistory() {
+        launchJob {
+            dataManager.dbHelper.clearAllHistory()
+        }
+    }
+
+    fun clearHistory(history: History) {
+        launchJob {
+            dataManager.dbHelper.deleteHistory(history)
+        }
+    }
+
+    fun filterHistory(query: String) {
+        this.query.value = query
     }
 }

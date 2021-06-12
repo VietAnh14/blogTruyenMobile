@@ -1,13 +1,15 @@
 package com.vianh.blogtruyen.features.base
 
 import android.view.View
-import android.view.ViewGroup
+import androidx.annotation.NonNull
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import androidx.viewbinding.ViewBinding
+import com.vianh.blogtruyen.databinding.HistoryItemBinding
 import com.vianh.blogtruyen.features.list.ListItem
 import java.util.*
-
+import kotlin.reflect.KFunction1
 
 
 interface HasUniqueId<T> {
@@ -18,7 +20,7 @@ interface HasUniqueId<T> {
 // E: Extra config
 @Suppress("UNCHECKED_CAST")
 abstract class AbstractViewHolder<T: ListItem, E>(itemView: View): RecyclerView.ViewHolder(itemView) {
-    protected var boundData: T? = null
+    var boundData: T? = null
 
     fun bindData(data: ListItem, extra: E) {
         val itemData = data as T
@@ -32,14 +34,13 @@ abstract class AbstractViewHolder<T: ListItem, E>(itemView: View): RecyclerView.
 
     open fun onAttachToWindow() = Unit
 
-    open fun onDetachFromWindow() {
-        boundData = null
-    }
+    open fun onDetachFromWindow() = Unit
 }
 
-abstract class AbstractAdapter<T: ListItem, E>(val extra: E): ListAdapter<T, AbstractViewHolder<T, E>>(DiffCallBack<T>()) {
 
-    override fun onBindViewHolder(holder: AbstractViewHolder<T, E>, position: Int) {
+abstract class AbstractAdapter<T: ListItem, E>(val extra: E): ListAdapter<T, AbstractViewHolder<out T, E>>(DiffCallBack<T>()) {
+
+    override fun onBindViewHolder(holder: AbstractViewHolder<out T, E>, position: Int) {
         holder.bindData(getItem(position), extra)
     }
 
@@ -47,17 +48,17 @@ abstract class AbstractAdapter<T: ListItem, E>(val extra: E): ListAdapter<T, Abs
         return getItem(position).viewType
     }
 
-    override fun onViewRecycled(holder: AbstractViewHolder<T, E>) {
+    override fun onViewRecycled(holder: AbstractViewHolder<out T, E>) {
         holder.onRecycle()
         super.onViewRecycled(holder)
     }
 
-    override fun onViewAttachedToWindow(holder: AbstractViewHolder<T, E>) {
+    override fun onViewAttachedToWindow(holder: AbstractViewHolder<out T, E>) {
         super.onViewAttachedToWindow(holder)
         holder.onAttachToWindow()
     }
 
-    override fun onViewDetachedFromWindow(holder: AbstractViewHolder<T, E>) {
+    override fun onViewDetachedFromWindow(holder: AbstractViewHolder<out T, E>) {
         holder.onDetachFromWindow()
         super.onViewDetachedFromWindow(holder)
     }

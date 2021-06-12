@@ -9,14 +9,14 @@ data class FullHistory(
     val history: HistoryEntity,
 
     @Relation(
-        parentColumn = "mangaId",
+        parentColumn = "refMangaId",
         entityColumn = "mangaId"
     )
     val manga: MangaEntity,
 
     @Relation(
-        parentColumn = "id",
-        entityColumn = "chapterId"
+        parentColumn = "chapterId",
+        entityColumn = "id"
     )
     val lastReadChapter: ChapterEntity
 ) {

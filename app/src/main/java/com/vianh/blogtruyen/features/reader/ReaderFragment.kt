@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updateLayoutParams
 import com.bumptech.glide.Glide
 import com.vianh.blogtruyen.data.model.Chapter
@@ -66,6 +67,10 @@ class ReaderFragment : BaseFragment<ReaderFragmentBinding>() {
     private fun setup() {
         hostActivity?.setupToolbar(requireBinding.toolbar)
         readerDelegate.setUpReader(tileSize)
+    }
+
+    override fun onWindowInsetsChange(root: View?, insets: WindowInsetsCompat): WindowInsetsCompat {
+        return insets
     }
 
     private fun onContentChange(content: ReaderModel) {

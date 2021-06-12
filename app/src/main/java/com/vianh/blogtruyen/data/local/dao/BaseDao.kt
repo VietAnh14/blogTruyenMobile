@@ -12,7 +12,7 @@ abstract class BaseDao<T> {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     abstract suspend fun insert(items: Collection<T>): List<Long>
 
-    @Update(onConflict = OnConflictStrategy.IGNORE)
+    @Update(onConflict = OnConflictStrategy.REPLACE)
     abstract suspend fun update(item: T): Int
 
     @Update

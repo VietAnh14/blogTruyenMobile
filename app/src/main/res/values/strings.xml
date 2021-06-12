@@ -17,4 +17,5 @@
     <string name="add_to_favorite">Theo dõi</string>
     <string name="manga_info">Thông tin</string>
     <string name="search_by_google">Tìm kiếm trên google</string>
+    <string name="clear_all_history">Xóa toàn bộ lịch sử</string>
 </resources>

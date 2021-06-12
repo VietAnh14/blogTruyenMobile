@@ -64,7 +64,7 @@ class HomeFragment: BaseFragment<HomeFragmentBinding>(), MangaItemVH.MangaClick 
         }
 
         requireBinding.swipeRefreshLayout.setOnRefreshListener {
-            viewModel.loadPage(1, false)
+            viewModel.loadPage(1, true)
         }
     }
 

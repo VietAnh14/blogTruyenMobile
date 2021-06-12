@@ -18,6 +18,7 @@ class ReaderDelegate(private val readerFragment: ReaderFragment, val viewModel: 
 
     private var readerAdapter: ReaderAdapter? = null
 
+    @Suppress("DEPRECATION")
     fun setUpReader(tileSize: Int) {
         with(binding) {
             btnNext.setOnClickListener {

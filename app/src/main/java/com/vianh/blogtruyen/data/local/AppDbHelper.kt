@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 
 // TODO: Inject dispatchers
-class AppDbHelper(val db: MangaDb) : DbHelper {
+class AppDbHelper(private val db: MangaDb) : DbHelper {
     override suspend fun upsertManga(manga: Manga, updateCategories: Boolean) {
         db.withTransaction {
             val mangaId = manga.id
@@ -36,7 +36,7 @@ class AppDbHelper(val db: MangaDb) : DbHelper {
             db.chapterDao.upsert(ChapterEntity.fromChapter(chapter, mangaId))
             db.historyDao.upsert(
                 HistoryEntity(
-                    mangaId = mangaId,
+                    refMangaId = mangaId,
                     chapterId = chapter.id,
                     lastRead = System.currentTimeMillis()
                 )
@@ -44,12 +44,20 @@ class AppDbHelper(val db: MangaDb) : DbHelper {
         }
     }
 
-    override suspend fun observeHistory(): Flow<List<History>> {
+    override fun observeHistory(): Flow<List<History>> {
         return db.historyDao
             .observeFullHistory()
             .map {
                 it.map { fullHistory -> fullHistory.toHistory() }
             }
             .flowOn(Dispatchers.IO)
+    }
+
+    override suspend fun clearAllHistory() {
+        return db.historyDao.deleteAll()
+    }
+
+    override suspend fun deleteHistory(history: History) {
+        return db.historyDao.delete(HistoryEntity.fromHistory(history))
     }
 }

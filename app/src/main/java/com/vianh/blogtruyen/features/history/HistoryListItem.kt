@@ -5,7 +5,7 @@ import com.vianh.blogtruyen.features.base.HasUniqueId
 import com.vianh.blogtruyen.features.list.ListItem
 
 sealed class HistoryListItem: ListItem {
-    data class HistoryItem(val history: History): HistoryListItem(), HasUniqueId<Int> {
+    data class HistoryItem(val history: History, val timeString: String): HistoryListItem(), HasUniqueId<Int> {
         override val viewType: Int
             get() = HISTORY_ITEM
 

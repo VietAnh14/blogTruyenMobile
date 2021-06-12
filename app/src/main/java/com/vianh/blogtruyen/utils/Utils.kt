@@ -42,6 +42,7 @@ class BlogTruyenInterceptor: Interceptor {
 
 }
 
+@Suppress("DEPRECATION")
 fun hideSystemUI(window: Window) {
     // Enables regular immersive mode.
     // For "lean back" mode, remove SYSTEM_UI_FLAG_IMMERSIVE.
@@ -59,6 +60,7 @@ fun hideSystemUI(window: Window) {
 
 // Shows the system bars by removing all the flags
 // except for the ones that make the content appear under the system bars.
+@Suppress("DEPRECATION")
 fun showSystemUI(window: Window) {
     //Magic color that make status bar transparent (arbg) first 4 bits are alpha
     window.statusBarColor = Color.parseColor("#99000000")

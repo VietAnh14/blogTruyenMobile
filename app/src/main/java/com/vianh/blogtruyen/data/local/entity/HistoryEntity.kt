@@ -1,6 +1,7 @@
 package com.vianh.blogtruyen.data.local.entity
 
 import androidx.room.*
+import com.vianh.blogtruyen.data.model.History
 
 @Entity(
     tableName = "history",
@@ -8,7 +9,7 @@ import androidx.room.*
         ForeignKey(
             entity = MangaEntity::class,
             parentColumns = ["mangaId"],
-            childColumns = ["mangaId"],
+            childColumns = ["refMangaId"],
             onDelete = ForeignKey.CASCADE
         ),
         ForeignKey(
@@ -19,13 +20,23 @@ import androidx.room.*
         )
     ],
     indices = [
-        Index(value = ["mangaId", "chapterId"])
+        Index(value = ["refMangaId", "chapterId"])
     ]
 )
 data class HistoryEntity(
-    val mangaId: Int,
+    @PrimaryKey
+    val refMangaId: Int,
     val chapterId: String,
-    val lastRead: Long,
-    @PrimaryKey(autoGenerate = true)
-    val id: Long = 0
-)
+    val lastRead: Long
+) {
+
+    companion object {
+        fun fromHistory(history: History): HistoryEntity {
+            return HistoryEntity(
+                refMangaId = history.manga.id,
+                chapterId = history.chapter.id,
+                lastRead = history.lastRead
+            )
+        }
+    }
+}

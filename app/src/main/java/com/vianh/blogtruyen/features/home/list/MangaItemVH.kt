@@ -1,13 +1,9 @@
 package com.vianh.blogtruyen.features.home.list
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import androidx.viewbinding.ViewBinding
 import com.vianh.blogtruyen.databinding.FeedItemBinding
 import com.vianh.blogtruyen.features.base.AbstractViewHolder
-import com.vianh.blogtruyen.features.list.BaseVH
-import com.vianh.blogtruyen.features.list.ListItem
 import com.vianh.blogtruyen.utils.loadNetWorkImage
 
 class MangaItemVH(private val binding: FeedItemBinding, clickListener: MangaClick) :

@@ -1,6 +1,5 @@
 package com.vianh.blogtruyen.features.reader.list
 
-import android.util.Log
 import com.vianh.blogtruyen.databinding.TransitionPageBinding
 import com.vianh.blogtruyen.features.list.BaseVH
 import com.vianh.blogtruyen.features.list.ListItem
