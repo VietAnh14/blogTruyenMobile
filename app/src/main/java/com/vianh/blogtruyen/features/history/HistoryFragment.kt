@@ -6,7 +6,7 @@ import androidx.appcompat.widget.SearchView
 import com.vianh.blogtruyen.R
 import com.vianh.blogtruyen.databinding.HistoryFragmentBinding
 import com.vianh.blogtruyen.features.base.BaseFragment
-import com.vianh.blogtruyen.utils.observeAsLiveData
+import com.vianh.blogtruyen.features.mangaDetails.MangaDetailsFragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class HistoryFragment: BaseFragment<HistoryFragmentBinding>() {
@@ -30,10 +30,12 @@ class HistoryFragment: BaseFragment<HistoryFragmentBinding>() {
     }
 
     private fun observe() {
-        hostActivity?.setupToolbar(requireBinding.toolbar)
-        setHasOptionsMenu(true)
-        viewModel.content.observeAsLiveData(viewLifecycleOwner) {
+        viewModel.content.observe(viewLifecycleOwner) {
             historyAdapter?.submitList(it)
+        }
+
+        viewModel.toInfoCommand.observe(viewLifecycleOwner) {
+            hostActivity?.changeFragment(MangaDetailsFragment.newInstance(it), true)
         }
     }
 
@@ -53,9 +55,21 @@ class HistoryFragment: BaseFragment<HistoryFragmentBinding>() {
     }
 
     private fun setup() {
+        hostActivity?.setupToolbar(requireBinding.toolbar)
+        setHasOptionsMenu(true)
+
         with(requireBinding.contentRecycler) {
             setHasFixedSize(true)
             adapter = HistoryAdapter(viewModel).also { historyAdapter = it }
+        }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return if (item.itemId == R.id.clear_all) {
+            viewModel.clearAllHistory()
+            true
+        } else {
+            super.onOptionsItemSelected(item)
         }
     }
 

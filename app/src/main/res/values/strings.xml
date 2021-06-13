@@ -18,4 +18,5 @@
     <string name="manga_info">Thông tin</string>
     <string name="search_by_google">Tìm kiếm trên google</string>
     <string name="clear_all_history">Xóa toàn bộ lịch sử</string>
+    <string name="empty_history">Empty history</string>
 </resources>

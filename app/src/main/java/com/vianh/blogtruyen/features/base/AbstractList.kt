@@ -22,6 +22,8 @@ interface HasUniqueId<T> {
 abstract class AbstractViewHolder<T: ListItem, E>(itemView: View): RecyclerView.ViewHolder(itemView) {
     var boundData: T? = null
 
+    fun requireData(): T = checkNotNull(boundData)
+
     fun bindData(data: ListItem, extra: E) {
         val itemData = data as T
         boundData = itemData

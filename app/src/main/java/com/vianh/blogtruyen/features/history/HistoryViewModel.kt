@@ -4,7 +4,10 @@ import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.vianh.blogtruyen.data.DataManager
 import com.vianh.blogtruyen.data.model.History
+import com.vianh.blogtruyen.data.model.Manga
 import com.vianh.blogtruyen.features.base.BaseVM
+import com.vianh.blogtruyen.utils.SingleLiveEvent
+import com.vianh.blogtruyen.utils.ifEmpty
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import java.text.SimpleDateFormat
@@ -16,14 +19,16 @@ class HistoryViewModel(private val dataManager: DataManager) : BaseVM() {
 
     private val query = MutableStateFlow("")
 
+    val toInfoCommand = SingleLiveEvent<Manga>()
+
     val content = combine(historyItems, query) { items, query -> filterItems(items, query) }
         .map { mapHistoryToListItem(it) }
-        .flowOn(Dispatchers.Default)
-        .onEmpty { listOf(HistoryListItem.EmptyItem) }
+        .ifEmpty { listOf(HistoryListItem.EmptyItem) }
+        .distinctUntilChanged()
         .catch {
             error.call(it)
             listOf(HistoryListItem.EmptyItem)
-        }
+        }.asLiveData(viewModelScope.coroutineContext + Dispatchers.Default)
 
     private fun filterItems(histories: List<History>, query: String): List<History> {
         return if (query.isBlank())
@@ -61,7 +66,7 @@ class HistoryViewModel(private val dataManager: DataManager) : BaseVM() {
         }
     }
 
-    fun clearHistory(history: History) {
+    fun deleteHistory(history: History) {
         launchJob {
             dataManager.dbHelper.deleteHistory(history)
         }
@@ -69,5 +74,9 @@ class HistoryViewModel(private val dataManager: DataManager) : BaseVM() {
 
     fun filterHistory(query: String) {
         this.query.value = query
+    }
+
+    fun navigateToInfo(manga: Manga) {
+        toInfoCommand.setValue(manga)
     }
 }

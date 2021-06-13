@@ -7,7 +7,7 @@ import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.vianh.blogtruyen.data.local.dao.CategoryDao
 import com.vianh.blogtruyen.data.local.dao.ChapterDao
-import com.vianh.blogtruyen.data.local.dao.HistoryDao
+import com.vianh.blogtruyen.features.history.data.HistoryDao
 import com.vianh.blogtruyen.data.local.dao.MangaDao
 import com.vianh.blogtruyen.data.local.entity.*
 import kotlinx.coroutines.*
