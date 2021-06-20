@@ -1,4 +1,4 @@
-package com.vianh.blogtruyen.features.bookmarks
+package com.vianh.blogtruyen.features.favorites
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import com.vianh.blogtruyen.databinding.BookmarksFragmentBinding
 import com.vianh.blogtruyen.features.base.BaseFragment
 
-class BookmarksFragment: BaseFragment<BookmarksFragmentBinding>() {
+class FavoritesFragment: BaseFragment<BookmarksFragmentBinding>() {
     override fun createBinding(
         inflater: LayoutInflater,
         container: ViewGroup?,

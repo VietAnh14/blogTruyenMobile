@@ -8,8 +8,9 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import com.vianh.blogtruyen.data.local.dao.CategoryDao
 import com.vianh.blogtruyen.data.local.dao.ChapterDao
 import com.vianh.blogtruyen.features.history.data.HistoryDao
-import com.vianh.blogtruyen.data.local.dao.MangaDao
+import com.vianh.blogtruyen.features.mangaDetails.data.MangaDao
 import com.vianh.blogtruyen.data.local.entity.*
+import com.vianh.blogtruyen.features.favorites.data.FavoriteDao
 import kotlinx.coroutines.*
 
 @Database(
@@ -18,7 +19,8 @@ import kotlinx.coroutines.*
         ChapterEntity::class,
         MangaCategory::class,
         CategoryEntity::class,
-        HistoryEntity::class
+        HistoryEntity::class,
+        FavoriteEntity::class
     ],
     exportSchema = false,
     version = 1
@@ -28,6 +30,7 @@ abstract class MangaDb : RoomDatabase() {
     abstract val categoryDao: CategoryDao
     abstract val chapterDao: ChapterDao
     abstract val historyDao: HistoryDao
+    abstract val favoriteDao: FavoriteDao
 
     companion object {
         private const val DB_NAME = "MangaDB.db"

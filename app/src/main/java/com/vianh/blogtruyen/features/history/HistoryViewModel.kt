@@ -6,6 +6,7 @@ import com.vianh.blogtruyen.data.DataManager
 import com.vianh.blogtruyen.data.model.History
 import com.vianh.blogtruyen.data.model.Manga
 import com.vianh.blogtruyen.features.base.BaseVM
+import com.vianh.blogtruyen.features.history.data.HistoryRepository
 import com.vianh.blogtruyen.utils.SingleLiveEvent
 import com.vianh.blogtruyen.utils.ifEmpty
 import kotlinx.coroutines.Dispatchers
@@ -13,9 +14,9 @@ import kotlinx.coroutines.flow.*
 import java.text.SimpleDateFormat
 import java.util.*
 
-class HistoryViewModel(private val dataManager: DataManager) : BaseVM() {
+class HistoryViewModel(private val historyRepository: HistoryRepository) : BaseVM() {
 
-    private val historyItems = dataManager.dbHelper.observeHistory()
+    private val historyItems = historyRepository.observeHistory()
 
     private val query = MutableStateFlow("")
 
@@ -62,13 +63,13 @@ class HistoryViewModel(private val dataManager: DataManager) : BaseVM() {
 
     fun clearAllHistory() {
         launchJob {
-            dataManager.dbHelper.clearAllHistory()
+            historyRepository.clearAllHistory()
         }
     }
 
     fun deleteHistory(history: History) {
         launchJob {
-            dataManager.dbHelper.deleteHistory(history)
+            historyRepository.deleteHistory(history)
         }
     }
 

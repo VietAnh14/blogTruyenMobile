@@ -4,16 +4,11 @@ import androidx.room.Embedded
 import androidx.room.Junction
 import androidx.room.Relation
 
-
-data class MangaWithCategories(
+data class FullManga(
     @Embedded
     val manga: MangaEntity,
 
-    @Relation(
-        parentColumn = "id",
-        entityColumn = "mangaId"
-    )
-    val chapter: List<ChapterEntity>,
+
 
     @Relation(
         parentColumn = "mangaId",

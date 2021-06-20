@@ -8,7 +8,7 @@ import com.vianh.blogtruyen.data.model.Manga
 interface MangaProvider {
     suspend fun fetchNewManga(pageNumber: Int): MonadResult<MutableList<Manga>>
     suspend fun fetchDetailManga(manga: Manga): Manga
-    suspend fun fetchChapterList(manga: Manga): List<Chapter>
+    suspend fun fetchChapterList(mangaId: Int): List<Chapter>
     suspend fun fetchChapterPage(link: String): List<String>
     suspend fun fetchComment(mangaId: Int, offset: Int): Map<Comment, List<Comment>>
 }

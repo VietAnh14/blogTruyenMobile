@@ -15,7 +15,6 @@ import okhttp3.Request
 import org.json.JSONArray
 import org.jsoup.Jsoup
 import org.jsoup.select.Elements
-import timber.log.Timber
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -46,13 +45,13 @@ class BlogtruyenProvider(private val client: OkHttpClient) : MangaProvider {
         }
     }
 
-    override suspend fun fetchChapterList(manga: Manga): List<Chapter> {
+    override suspend fun fetchChapterList(mangaId: Int): List<Chapter> {
         return withContext(Dispatchers.IO) {
             val result: MutableList<Chapter> = mutableListOf()
             var lastPage: Int
             var currentPage = 1
             do {
-                val url = "$AJAX_LOAD_CHAPTER?id=${manga.id}&p=${currentPage}"
+                val url = "$AJAX_LOAD_CHAPTER?id=${mangaId}&p=${currentPage}"
                 val request = Request.Builder().url(url).build()
                 val response = client.newCall(request).extractData()
                 val docs = Jsoup.parse(response)
@@ -63,10 +62,9 @@ class BlogtruyenProvider(private val client: OkHttpClient) : MangaProvider {
                     1
                 }
                 val items = docs.getElementById("listChapter").children()
-                result.addAll(parseSingleListChapter(items, manga.id))
+                result.addAll(parseSingleListChapter(items))
                 currentPage++
             } while (lastPage >= currentPage)
-            Timber.d(System.currentTimeMillis().toString())
             return@withContext result
         }
     }
@@ -153,7 +151,7 @@ class BlogtruyenProvider(private val client: OkHttpClient) : MangaProvider {
         return comments
     }
 
-    private fun parseSingleListChapter(items: Elements, mangaId: Int): List<Chapter> {
+    private fun parseSingleListChapter(items: Elements): List<Chapter> {
         val result: MutableList<Chapter> = mutableListOf()
         for (element in items) {
             val row = element.child(0)

@@ -1,17 +1,28 @@
 package com.vianh.blogtruyen.features.mangaDetails
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.vianh.blogtruyen.data.DataManager
+import androidx.lifecycle.asLiveData
+import androidx.lifecycle.viewModelScope
 import com.vianh.blogtruyen.data.model.Chapter
 import com.vianh.blogtruyen.data.model.Comment
 import com.vianh.blogtruyen.data.model.Manga
 import com.vianh.blogtruyen.features.base.BaseVM
+import com.vianh.blogtruyen.features.favorites.data.FavoriteRepository
+import com.vianh.blogtruyen.features.mangaDetails.data.MangaRepo
 import kotlinx.coroutines.Job
 
-class MangaDetailsViewModel(private val dataManager: DataManager, var manga: Manga): BaseVM() {
+class MangaDetailsViewModel(
+    private val repo: MangaRepo,
+    private val favoriteRepo: FavoriteRepository,
+    var manga: Manga
+) : BaseVM() {
     val mangaLiveData: MutableLiveData<Manga> = MutableLiveData(manga)
     val chapters: MutableLiveData<List<Chapter>> = MutableLiveData(listOf())
     val comments: MutableLiveData<List<Comment>> = MutableLiveData(listOf())
+    val isFavorite: LiveData<Boolean> = favoriteRepo
+        .observeFavoriteState(manga.id)
+        .asLiveData(viewModelScope.coroutineContext)
 
     private var commentPage = 1
     private var hasNextCommentPage = true
@@ -28,30 +39,15 @@ class MangaDetailsViewModel(private val dataManager: DataManager, var manga: Man
 
     private fun loadDetails() {
         launchLoading {
-            manga = dataManager.mangaProvider.fetchDetailManga(manga)
-            dataManager.dbHelper.upsertManga(manga)
-            mangaLiveData.value = manga
+            mangaLiveData.value = repo.fetchMangaDetails(manga)
         }
     }
 
     fun loadChapters() {
         launchJob {
-            val localChapterIds = dataManager
-                .dbHelper
-                .findAllReadChapter(manga.id)
-                .map { it.id }
-                .toSet()
-
-            val mangaChapter = dataManager
-                .mangaProvider
-                .fetchChapterList(manga)
-                .map {
-                    it.read = localChapterIds.contains(it.id)
-                    it
-                }
-
-            manga = manga.copy(chapters = mangaChapter)
-            chapters.postValue(mangaChapter)
+            val fetchChapters = repo.loadChapter(manga.id)
+            manga = manga.copy(chapters = fetchChapters)
+            chapters.postValue(fetchChapters)
         }
     }
 
@@ -60,7 +56,7 @@ class MangaDetailsViewModel(private val dataManager: DataManager, var manga: Man
             return
         }
         commentJob = launchJob {
-            val commentMap = dataManager.mangaProvider.fetchComment(manga.id, offset)
+            val commentMap = repo.loadComments(manga.id, offset)
             hasNextCommentPage = commentMap.isNotEmpty()
             val flattenComments = ArrayList(comments.value!!)
             for (comment in commentMap) {
@@ -72,7 +68,12 @@ class MangaDetailsViewModel(private val dataManager: DataManager, var manga: Man
         }
     }
 
-    fun addToFavorite() {
-        //TODO: Implement
+    fun toggleFavorite(isFavorite: Boolean) {
+        launchJob {
+            if (isFavorite)
+                favoriteRepo.addToFavorite(manga)
+            else
+                favoriteRepo.removeFromFavorite(manga.id)
+        }
     }
 }

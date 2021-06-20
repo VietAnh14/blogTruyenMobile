@@ -9,7 +9,7 @@ import androidx.fragment.app.commit
 import com.vianh.blogtruyen.R
 import com.vianh.blogtruyen.databinding.HomeActivityBinding
 import com.vianh.blogtruyen.features.base.BaseActivity
-import com.vianh.blogtruyen.features.bookmarks.BookmarksFragment
+import com.vianh.blogtruyen.features.favorites.FavoritesFragment
 import com.vianh.blogtruyen.features.history.HistoryFragment
 import com.vianh.blogtruyen.views.ViewHeightAnimator
 
@@ -32,7 +32,7 @@ class HomeActivity : BaseActivity<HomeActivityBinding>() {
                 when (it.itemId) {
                     R.id.home_menu -> changeFragment(HomeFragment())
                     R.id.history -> changeFragment(HistoryFragment())
-                    R.id.bookmarks -> changeFragment(BookmarksFragment())
+                    R.id.bookmarks -> changeFragment(FavoritesFragment())
                     else -> false
                 }
             }
