@@ -1,6 +1,7 @@
 package com.vianh.blogtruyen
 
 import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.*
 import org.junit.Test
 
 import org.junit.Assert.*
@@ -66,5 +67,38 @@ class ExampleUnitTest {
             }
         }
         println("Completed in $time ms")
+    }
+
+    @ObsoleteCoroutinesApi
+    @Test
+    fun testFlow() {
+        val stateFlowA = MutableStateFlow(1)
+        val stateFlowB = MutableStateFlow("a")
+
+        val combineFlow = stateFlowA.combine(stateFlowB) { a, b ->
+            println("emitting thread: ${Thread.currentThread().name}")
+            a * a * a * a
+        }.flowOn(newSingleThreadContext("Some thread"))
+            .map {
+                println("map thread: ${Thread.currentThread().name}")
+                it * it
+            }
+
+        GlobalScope.launch {
+            combineFlow.collect {
+                println("collect $it     thread: ${Thread.currentThread().name}")
+            }
+        }
+
+        runBlocking {
+            stateFlowA.value = 2
+            delay(200)
+            stateFlowB.value = "v"
+            delay(1000)
+            stateFlowA.value = 12
+            delay(1000)
+            stateFlowA.value= 10
+
+        }
     }
 }

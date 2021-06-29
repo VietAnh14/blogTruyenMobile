@@ -13,9 +13,7 @@ import com.vianh.blogtruyen.features.home.list.MangaItem
 import com.vianh.blogtruyen.features.home.list.MangaItemVH
 import com.vianh.blogtruyen.features.list.ListItem
 import com.vianh.blogtruyen.features.mangaDetails.MangaDetailsFragment
-import com.vianh.blogtruyen.utils.GridItemSpacingDecorator
-import com.vianh.blogtruyen.utils.ScrollLoadMore
-import com.vianh.blogtruyen.utils.observeAsLiveData
+import com.vianh.blogtruyen.utils.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class HomeFragment: BaseFragment<HomeFragmentBinding>(), MangaItemVH.MangaClick {

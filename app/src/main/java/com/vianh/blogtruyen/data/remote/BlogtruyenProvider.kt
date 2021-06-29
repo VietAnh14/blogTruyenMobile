@@ -7,7 +7,7 @@ import com.vianh.blogtruyen.data.model.Category
 import com.vianh.blogtruyen.data.model.Chapter
 import com.vianh.blogtruyen.data.model.Comment
 import com.vianh.blogtruyen.data.model.Manga
-import com.vianh.blogtruyen.utils.extractData
+import com.vianh.blogtruyen.utils.getBodyString
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
@@ -30,7 +30,7 @@ class BlogtruyenProvider(private val client: OkHttpClient) : MangaProvider {
             runCatching {
                 val url = BuildConfig.HOST + "/thumb-$pageNumber"
                 val request = Request.Builder().url(url).build()
-                val response = client.newCall(request).extractData()
+                val response = client.newCall(request).getBodyString()
                 parseManga(response)
             }
         }
@@ -40,7 +40,7 @@ class BlogtruyenProvider(private val client: OkHttpClient) : MangaProvider {
         return withContext(Dispatchers.IO) {
             val url = BuildConfig.HOST + manga.link
             val request = Request.Builder().url(url).build()
-            val response = client.newCall(request).extractData()
+            val response = client.newCall(request).getBodyString()
             parseDetailManga(response, manga)
         }
     }
@@ -53,7 +53,7 @@ class BlogtruyenProvider(private val client: OkHttpClient) : MangaProvider {
             do {
                 val url = "$AJAX_LOAD_CHAPTER?id=${mangaId}&p=${currentPage}"
                 val request = Request.Builder().url(url).build()
-                val response = client.newCall(request).extractData()
+                val response = client.newCall(request).getBodyString()
                 val docs = Jsoup.parse(response)
                 val options = docs.getElementsByClass("slcChangePage")
                 lastPage = if (!options.isEmpty()) {
@@ -73,7 +73,7 @@ class BlogtruyenProvider(private val client: OkHttpClient) : MangaProvider {
         return withContext(Dispatchers.IO) {
             val url = BuildConfig.HOST_FULL + link
             val request = Request.Builder().url(url).build()
-            val content = client.newCall(request).extractData()
+            val content = client.newCall(request).getBodyString()
             return@withContext parseChapter(content)
         }
     }
@@ -82,7 +82,7 @@ class BlogtruyenProvider(private val client: OkHttpClient) : MangaProvider {
         return withContext(Dispatchers.IO) {
             val uri = "$AJAX_LOAD_COMMENT?mangaId=$mangaId&p=$offset"
             val request = Request.Builder().url(uri).build()
-            val content = client.newCall(request).extractData()
+            val content = client.newCall(request).getBodyString()
             parseComment(content)
         }
     }

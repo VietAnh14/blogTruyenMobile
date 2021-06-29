@@ -18,7 +18,7 @@ class HomeActivity : BaseActivity<HomeActivityBinding>() {
     override fun createBinding(): HomeActivityBinding = HomeActivityBinding.inflate(layoutInflater)
 
     private lateinit var bottomNavAnimator: ViewHeightAnimator
-    private val rootFragments = mutableMapOf<Int, Fragment>()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
