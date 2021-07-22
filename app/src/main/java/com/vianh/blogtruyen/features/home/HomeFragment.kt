@@ -54,7 +54,7 @@ class HomeFragment: BaseFragment<HomeFragmentBinding>(), MangaItemVH.MangaClick 
 
         with(requireBinding.feedRecycler) {
             setHasFixedSize(true)
-            addItemDecoration(GridItemSpacingDecorator(30))
+//            addItemDecoration(GridItemSpacingDecorator(20))
             adapter = MangaFeedAdapter(this@HomeFragment).also { feedAdapter = it }
             addOnScrollListener(ScrollLoadMore(2) {
                 viewModel.loadPage()

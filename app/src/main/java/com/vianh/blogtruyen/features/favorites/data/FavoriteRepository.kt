@@ -4,6 +4,7 @@ import com.vianh.blogtruyen.data.local.MangaDb
 import com.vianh.blogtruyen.data.local.entity.FavoriteEntity
 import com.vianh.blogtruyen.data.model.Favorite
 import com.vianh.blogtruyen.data.model.Manga
+import com.vianh.blogtruyen.utils.mapList
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
@@ -15,7 +16,7 @@ interface FavoriteRepository {
 
     suspend fun removeFromFavorite(mangaId: Int)
 
-    fun observeFavorite(): Flow<Favorite>
+    fun observeFavorite(): Flow<List<Favorite>>
 
     fun observeFavoriteState(mangaId: Int): Flow<Boolean>
 }
@@ -29,10 +30,10 @@ class FavoriteRepo(private val db: MangaDb): FavoriteRepository {
         db.favoriteDao.delete(mangaId)
     }
 
-    override fun observeFavorite(): Flow<Favorite> {
+    override fun observeFavorite(): Flow<List<Favorite>> {
         return db.favoriteDao
             .observeAll()
-            .map { it.toFavorite() }
+            .mapList { it.toFavorite() }
             .flowOn(Dispatchers.IO)
     }
 

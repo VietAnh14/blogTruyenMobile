@@ -4,7 +4,7 @@ import com.vianh.blogtruyen.data.model.Manga
 import com.vianh.blogtruyen.features.base.HasUniqueId
 import com.vianh.blogtruyen.features.list.ListItem
 
-data class MangaItem(val manga: Manga): ListItem, HasUniqueId<Int> {
+data class MangaItem(val manga: Manga, val notificationCount: Int = 0): ListItem, HasUniqueId<Int> {
 
     override val id: Int
         get() = manga.id
