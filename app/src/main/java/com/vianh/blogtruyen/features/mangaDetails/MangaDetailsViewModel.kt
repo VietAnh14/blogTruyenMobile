@@ -43,7 +43,7 @@ class MangaDetailsViewModel(
         }
     }
 
-    fun loadChapters() {
+    private fun loadChapters() {
         launchJob {
             val fetchChapters = repo.loadChapter(manga.id)
             manga = manga.copy(chapters = fetchChapters)

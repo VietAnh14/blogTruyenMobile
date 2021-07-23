@@ -34,7 +34,7 @@ class HomeFragment: BaseFragment<HomeFragmentBinding>(), MangaItemVH.MangaClick 
     }
 
     private fun observe() {
-        viewModel.listContent.observeAsLiveData(viewLifecycleOwner, this::onContentChange)
+        viewModel.content.observe(viewLifecycleOwner, this::onContentChange)
         viewModel.pageReload.observe(viewLifecycleOwner, this::onPageReload)
         viewModel.error.observe(viewLifecycleOwner, { showToast(it.message) })
     }

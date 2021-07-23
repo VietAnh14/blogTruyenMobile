@@ -4,5 +4,5 @@ data class Favorite(
     val manga: Manga,
     val currentChapterCount: Int,
     val newChapterCount: Int,
-    val lastCheck: Long
+    val subscribeTime: Long
 )

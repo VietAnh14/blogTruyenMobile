@@ -16,6 +16,8 @@ interface FavoriteRepository {
 
     suspend fun removeFromFavorite(mangaId: Int)
 
+    suspend fun upsertFavorite(favorite: Favorite)
+
     fun observeFavorite(): Flow<List<Favorite>>
 
     fun observeFavoriteState(mangaId: Int): Flow<Boolean>
@@ -23,11 +25,15 @@ interface FavoriteRepository {
 
 class FavoriteRepo(private val db: MangaDb): FavoriteRepository {
     override suspend fun addToFavorite(manga: Manga) {
-        db.favoriteDao.insert(FavoriteEntity.fromManga(manga))
+        db.favoriteDao.upsert(FavoriteEntity.fromManga(manga))
     }
 
     override suspend fun removeFromFavorite(mangaId: Int) {
         db.favoriteDao.delete(mangaId)
+    }
+
+    override suspend fun upsertFavorite(favorite: Favorite) {
+        db.favoriteDao.upsert(FavoriteEntity.fromFavorite(favorite))
     }
 
     override fun observeFavorite(): Flow<List<Favorite>> {

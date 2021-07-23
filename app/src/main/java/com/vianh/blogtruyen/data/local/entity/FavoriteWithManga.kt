@@ -21,7 +21,7 @@ data class FavoriteWithManga(
             manga = manga.toManga(),
             currentChapterCount = favorite.currentChapterCount,
             newChapterCount = favorite.newChapterCount,
-            lastCheck = favorite.lastCheck
+            subscribeTime = favorite.createdTime
         )
     }
 }

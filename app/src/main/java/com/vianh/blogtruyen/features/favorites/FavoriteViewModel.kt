@@ -8,11 +8,13 @@ import com.vianh.blogtruyen.features.favorites.data.FavoriteRepository
 import com.vianh.blogtruyen.features.home.list.MangaItem
 import com.vianh.blogtruyen.utils.mapList
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.map
 
 class FavoriteViewModel(private val favoriteRepository: FavoriteRepository): BaseVM() {
 
     val content = favoriteRepository
         .observeFavorite()
+        .map { favorites -> favorites.sortedByDescending { it.subscribeTime } }
         .mapList { mapFavoriteToFeedItem(it) }
         .asLiveData(viewModelScope.coroutineContext + Dispatchers.Default)
 

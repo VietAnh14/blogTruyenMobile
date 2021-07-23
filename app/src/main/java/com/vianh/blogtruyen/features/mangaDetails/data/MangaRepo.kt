@@ -43,6 +43,7 @@ class MangaRepository(private val db: MangaDb, private val provider: MangaProvid
         return db.chapterDao.findReadChapterByMangaId(mangaId)
     }
 
+    // TODO: USE ID
     override suspend fun fetchMangaDetails(manga: Manga, remote: Boolean): Manga {
         return if (remote) {
             val details = provider.fetchDetailManga(manga)

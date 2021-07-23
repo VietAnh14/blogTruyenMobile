@@ -1,8 +1,6 @@
 package com.vianh.blogtruyen.data.remote
 
-import com.github.michaelbull.result.runCatching
 import com.vianh.blogtruyen.BuildConfig
-import com.vianh.blogtruyen.data.MonadResult
 import com.vianh.blogtruyen.data.model.Category
 import com.vianh.blogtruyen.data.model.Chapter
 import com.vianh.blogtruyen.data.model.Comment
@@ -25,14 +23,12 @@ class BlogtruyenProvider(private val client: OkHttpClient) : MangaProvider {
         private const val AJAX_LOAD_COMMENT = BuildConfig.HOST + "/Comment/AjaxLoadComment"
     }
 
-    override suspend fun fetchNewManga(pageNumber: Int): MonadResult<MutableList<Manga>> {
+    override suspend fun fetchNewManga(pageNumber: Int): MutableList<Manga> {
         return withContext(Dispatchers.IO) {
-            runCatching {
-                val url = BuildConfig.HOST + "/thumb-$pageNumber"
-                val request = Request.Builder().url(url).build()
-                val response = client.newCall(request).getBodyString()
-                parseManga(response)
-            }
+            val url = BuildConfig.HOST + "/thumb-$pageNumber"
+            val request = Request.Builder().url(url).build()
+            val response = client.newCall(request).getBodyString()
+            parseManga(response)
         }
     }
 

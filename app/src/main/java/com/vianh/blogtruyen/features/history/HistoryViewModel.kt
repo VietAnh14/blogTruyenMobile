@@ -28,7 +28,8 @@ class HistoryViewModel(private val historyRepository: HistoryRepository) : BaseV
         .distinctUntilChanged()
         .catch {
             error.call(it)
-            listOf(HistoryListItem.EmptyItem)
+            // TODO: EMIT ERROR ITEM
+            emit(listOf(HistoryListItem.EmptyItem))
         }.asLiveData(viewModelScope.coroutineContext + Dispatchers.Default)
 
     private fun filterItems(histories: List<History>, query: String): List<History> {
