@@ -2,14 +2,17 @@ package com.vianh.blogtruyen.utils
 
 import android.content.Context
 import android.graphics.Color
+import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.view.View
 import android.view.Window
 import android.widget.ImageView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.RequestBuilder
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.transition.DrawableCrossFadeFactory
 import com.vianh.blogtruyen.BuildConfig
+import com.vianh.blogtruyen.R
 import okhttp3.Interceptor
 import okhttp3.Response
 import timber.log.Timber

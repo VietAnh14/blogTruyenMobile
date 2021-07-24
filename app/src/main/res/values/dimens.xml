@@ -7,4 +7,5 @@
     <dimen name="reply_comment_margin">30dp</dimen>
     <dimen name="page_item_min_height">300dp</dimen>
     <dimen name="history_padding_dimens">10dp</dimen>
+    <dimen name="manga_feed_item_margin">10dp</dimen>
 </resources>

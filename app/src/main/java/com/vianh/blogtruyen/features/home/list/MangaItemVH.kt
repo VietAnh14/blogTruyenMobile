@@ -1,11 +1,15 @@
 package com.vianh.blogtruyen.features.home.list
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import com.bumptech.glide.Glide
 import com.vianh.blogtruyen.databinding.FeedItemBinding
 import com.vianh.blogtruyen.features.base.AbstractViewHolder
+import com.vianh.blogtruyen.utils.gone
 import com.vianh.blogtruyen.utils.loadNetWorkImage
 
+@SuppressLint("UnsafeOptInUsageError")
 class MangaItemVH(private val binding: FeedItemBinding, clickListener: MangaClick) :
     AbstractViewHolder<MangaItem, Unit>(binding.root) {
 
@@ -21,7 +25,18 @@ class MangaItemVH(private val binding: FeedItemBinding, clickListener: MangaClic
         with(binding) {
             imageCover.loadNetWorkImage(data.manga.imageUrl)
             mangaName.text = data.manga.title
+
+            if (data.notificationCount > 0) {
+                notificationText.text = data.notificationCount.toString()
+            } else {
+                notificationText.gone()
+            }
         }
+    }
+
+    override fun onRecycle() {
+        Glide.with(itemView.context).clear(binding.imageCover)
+        super.onRecycle()
     }
 
     companion object {

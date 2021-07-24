@@ -1,13 +1,11 @@
 package com.vianh.blogtruyen.data.remote
 
-import com.github.michaelbull.result.runCatching
 import com.vianh.blogtruyen.BuildConfig
-import com.vianh.blogtruyen.data.MonadResult
 import com.vianh.blogtruyen.data.model.Category
 import com.vianh.blogtruyen.data.model.Chapter
 import com.vianh.blogtruyen.data.model.Comment
 import com.vianh.blogtruyen.data.model.Manga
-import com.vianh.blogtruyen.utils.extractData
+import com.vianh.blogtruyen.utils.getBodyString
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
@@ -15,7 +13,6 @@ import okhttp3.Request
 import org.json.JSONArray
 import org.jsoup.Jsoup
 import org.jsoup.select.Elements
-import timber.log.Timber
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -26,14 +23,12 @@ class BlogtruyenProvider(private val client: OkHttpClient) : MangaProvider {
         private const val AJAX_LOAD_COMMENT = BuildConfig.HOST + "/Comment/AjaxLoadComment"
     }
 
-    override suspend fun fetchNewManga(pageNumber: Int): MonadResult<MutableList<Manga>> {
+    override suspend fun fetchNewManga(pageNumber: Int): MutableList<Manga> {
         return withContext(Dispatchers.IO) {
-            runCatching {
-                val url = BuildConfig.HOST + "/thumb-$pageNumber"
-                val request = Request.Builder().url(url).build()
-                val response = client.newCall(request).extractData()
-                parseManga(response)
-            }
+            val url = BuildConfig.HOST + "/thumb-$pageNumber"
+            val request = Request.Builder().url(url).build()
+            val response = client.newCall(request).getBodyString()
+            parseManga(response)
         }
     }
 
@@ -41,32 +36,35 @@ class BlogtruyenProvider(private val client: OkHttpClient) : MangaProvider {
         return withContext(Dispatchers.IO) {
             val url = BuildConfig.HOST + manga.link
             val request = Request.Builder().url(url).build()
-            val response = client.newCall(request).extractData()
+            val response = client.newCall(request).getBodyString()
             parseDetailManga(response, manga)
         }
     }
 
-    override suspend fun fetchChapterList(manga: Manga): List<Chapter> {
+    override suspend fun fetchChapterList(mangaId: Int): List<Chapter> {
         return withContext(Dispatchers.IO) {
             val result: MutableList<Chapter> = mutableListOf()
             var lastPage: Int
             var currentPage = 1
             do {
-                val url = "$AJAX_LOAD_CHAPTER?id=${manga.id}&p=${currentPage}"
+                val url = "$AJAX_LOAD_CHAPTER?id=${mangaId}&p=${currentPage}"
                 val request = Request.Builder().url(url).build()
-                val response = client.newCall(request).extractData()
+                val response = client.newCall(request).getBodyString()
                 val docs = Jsoup.parse(response)
                 val options = docs.getElementsByClass("slcChangePage")
                 lastPage = if (!options.isEmpty()) {
-                    options[0].getElementsByTag("option").last().attr("value").toInt()
+                    options[0].getElementsByTag("option")
+                        .last()
+                        ?.attr("value")?.toInt() ?: 1
                 } else {
                     1
                 }
-                val items = docs.getElementById("listChapter").children()
-                result.addAll(parseSingleListChapter(items, manga.id))
+
+                val items = docs.getElementById("listChapter")
+                    ?.children() ?: throwParseFail("Failed to parse chapter list")
+                result.addAll(parseSingleListChapter(items))
                 currentPage++
             } while (lastPage >= currentPage)
-            Timber.d(System.currentTimeMillis().toString())
             return@withContext result
         }
     }
@@ -75,7 +73,7 @@ class BlogtruyenProvider(private val client: OkHttpClient) : MangaProvider {
         return withContext(Dispatchers.IO) {
             val url = BuildConfig.HOST_FULL + link
             val request = Request.Builder().url(url).build()
-            val content = client.newCall(request).extractData()
+            val content = client.newCall(request).getBodyString()
             return@withContext parseChapter(content)
         }
     }
@@ -84,7 +82,7 @@ class BlogtruyenProvider(private val client: OkHttpClient) : MangaProvider {
         return withContext(Dispatchers.IO) {
             val uri = "$AJAX_LOAD_COMMENT?mangaId=$mangaId&p=$offset"
             val request = Request.Builder().url(uri).build()
-            val content = client.newCall(request).extractData()
+            val content = client.newCall(request).getBodyString()
             parseComment(content)
         }
     }
@@ -102,16 +100,17 @@ class BlogtruyenProvider(private val client: OkHttpClient) : MangaProvider {
             val commentContent = session
                 .getElementsByClass("c-content")
                 .first()
-            val userName = commentContent.getElementsByClass("user")
-                .first()
-                .firstElementSibling()
-                .text()
-            val time = commentContent.getElementsByClass("time")
-                .first()
-                .text()
-            val message = commentContent.getElementsByClass("commment-content")
-                .first()
-                .text()
+            val userName = commentContent?.getElementsByClass("user")
+                ?.first()
+                ?.firstElementSibling()
+                ?.text().orEmpty()
+            val time = commentContent?.getElementsByClass("time")
+                ?.first()
+                ?.text().orEmpty()
+            val message = commentContent?.getElementsByClass("commment-content")
+                ?.first()
+                ?.text().orEmpty()
+
             val subCommentsSession = session.getElementsByClass("sub-c-item")
             val subComments = parseSubComment(subCommentsSession)
             val rootComment = Comment(
@@ -130,16 +129,19 @@ class BlogtruyenProvider(private val client: OkHttpClient) : MangaProvider {
         val comments = ArrayList<Comment>()
         for (subComment in elements) {
             val avatar = subComment.getElementsByClass("img-avatar")
-                .first().attr("src")
+                .first()
+                ?.attr("src")
+                .orEmpty()
             val userName = subComment.getElementsByClass("user")
                 .first()
-                .text()
+                ?.text()
+                .orEmpty()
             val time = subComment.getElementsByClass("time")
                 .first()
-                .text()
+                ?.text().orEmpty()
             val message = subComment.getElementsByClass("commment-content")
                 .first()
-                .text()
+                ?.text().orEmpty()
 
             val comment = Comment(
                 userName = userName,
@@ -153,7 +155,7 @@ class BlogtruyenProvider(private val client: OkHttpClient) : MangaProvider {
         return comments
     }
 
-    private fun parseSingleListChapter(items: Elements, mangaId: Int): List<Chapter> {
+    private fun parseSingleListChapter(items: Elements): List<Chapter> {
         val result: MutableList<Chapter> = mutableListOf()
         for (element in items) {
             val row = element.child(0)
@@ -176,7 +178,8 @@ class BlogtruyenProvider(private val client: OkHttpClient) : MangaProvider {
         val details = doc.getElementsByClass("manga-detail")[0]
         val title = details.getElementsByClass("title")[0].text()
         val image = details.getElementsByClass("content")[0].child(0).attr("src")
-        val id = details.getElementById("MangaId").attr("value").toInt()
+        val id = details.getElementById("MangaId")
+            ?.attr("value")?.toInt() ?: throwParseFail("Fail to parse manga")
         val description = details.getElementsByClass("introduce")[0].text()
         val category = details.getElementsByClass("catetgory")[0]
             .child(0)
@@ -225,7 +228,8 @@ class BlogtruyenProvider(private val client: OkHttpClient) : MangaProvider {
         val content = doc.getElementById("content")
 
         // Check if chapter is render by angular
-        val item = content.child(0)
+        val item = requireNotNull(content)
+            .child(0)
         if (item.tagName() == "img") {
             val elements = content.getElementsByTag("img")
             for (image in elements) {
@@ -242,5 +246,9 @@ class BlogtruyenProvider(private val client: OkHttpClient) : MangaProvider {
             }
         }
         return images
+    }
+
+    private fun throwParseFail(message: String): Nothing {
+        throw IllegalArgumentException(message)
     }
 }

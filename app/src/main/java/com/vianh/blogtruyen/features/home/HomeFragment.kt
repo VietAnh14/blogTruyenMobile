@@ -13,9 +13,7 @@ import com.vianh.blogtruyen.features.home.list.MangaItem
 import com.vianh.blogtruyen.features.home.list.MangaItemVH
 import com.vianh.blogtruyen.features.list.ListItem
 import com.vianh.blogtruyen.features.mangaDetails.MangaDetailsFragment
-import com.vianh.blogtruyen.utils.GridItemSpacingDecorator
-import com.vianh.blogtruyen.utils.ScrollLoadMore
-import com.vianh.blogtruyen.utils.observeAsLiveData
+import com.vianh.blogtruyen.utils.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class HomeFragment: BaseFragment<HomeFragmentBinding>(), MangaItemVH.MangaClick {
@@ -36,7 +34,7 @@ class HomeFragment: BaseFragment<HomeFragmentBinding>(), MangaItemVH.MangaClick 
     }
 
     private fun observe() {
-        viewModel.listContent.observeAsLiveData(viewLifecycleOwner, this::onContentChange)
+        viewModel.content.observe(viewLifecycleOwner, this::onContentChange)
         viewModel.pageReload.observe(viewLifecycleOwner, this::onPageReload)
         viewModel.error.observe(viewLifecycleOwner, { showToast(it.message) })
     }
@@ -56,7 +54,7 @@ class HomeFragment: BaseFragment<HomeFragmentBinding>(), MangaItemVH.MangaClick 
 
         with(requireBinding.feedRecycler) {
             setHasFixedSize(true)
-            addItemDecoration(GridItemSpacingDecorator(30))
+//            addItemDecoration(GridItemSpacingDecorator(20))
             adapter = MangaFeedAdapter(this@HomeFragment).also { feedAdapter = it }
             addOnScrollListener(ScrollLoadMore(2) {
                 viewModel.loadPage()

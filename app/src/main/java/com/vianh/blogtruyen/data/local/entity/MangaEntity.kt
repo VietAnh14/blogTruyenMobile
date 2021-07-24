@@ -13,8 +13,7 @@ data class MangaEntity(
     val title: String,
     val uploadTitle: String,
     val description: String = "Still update",
-    val mangaId: Int,
-    val subscribed: Boolean = false
+    val mangaId: Int
 ) {
 
     fun toManga(): Manga {
@@ -24,8 +23,7 @@ data class MangaEntity(
             link = link,
             title = title,
             uploadTitle = uploadTitle,
-            description = description,
-            subscribed = subscribed
+            description = description
         )
     }
 
@@ -38,8 +36,7 @@ data class MangaEntity(
                 title = manga.title,
                 uploadTitle = manga.uploadTitle,
                 description = manga.description,
-                mangaId = manga.id,
-                subscribed = manga.subscribed
+                mangaId = manga.id
             )
         }
     }

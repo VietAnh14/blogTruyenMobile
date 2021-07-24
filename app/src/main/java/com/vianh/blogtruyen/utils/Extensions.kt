@@ -1,12 +1,10 @@
 package com.vianh.blogtruyen.utils
 
-import android.animation.TimeInterpolator
 import android.content.Context
 import android.util.TypedValue
 import android.view.Gravity
 import android.view.View
 import android.view.animation.AccelerateInterpolator
-import android.view.animation.AnimationUtils
 import android.view.animation.Interpolator
 import androidx.annotation.AttrRes
 import androidx.annotation.ColorInt
@@ -15,13 +13,14 @@ import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
-import com.vianh.blogtruyen.R
 import kotlinx.coroutines.suspendCancellableCoroutine
 import okhttp3.Call
+import okhttp3.Callback
+import okhttp3.Response
 import java.io.File
+import java.io.IOException
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
-import kotlin.coroutines.suspendCoroutine
 
 class HttpError(private val code: Int, message: String?) : Exception(message) {
     override val message: String?
@@ -32,26 +31,21 @@ class HttpError(private val code: Int, message: String?) : Exception(message) {
     }
 }
 
-suspend fun <T> Call.suspendGetResult(): T {
-    return suspendCoroutine {
-        val response = execute()
-        if (response.isSuccessful && response.body != null) {
-            it.resume(response.body?.string() as T)
-        } else {
-            it.resumeWithException(HttpError(response.code, response.message))
+suspend fun Call.getBodyString(): String {
+    return suspendCancellableCoroutine {
+        it.invokeOnCancellation {
+            this.cancel()
         }
-        response.body?.close()
-    }
-}
 
-fun Call.extractData(): String {
-    val httpResponse = execute()
-    httpResponse.use { response ->
-        if (response.isSuccessful && response.body != null) {
-            return response.body!!.string()
-        } else {
-            throw HttpError(response.code, response.message)
-        }
+        this.enqueue(object: Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                it.resumeWithException(e)
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                it.resume(response.body!!.string())
+            }
+        })
     }
 }
 

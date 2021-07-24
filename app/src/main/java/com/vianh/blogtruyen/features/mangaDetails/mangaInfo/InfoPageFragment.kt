@@ -42,7 +42,13 @@ class InfoPageFragment : BaseFragment<ChapterPageFragmentBinding>(), ChapterVH.C
         viewModel.chapters.observe(viewLifecycleOwner, this::onNewChapters)
         viewModel.mangaLiveData.observe(viewLifecycleOwner, this::onMangaChange)
         viewModel.isLoading.observe(viewLifecycleOwner, this::onLoadingChange)
-        viewModel.error.observe(viewLifecycleOwner, Observer { showToast(it.message) })
+        viewModel.isFavorite.observe(viewLifecycleOwner, this::onFavoriteStateChange)
+
+        viewModel.error.observe(viewLifecycleOwner, { showToast(it.message) })
+    }
+
+    private fun onFavoriteStateChange(isFavorite: Boolean) {
+        requireBinding.actionFollow.isChecked = isFavorite
     }
 
     private fun onMangaChange(manga: Manga) {
@@ -54,6 +60,11 @@ class InfoPageFragment : BaseFragment<ChapterPageFragmentBinding>(), ChapterVH.C
     }
 
     private fun setup() {
+
+        requireBinding.actionFollow.setOnClickListener {
+            viewModel.toggleFavorite(!requireBinding.actionFollow.isChecked)
+        }
+
         chapterAdapter = ChapterAdapter(this)
         headerAdapter = InfoHeaderAdapter(viewModel)
         with(requireBinding.chapterRecycler) {

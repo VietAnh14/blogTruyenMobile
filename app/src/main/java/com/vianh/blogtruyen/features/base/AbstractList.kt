@@ -1,15 +1,11 @@
 package com.vianh.blogtruyen.features.base
 
 import android.view.View
-import androidx.annotation.NonNull
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import androidx.viewbinding.ViewBinding
-import com.vianh.blogtruyen.databinding.HistoryItemBinding
 import com.vianh.blogtruyen.features.list.ListItem
 import java.util.*
-import kotlin.reflect.KFunction1
 
 
 interface HasUniqueId<T> {

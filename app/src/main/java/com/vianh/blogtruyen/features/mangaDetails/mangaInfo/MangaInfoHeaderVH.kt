@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.chip.Chip
+import com.vianh.blogtruyen.R
 import com.vianh.blogtruyen.data.model.Manga
 import com.vianh.blogtruyen.databinding.ChipItemBinding
 import com.vianh.blogtruyen.databinding.MangaInfoItemBinding
@@ -15,15 +16,7 @@ class MangaInfoHeaderVH(
     private val viewModel: MangaDetailsViewModel
 ) : RecyclerView.ViewHolder(binding.root) {
     init {
-        with(binding) {
-            favoriteAction.setOnClickListener {
-                viewModel.addToFavorite()
-            }
 
-            webViewAction.setOnClickListener {
-                //TODO: Implement
-            }
-        }
     }
 
     fun onBind(manga: Manga) {

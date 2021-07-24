@@ -56,47 +56,14 @@
 
     <TextView
         android:id="@+id/textView5"
+        android:layout_marginTop="10dp"
         style="@style/TextAppearance.AppCompat.Medium"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
         android:text="@string/summary"
         android:textColor="@color/pureWhite"
-        app:layout_constraintStart_toStartOf="@+id/favoriteAction"
-        app:layout_constraintTop_toBottomOf="@+id/favoriteAction" />
-
-    <Button
-        android:id="@+id/favoriteAction"
-        style="?android:attr/borderlessButtonStyle"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="10dp"
-        android:elevation="0dp"
-        android:text="@string/add_to_favorite"
-        android:textAllCaps="false"
-        android:textSize="12sp"
-        app:drawableTopCompat="@drawable/ic_favorite_border_24dp"
-        app:layout_constraintEnd_toStartOf="@+id/webViewAction"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="@+id/small_cover"
         app:layout_constraintTop_toBottomOf="@+id/header_cover" />
-
-    <Button
-        android:id="@+id/webViewAction"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:textAllCaps="false"
-        android:textSize="12sp"
-        style="?android:attr/borderlessButtonStyle"
-        android:layout_marginEnd="20dp"
-        android:layout_marginStart="10dp"
-        android:text="@string/search_by_google"
-        app:drawableTopCompat="@drawable/ic_search_24"
-        app:layout_constraintBaseline_toBaselineOf="@+id/favoriteAction"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/favoriteAction" />
 
     <TextView
         android:id="@+id/summary"
