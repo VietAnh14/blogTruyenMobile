@@ -35,35 +35,21 @@ abstract class MangaDb : RoomDatabase() {
     companion object {
         private const val DB_NAME = "MangaDB.db"
 
-//        // Todo: finish this list
-//        val categories: List<CategoryEntity> by lazy {
-//            listOf(
-//                CategoryEntity("Action", "/theloai/action"),
-//                CategoryEntity("Adventure", "/theloai/adventure"),
-//                CategoryEntity("Comedy", "/theloai/comedy"),
-//                CategoryEntity("Shounen", "/theloai/shounen"),
-//                CategoryEntity("Magic", "/theloai/magic"),
-//                CategoryEntity("Fantasy", "/theloai/adventure/fantasy-new"),
-//                CategoryEntity("Manga", "/theloai/manga"),
-//                CategoryEntity("Full màu", "/theloai/full-mau")
-//            )
-//        }
-
         fun provideDb(context: Context): MangaDb {
             var mangaDb: MangaDb? = null
-            val callback = object : RoomDatabase.Callback() {
-                override fun onCreate(db: SupportSQLiteDatabase) {
-                    super.onCreate(db)
-                    mangaDb?.let {
-                        GlobalScope.launch(Dispatchers.IO) {
+//            val callback = object : RoomDatabase.Callback() {
+//                override fun onCreate(db: SupportSQLiteDatabase) {
+//                    super.onCreate(db)
+//                    mangaDb?.let {
+//                        GlobalScope.launch(Dispatchers.IO) {
 //                            it.categoryDao().insert(categories)
-                        }
-                    }
-                }
-            }
+//                        }
+//                    }
+//                }
+//            }
 
             mangaDb = Room.databaseBuilder(context, MangaDb::class.java, DB_NAME)
-                .addCallback(callback)
+//                .addCallback(callback)
                 .build()
             return mangaDb
         }

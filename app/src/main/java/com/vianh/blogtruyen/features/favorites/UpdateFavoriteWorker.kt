@@ -42,7 +42,9 @@ class UpdateFavoriteWorker(context: Context, workerParameters: WorkerParameters)
         val newChapterCount = remoteChapters.size - knownChapterCount
 
         if (newChapterCount > 0) {
-            favoriteRepository.upsertFavorite(favorite.copy(newChapterCount = newChapterCount))
+            favoriteRepository.upsertFavorite(
+                favorite.copy(newChapterCount = newChapterCount + favorite.newChapterCount)
+            )
         }
     }
 
@@ -63,7 +65,11 @@ class UpdateFavoriteWorker(context: Context, workerParameters: WorkerParameters)
                     .build()
 
             WorkManager.getInstance(context)
-                .enqueueUniquePeriodicWork(WORK_NAME, ExistingPeriodicWorkPolicy.KEEP, updateWorkRequest)
+                .enqueueUniquePeriodicWork(
+                    WORK_NAME,
+                    ExistingPeriodicWorkPolicy.KEEP,
+                    updateWorkRequest
+                )
         }
     }
 }

@@ -7,6 +7,7 @@ import com.vianh.blogtruyen.data.model.Manga
 import com.vianh.blogtruyen.utils.mapList
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 
@@ -18,12 +19,14 @@ interface FavoriteRepository {
 
     suspend fun upsertFavorite(favorite: Favorite)
 
+    suspend fun clearNewChapters(mangaId: Int)
+
     fun observeFavorite(): Flow<List<Favorite>>
 
-    fun observeFavoriteState(mangaId: Int): Flow<Boolean>
+    fun observeFavoriteState(mangaId: Int): Flow<Favorite?>
 }
 
-class FavoriteRepo(private val db: MangaDb): FavoriteRepository {
+class FavoriteRepo(private val db: MangaDb) : FavoriteRepository {
     override suspend fun addToFavorite(manga: Manga) {
         db.favoriteDao.upsert(FavoriteEntity.fromManga(manga))
     }
@@ -36,6 +39,16 @@ class FavoriteRepo(private val db: MangaDb): FavoriteRepository {
         db.favoriteDao.upsert(FavoriteEntity.fromFavorite(favorite))
     }
 
+    override suspend fun clearNewChapters(mangaId: Int) {
+        val favorite = db.favoriteDao.observeByMangaId(mangaId).firstOrNull()?.favorite
+        if (favorite != null) {
+            val currentChapterCount = favorite.currentChapterCount + favorite.newChapterCount
+            val freshFavorite = favorite
+                .copy(newChapterCount = 0, currentChapterCount = currentChapterCount)
+            db.favoriteDao.update(freshFavorite)
+        }
+    }
+
     override fun observeFavorite(): Flow<List<Favorite>> {
         return db.favoriteDao
             .observeAll()
@@ -43,11 +56,10 @@ class FavoriteRepo(private val db: MangaDb): FavoriteRepository {
             .flowOn(Dispatchers.IO)
     }
 
-    override fun observeFavoriteState(mangaId: Int): Flow<Boolean> {
+    override fun observeFavoriteState(mangaId: Int): Flow<Favorite?> {
         return db.favoriteDao
             .observeByMangaId(mangaId)
-            .map { it != null }
+            .map { it?.toFavorite() }
             .flowOn(Dispatchers.IO)
     }
-
 }

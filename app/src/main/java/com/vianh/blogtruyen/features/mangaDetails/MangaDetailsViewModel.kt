@@ -11,6 +11,7 @@ import com.vianh.blogtruyen.features.base.BaseVM
 import com.vianh.blogtruyen.features.favorites.data.FavoriteRepository
 import com.vianh.blogtruyen.features.mangaDetails.data.MangaRepo
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.map
 
 class MangaDetailsViewModel(
     private val repo: MangaRepo,
@@ -22,6 +23,7 @@ class MangaDetailsViewModel(
     val comments: MutableLiveData<List<Comment>> = MutableLiveData(listOf())
     val isFavorite: LiveData<Boolean> = favoriteRepo
         .observeFavoriteState(manga.id)
+        .map { it != null }
         .asLiveData(viewModelScope.coroutineContext)
 
     private var commentPage = 1
@@ -48,6 +50,8 @@ class MangaDetailsViewModel(
             val fetchChapters = repo.loadChapter(manga.id)
             manga = manga.copy(chapters = fetchChapters)
             chapters.postValue(fetchChapters)
+
+            favoriteRepo.clearNewChapters(manga.id)
         }
     }
 

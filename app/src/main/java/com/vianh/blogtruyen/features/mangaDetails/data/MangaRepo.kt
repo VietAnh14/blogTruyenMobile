@@ -2,10 +2,7 @@ package com.vianh.blogtruyen.features.mangaDetails.data
 
 import androidx.room.withTransaction
 import com.vianh.blogtruyen.data.local.MangaDb
-import com.vianh.blogtruyen.data.local.entity.CategoryEntity
-import com.vianh.blogtruyen.data.local.entity.ChapterEntity
-import com.vianh.blogtruyen.data.local.entity.MangaCategory
-import com.vianh.blogtruyen.data.local.entity.MangaEntity
+import com.vianh.blogtruyen.data.local.entity.*
 import com.vianh.blogtruyen.data.model.Chapter
 import com.vianh.blogtruyen.data.model.Comment
 import com.vianh.blogtruyen.data.model.Manga
@@ -21,9 +18,14 @@ interface MangaRepo {
     suspend fun loadChapter(mangaId: Int, remote: Boolean = true): List<Chapter>
 
     suspend fun loadComments(mangaId: Int, offset: Int): Map<Comment, List<Comment>>
+
+    suspend fun markChapterAsRead(chapter: Chapter, mangaId: Int)
 }
 
-class MangaRepository(private val db: MangaDb, private val provider: MangaProvider) : MangaRepo {
+class MangaRepository(
+    private val db: MangaDb,
+    private val provider: MangaProvider
+) : MangaRepo {
 
     override suspend fun upsertManga(manga: Manga, updateCategories: Boolean) {
         db.withTransaction {
@@ -70,5 +72,19 @@ class MangaRepository(private val db: MangaDb, private val provider: MangaProvid
 
     override suspend fun loadComments(mangaId: Int, offset: Int): Map<Comment, List<Comment>> {
         return provider.fetchComment(mangaId, offset)
+    }
+
+    override suspend fun markChapterAsRead(chapter: Chapter, mangaId: Int) {
+        db.withTransaction {
+            chapter.read = true
+            db.chapterDao.upsert(ChapterEntity.fromChapter(chapter, mangaId))
+            db.historyDao.upsert(
+                HistoryEntity(
+                    refMangaId = mangaId,
+                    chapterId = chapter.id,
+                    lastRead = System.currentTimeMillis()
+                )
+            )
+        }
     }
 }
