@@ -40,7 +40,7 @@ class CommentPageFragment: BaseFragment<CommentPageFragmentBinding>() {
         with(requireBinding.commentRecycler) {
             adapter = CommentAdapter()
             clearOnScrollListeners()
-            addOnScrollListener(ScrollLoadMore(3, ) {
+            addOnScrollListener(ScrollLoadMore(3) {
                 viewModel.loadComments()
             })
         }

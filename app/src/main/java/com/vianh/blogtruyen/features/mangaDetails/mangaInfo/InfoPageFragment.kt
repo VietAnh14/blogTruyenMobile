@@ -4,18 +4,20 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.vianh.blogtruyen.data.model.Chapter
 import com.vianh.blogtruyen.data.model.Manga
 import com.vianh.blogtruyen.databinding.ChapterPageFragmentBinding
 import com.vianh.blogtruyen.features.base.BaseFragment
+import com.vianh.blogtruyen.features.download.DownloadIntent
+import com.vianh.blogtruyen.features.download.DownloadService
 import com.vianh.blogtruyen.features.mangaDetails.MangaDetailsViewModel
 import com.vianh.blogtruyen.features.mangaDetails.mangaInfo.adapter.ChapterAdapter
 import com.vianh.blogtruyen.features.mangaDetails.mangaInfo.adapter.InfoHeaderAdapter
 import com.vianh.blogtruyen.features.reader.ReaderFragment
 import org.koin.androidx.viewmodel.ext.android.getViewModel
+import timber.log.Timber
 
 class InfoPageFragment : BaseFragment<ChapterPageFragmentBinding>(), ChapterVH.ChapterClick,
     SwipeRefreshLayout.OnRefreshListener {
@@ -40,7 +42,7 @@ class InfoPageFragment : BaseFragment<ChapterPageFragmentBinding>(), ChapterVH.C
 
     private fun observe() {
         viewModel.chapters.observe(viewLifecycleOwner, this::onNewChapters)
-        viewModel.mangaLiveData.observe(viewLifecycleOwner, this::onMangaChange)
+        viewModel.manga.observe(viewLifecycleOwner, this::onMangaChange)
         viewModel.isLoading.observe(viewLifecycleOwner, this::onLoadingChange)
         viewModel.isFavorite.observe(viewLifecycleOwner, this::onFavoriteStateChange)
 
@@ -52,6 +54,7 @@ class InfoPageFragment : BaseFragment<ChapterPageFragmentBinding>(), ChapterVH.C
     }
 
     private fun onMangaChange(manga: Manga) {
+        Timber.d("Render manga")
         headerAdapter?.submitItem(manga)
     }
 
@@ -60,11 +63,6 @@ class InfoPageFragment : BaseFragment<ChapterPageFragmentBinding>(), ChapterVH.C
     }
 
     private fun setup() {
-
-        requireBinding.actionFollow.setOnClickListener {
-            viewModel.toggleFavorite(!requireBinding.actionFollow.isChecked)
-        }
-
         chapterAdapter = ChapterAdapter(this)
         headerAdapter = InfoHeaderAdapter(viewModel)
         with(requireBinding.chapterRecycler) {
@@ -72,7 +70,20 @@ class InfoPageFragment : BaseFragment<ChapterPageFragmentBinding>(), ChapterVH.C
             setHasFixedSize(true)
         }
 
-        requireBinding.swipeRefreshLayout.setOnRefreshListener(this)
+        with(requireBinding) {
+            swipeRefreshLayout.setOnRefreshListener(this@InfoPageFragment)
+            btnRead.setOnClickListener {
+                val manga = viewModel.currentManga
+                val downloadIntent =
+                    DownloadIntent(manga.title, manga.id, manga.imageUrl, manga.chapters.take(2))
+                DownloadService.start(requireContext(), downloadIntent)
+            }
+
+            actionFollow.setOnClickListener {
+                viewModel.toggleFavorite(!requireBinding.actionFollow.isChecked)
+            }
+        }
+
     }
 
     private fun onLoadingChange(isLoading: Boolean) {
@@ -92,7 +103,7 @@ class InfoPageFragment : BaseFragment<ChapterPageFragmentBinding>(), ChapterVH.C
     }
 
     override fun onChapterClick(chapter: Chapter) {
-        hostActivity?.changeFragment(ReaderFragment.newInstance(chapter, viewModel.manga), true)
+        hostActivity?.changeFragment(ReaderFragment.newInstance(chapter, viewModel.currentManga), true)
     }
 
     override fun onRefresh() {

@@ -23,7 +23,7 @@ class BlogtruyenProvider(private val client: OkHttpClient) : MangaProvider {
         private const val AJAX_LOAD_COMMENT = BuildConfig.HOST + "/Comment/AjaxLoadComment"
     }
 
-    override suspend fun fetchNewManga(pageNumber: Int): MutableList<Manga> {
+    override suspend fun fetchNewManga(pageNumber: Int): List<Manga> {
         return withContext(Dispatchers.IO) {
             val url = BuildConfig.HOST + "/thumb-$pageNumber"
             val request = Request.Builder().url(url).build()
@@ -65,7 +65,11 @@ class BlogtruyenProvider(private val client: OkHttpClient) : MangaProvider {
                 result.addAll(parseSingleListChapter(items))
                 currentPage++
             } while (lastPage >= currentPage)
-            return@withContext result
+            val size = result.size
+
+            return@withContext result.mapIndexed { index, chapter ->
+                chapter.copy(number = size - index)
+            }
         }
     }
 
@@ -166,7 +170,8 @@ class BlogtruyenProvider(private val client: OkHttpClient) : MangaProvider {
                 Chapter(
                     id = id,
                     name = title,
-                    url = link
+                    url = link,
+                    number = 0
                 )
             )
         }

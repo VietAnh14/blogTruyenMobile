@@ -20,7 +20,7 @@ class ReaderViewModel(private val dataManager: DataManager, chapter: Chapter, va
         loadPages()
     }
 
-    fun loadPages() {
+    private fun loadPages() {
         launchJob {
             val chapter = currentChapter.value ?: return@launchJob
 

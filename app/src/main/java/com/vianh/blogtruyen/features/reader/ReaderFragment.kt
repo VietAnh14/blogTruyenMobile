@@ -83,7 +83,7 @@ class ReaderFragment : BaseFragment<ReaderFragmentBinding>() {
         const val MANGA_KEY = "MANGA_BUNDLE_KEY"
 
         fun newInstance(chapter: Chapter, manga: Manga): ReaderFragment {
-            val bundle = Bundle()
+            val bundle = Bundle(2)
             bundle.putParcelable(CHAPTER_KEY, chapter)
             bundle.putParcelable(MANGA_KEY, manga)
             return ReaderFragment().apply {

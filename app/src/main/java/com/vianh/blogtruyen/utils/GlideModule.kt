@@ -12,14 +12,11 @@ import com.bumptech.glide.load.model.GlideUrl
 import com.bumptech.glide.module.AppGlideModule
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.signature.ObjectKey
-import com.vianh.blogtruyen.data.remote.BlogtruyenProvider
 import okhttp3.OkHttpClient
-import org.koin.core.component.KoinApiExtension
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import java.io.InputStream
 
-@KoinApiExtension
 @GlideModule
 class GlideModule : AppGlideModule(), KoinComponent {
     override fun applyOptions(context: Context, builder: GlideBuilder) {

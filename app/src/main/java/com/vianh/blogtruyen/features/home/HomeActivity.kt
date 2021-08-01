@@ -12,6 +12,7 @@ import com.vianh.blogtruyen.features.base.BaseActivity
 import com.vianh.blogtruyen.features.favorites.FavoritesFragment
 import com.vianh.blogtruyen.features.favorites.UpdateFavoriteWorker
 import com.vianh.blogtruyen.features.history.HistoryFragment
+import com.vianh.blogtruyen.features.local.LocalMangaFragment
 import com.vianh.blogtruyen.views.ViewHeightAnimator
 
 class HomeActivity : BaseActivity<HomeActivityBinding>() {
@@ -29,17 +30,18 @@ class HomeActivity : BaseActivity<HomeActivityBinding>() {
 
     private fun setupViews() {
         with(binding) {
-            bottomNav.setOnNavigationItemSelectedListener {
+            bottomNav.setOnItemSelectedListener {
                 when (it.itemId) {
                     R.id.home_menu -> changeFragment(HomeFragment())
                     R.id.history -> changeFragment(HistoryFragment())
                     R.id.bookmarks -> changeFragment(FavoritesFragment())
+                    R.id.downloads -> changeFragment(LocalMangaFragment())
                     else -> false
                 }
             }
-            bottomNav.setOnNavigationItemReselectedListener {
 
-            }
+            bottomNav.setOnItemReselectedListener {  }
+
             bottomNavAnimator = ViewHeightAnimator(bottomNav)
         }
     }

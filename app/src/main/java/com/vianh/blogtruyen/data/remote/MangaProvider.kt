@@ -5,7 +5,7 @@ import com.vianh.blogtruyen.data.model.Comment
 import com.vianh.blogtruyen.data.model.Manga
 
 interface MangaProvider {
-    suspend fun fetchNewManga(pageNumber: Int): MutableList<Manga>
+    suspend fun fetchNewManga(pageNumber: Int): List<Manga>
     suspend fun fetchDetailManga(manga: Manga): Manga
     suspend fun fetchChapterList(mangaId: Int): List<Chapter>
     suspend fun fetchChapterPage(link: String): List<String>

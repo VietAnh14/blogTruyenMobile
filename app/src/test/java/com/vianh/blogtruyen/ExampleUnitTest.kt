@@ -1,5 +1,6 @@
 package com.vianh.blogtruyen
 
+import com.vianh.blogtruyen.utils.cancelableCatching
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import org.junit.Test
@@ -72,33 +73,28 @@ class ExampleUnitTest {
     @ObsoleteCoroutinesApi
     @Test
     fun testFlow() {
-        val stateFlowA = MutableStateFlow(1)
-        val stateFlowB = MutableStateFlow("a")
-
-        val combineFlow = stateFlowA.combine(stateFlowB) { a, b ->
-            println("emitting thread: ${Thread.currentThread().name}")
-            a * a * a * a
-        }.flowOn(newSingleThreadContext("Some thread"))
-            .map {
-                println("map thread: ${Thread.currentThread().name}")
-                it * it
-            }
-
-        GlobalScope.launch {
-            combineFlow.collect {
-                println("collect $it     thread: ${Thread.currentThread().name}")
+        val flowA = flow {
+            cancelableCatching {
+                emit(1)
+                delay(1000)
+                emit(100)
+                delay(2000)
+//                throw CancellationException()
+                emit(1000)
             }
         }
 
-        runBlocking {
-            stateFlowA.value = 2
-            delay(200)
-            stateFlowB.value = "v"
-            delay(1000)
-            stateFlowA.value = 12
-            delay(1000)
-            stateFlowA.value= 10
+        val job = flowA
+            .onEach { println("On each $it") }
+            .onCompletion { println("Complete $it") }
+            .catch { println("Catch err 2 $it") }
+            .launchIn(GlobalScope)
 
+
+        runBlocking {
+            delay(1500)
+            job.cancel()
+            delay(3000)
         }
     }
 }
