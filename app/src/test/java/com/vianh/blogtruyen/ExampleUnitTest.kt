@@ -79,21 +79,26 @@ class ExampleUnitTest {
                 delay(1000)
                 emit(100)
                 delay(2000)
-//                throw CancellationException()
+                throw CancellationException()
                 emit(1000)
             }
         }
 
         val job = flowA
+            .catch {
+                emit(-200)
+                println("Catch err 2 $it")
+            }
+            .onCompletion {
+                println("Complete $it")
+            }
             .onEach { println("On each $it") }
-            .onCompletion { println("Complete $it") }
-            .catch { println("Catch err 2 $it") }
             .launchIn(GlobalScope)
 
 
         runBlocking {
             delay(1500)
-            job.cancel()
+//            job.cancel()
             delay(3000)
         }
     }

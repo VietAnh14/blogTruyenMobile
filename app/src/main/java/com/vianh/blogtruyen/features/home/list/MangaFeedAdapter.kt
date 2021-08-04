@@ -2,14 +2,8 @@ package com.vianh.blogtruyen.features.home.list
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
-import com.vianh.blogtruyen.databinding.FeedItemBinding
-import com.vianh.blogtruyen.features.base.AbstractAdapter
-import com.vianh.blogtruyen.features.base.AbstractViewHolder
-import com.vianh.blogtruyen.features.list.BaseVH
-import com.vianh.blogtruyen.features.list.ListItem
-import java.lang.IllegalArgumentException
+import com.vianh.blogtruyen.features.list.AbstractAdapter
+import com.vianh.blogtruyen.features.list.AbstractViewHolder
 
 class MangaFeedAdapter(val itemClick: MangaItemVH.MangaClick): AbstractAdapter<MangaItem, Unit>(Unit) {
 

@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.bumptech.glide.Glide
 import com.vianh.blogtruyen.databinding.FeedItemBinding
-import com.vianh.blogtruyen.features.base.AbstractViewHolder
+import com.vianh.blogtruyen.features.list.AbstractViewHolder
 import com.vianh.blogtruyen.utils.gone
 import com.vianh.blogtruyen.utils.loadNetWorkImage
 

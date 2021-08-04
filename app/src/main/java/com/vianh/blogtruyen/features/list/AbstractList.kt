@@ -1,16 +1,10 @@
-package com.vianh.blogtruyen.features.base
+package com.vianh.blogtruyen.features.list
 
 import android.view.View
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.vianh.blogtruyen.features.list.ListItem
 import java.util.*
-
-
-interface HasUniqueId<T> {
-    val id: T
-}
 
 // T: List data
 // E: Extra config
@@ -36,7 +30,9 @@ abstract class AbstractViewHolder<T: ListItem, E>(itemView: View): RecyclerView.
 }
 
 
-abstract class AbstractAdapter<T: ListItem, E>(val extra: E): ListAdapter<T, AbstractViewHolder<out T, E>>(DiffCallBack<T>()) {
+abstract class AbstractAdapter<T: ListItem, E>(val extra: E): ListAdapter<T, AbstractViewHolder<out T, E>>(
+    DiffCallBack<T>()
+) {
 
     override fun onBindViewHolder(holder: AbstractViewHolder<out T, E>, position: Int) {
         holder.bindData(getItem(position), extra)

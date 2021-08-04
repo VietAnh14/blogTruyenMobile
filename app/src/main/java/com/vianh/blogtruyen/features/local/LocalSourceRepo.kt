@@ -2,6 +2,7 @@ package com.vianh.blogtruyen.features.local
 
 import android.content.Context
 import com.vianh.blogtruyen.data.local.MangaDb
+import com.vianh.blogtruyen.data.local.entity.ChapterEntity
 import com.vianh.blogtruyen.data.model.Chapter
 import com.vianh.blogtruyen.data.model.Manga
 import java.io.File
@@ -30,15 +31,40 @@ class LocalSourceRepo(private val context: Context, private val db: MangaDb) {
             ?.firstOrNull { it.isFile && it.nameWithoutExtension == mangaId.toString() }
     }
 
-    fun loadMangaDetail(): Manga {
-        val coverDir = getCoverDir()
+    suspend fun getChapters(mangaId: Int): List<Chapter> {
         val localDir = getStorageDir()
-        return Manga.getEmpty()
+        val mangaDir = localDir.listFiles { dir, name ->
+            dir.isDirectory && name.split("_").lastOrNull()?.toIntOrNull() == mangaId
+        }?.firstOrNull() ?: return emptyList()
+
+        val chapterDirs = mangaDir.listFiles() ?: return emptyList()
+
+        return chapterDirs.mapNotNull {
+            val id = it.name.split("_")
+                .getOrNull(1) ?: return@mapNotNull null
+
+            val chapter = getChapterById(id)
+            if (chapter == null) {
+                it.delete()
+            }
+
+            chapter
+        }
+    }
+
+    suspend fun getChapterById(id: String): Chapter? {
+        return db.chapterDao.findChapterById(id)?.toChapter()
+    }
+
+    suspend fun upsertChapter(chapter: Chapter, mangaId: Int) {
+        // TODO: Keep read state
+        val entity = ChapterEntity.fromChapter(chapter, mangaId)
+        db.chapterDao.upsert(entity)
     }
 
     fun getChapterDir(mangaId: Int, title: String, chapter: Chapter): File {
         val mangaDir = getLocalMangaDir(mangaId, title)
-        val chapterDir = File(mangaDir, String.format(FILE_FORMAT, chapter.number, chapter.name))
+        val chapterDir = File(mangaDir, String.format(FILE_FORMAT, chapter.number, chapter.id))
         chapterDir.createDirs()
 
         return chapterDir

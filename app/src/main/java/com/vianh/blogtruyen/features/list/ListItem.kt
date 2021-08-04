@@ -13,3 +13,7 @@ interface ListItem {
         const val TRANSITION_ITEM = 7
     }
 }
+
+interface HasUniqueId<T> {
+    val id: T
+}

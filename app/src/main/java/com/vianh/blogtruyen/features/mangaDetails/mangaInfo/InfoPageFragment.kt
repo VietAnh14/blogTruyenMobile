@@ -12,8 +12,10 @@ import com.vianh.blogtruyen.databinding.ChapterPageFragmentBinding
 import com.vianh.blogtruyen.features.base.BaseFragment
 import com.vianh.blogtruyen.features.download.DownloadIntent
 import com.vianh.blogtruyen.features.download.DownloadService
+import com.vianh.blogtruyen.features.download.DownloadState
 import com.vianh.blogtruyen.features.mangaDetails.MangaDetailsViewModel
 import com.vianh.blogtruyen.features.mangaDetails.mangaInfo.adapter.ChapterAdapter
+import com.vianh.blogtruyen.features.mangaDetails.mangaInfo.adapter.ChapterItem
 import com.vianh.blogtruyen.features.mangaDetails.mangaInfo.adapter.InfoHeaderAdapter
 import com.vianh.blogtruyen.features.reader.ReaderFragment
 import org.koin.androidx.viewmodel.ext.android.getViewModel
@@ -58,7 +60,7 @@ class InfoPageFragment : BaseFragment<ChapterPageFragmentBinding>(), ChapterVH.C
         headerAdapter?.submitItem(manga)
     }
 
-    private fun onNewChapters(chapters: List<Chapter>) {
+    private fun onNewChapters(chapters: List<ChapterItem>) {
         chapterAdapter?.submitList(chapters)
     }
 
@@ -73,12 +75,7 @@ class InfoPageFragment : BaseFragment<ChapterPageFragmentBinding>(), ChapterVH.C
         with(requireBinding) {
             swipeRefreshLayout.setOnRefreshListener(this@InfoPageFragment)
             btnRead.setOnClickListener {
-                val chapter = viewModel.currentManga.chapters.first()
 
-                // Clear chapter list when write to bundle
-                val manga = viewModel.currentManga.copy(chapters = emptyList())
-                val downloadIntent = DownloadIntent(manga, chapter)
-                DownloadService.start(requireContext(), downloadIntent)
             }
 
             actionFollow.setOnClickListener {
@@ -104,11 +101,18 @@ class InfoPageFragment : BaseFragment<ChapterPageFragmentBinding>(), ChapterVH.C
         }
     }
 
-    override fun onChapterClick(chapter: Chapter) {
-        hostActivity?.changeFragment(ReaderFragment.newInstance(chapter, viewModel.currentManga), true)
-    }
-
     override fun onRefresh() {
         viewModel.loadMangaInfo()
+    }
+
+    override fun onChapterClick(chapter: ChapterItem) {
+        hostActivity?.changeFragment(ReaderFragment.newInstance(chapter.chapter, viewModel.currentManga), true)
+    }
+
+    override fun onStateButtonClick(item: ChapterItem) {
+        // Clear chapter list when write to bundle
+        val manga = viewModel.currentManga.copy(chapters = emptyList())
+        val downloadIntent = DownloadIntent(manga, item.chapter)
+        DownloadService.start(requireContext(), downloadIntent)
     }
 }

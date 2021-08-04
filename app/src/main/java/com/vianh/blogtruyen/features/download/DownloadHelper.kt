@@ -19,6 +19,7 @@ import java.util.concurrent.TimeUnit
 
 
 sealed class DownloadState {
+    object NotDownloaded: DownloadState()
     object Queued : DownloadState()
     data class InProgress(val progress: Int) : DownloadState()
     data class Error(val cause: Throwable) : DownloadState()
@@ -70,6 +71,8 @@ class DownloadHelper(
                 successPage++
                 emit((successPage * 100f / pages.size).toInt())
             }
+
+            localSourceRepo.upsertChapter(chapter, manga.id)
         }.distinctUntilChanged().flowOn(Dispatchers.IO)
     }
 

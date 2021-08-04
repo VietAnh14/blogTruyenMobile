@@ -66,7 +66,10 @@ class DownloadService : LifecycleService() {
                 downloadState.value = DownloadState.InProgress(it)
             }
             .catch { Timber.e(it) }
-            .onCompletion { completeDownload(downloadItem, startId) }
+            .onCompletion {
+                downloadState.value = DownloadState.Completed
+                completeDownload(downloadItem, startId)
+            }
 
         downloadQueue.update {
             val new = ArrayList(it)
