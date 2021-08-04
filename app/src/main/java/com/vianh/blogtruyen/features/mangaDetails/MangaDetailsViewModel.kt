@@ -8,6 +8,7 @@ import com.vianh.blogtruyen.data.model.Chapter
 import com.vianh.blogtruyen.data.model.Comment
 import com.vianh.blogtruyen.data.model.Manga
 import com.vianh.blogtruyen.features.base.BaseVM
+import com.vianh.blogtruyen.features.download.DownloadItem
 import com.vianh.blogtruyen.features.download.DownloadService
 import com.vianh.blogtruyen.features.download.DownloadState
 import com.vianh.blogtruyen.features.favorites.data.FavoriteRepository
@@ -53,9 +54,9 @@ class MangaDetailsViewModel(
 
             val downloadItem = downloading[it.id]
             if (downloadItem != null) {
-                ChapterItem(it, downloadItem.state.asLiveData())
+                ChapterItem(it, downloadItem.state)
             } else {
-                ChapterItem(it, MutableLiveData(state))
+                ChapterItem(it, MutableStateFlow(state))
             }
         }
     }.distinctUntilChanged().asLiveData(viewModelScope.coroutineContext + Dispatchers.Default)

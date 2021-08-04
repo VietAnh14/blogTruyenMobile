@@ -4,7 +4,6 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
-import com.vianh.blogtruyen.data.model.Chapter
 import com.vianh.blogtruyen.databinding.ChapterItemBinding
 import com.vianh.blogtruyen.features.mangaDetails.mangaInfo.ChapterVH
 import kotlinx.coroutines.CoroutineScope
@@ -28,10 +27,6 @@ class ChapterAdapter(
         super.onViewRecycled(holder)
     }
 
-    override fun getItemId(position: Int): Long {
-        return getItem(position).chapter.id.hashCode().toLong()
-    }
-
     override fun onViewDetachedFromWindow(holder: ChapterVH) {
         holder.onDetached()
         super.onViewDetachedFromWindow(holder)
@@ -43,7 +38,7 @@ class ChapterAdapter(
         }
 
         override fun areContentsTheSame(oldItem: ChapterItem, newItem: ChapterItem): Boolean {
-            return oldItem == newItem
+            return oldItem.chapter == newItem.chapter && oldItem.downloadState.value == newItem.downloadState.value
         }
 
     }

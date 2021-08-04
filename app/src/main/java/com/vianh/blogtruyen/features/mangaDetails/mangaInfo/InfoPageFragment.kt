@@ -4,15 +4,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.vianh.blogtruyen.data.model.Chapter
 import com.vianh.blogtruyen.data.model.Manga
 import com.vianh.blogtruyen.databinding.ChapterPageFragmentBinding
 import com.vianh.blogtruyen.features.base.BaseFragment
 import com.vianh.blogtruyen.features.download.DownloadIntent
 import com.vianh.blogtruyen.features.download.DownloadService
-import com.vianh.blogtruyen.features.download.DownloadState
 import com.vianh.blogtruyen.features.mangaDetails.MangaDetailsViewModel
 import com.vianh.blogtruyen.features.mangaDetails.mangaInfo.adapter.ChapterAdapter
 import com.vianh.blogtruyen.features.mangaDetails.mangaInfo.adapter.ChapterItem
@@ -65,7 +64,7 @@ class InfoPageFragment : BaseFragment<ChapterPageFragmentBinding>(), ChapterVH.C
     }
 
     private fun setup() {
-        chapterAdapter = ChapterAdapter(this)
+        chapterAdapter = ChapterAdapter(this, lifecycleScope)
         headerAdapter = InfoHeaderAdapter(viewModel)
         with(requireBinding.chapterRecycler) {
             adapter = ConcatAdapter(headerAdapter, chapterAdapter)
