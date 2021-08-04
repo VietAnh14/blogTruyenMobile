@@ -13,6 +13,7 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.transition.DrawableCrossFadeFactory
 import com.vianh.blogtruyen.BuildConfig
 import com.vianh.blogtruyen.R
+import com.vianh.blogtruyen.data.remote.BlogtruyenProvider
 import okhttp3.Interceptor
 import okhttp3.Response
 import timber.log.Timber
@@ -37,7 +38,8 @@ class BlogTruyenInterceptor: Interceptor {
             return chain.proceed(request)
         } else {
             val newRequest = request.newBuilder()
-                .header("Referer", request.url.host).build()
+                .header("Referer", BlogtruyenProvider.REFERER)
+                .build()
 
             return chain.proceed(newRequest)
         }

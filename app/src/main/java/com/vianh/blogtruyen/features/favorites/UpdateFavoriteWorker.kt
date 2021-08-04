@@ -5,15 +5,12 @@ import androidx.work.*
 import com.vianh.blogtruyen.data.model.Favorite
 import com.vianh.blogtruyen.features.favorites.data.FavoriteRepository
 import com.vianh.blogtruyen.features.mangaDetails.data.MangaRepo
-import com.vianh.blogtruyen.features.mangaDetails.data.MangaRepository
 import kotlinx.coroutines.flow.first
-import org.koin.core.component.KoinApiExtension
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
-@KoinApiExtension
 class UpdateFavoriteWorker(context: Context, workerParameters: WorkerParameters) :
     CoroutineWorker(context, workerParameters), KoinComponent {
 

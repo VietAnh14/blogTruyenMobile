@@ -1,16 +1,10 @@
-package com.vianh.blogtruyen.features.base
+package com.vianh.blogtruyen.features.list
 
 import android.view.View
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.vianh.blogtruyen.features.list.ListItem
 import java.util.*
-
-
-interface HasUniqueId<T> {
-    val id: T
-}
 
 // T: List data
 // E: Extra config
@@ -36,7 +30,10 @@ abstract class AbstractViewHolder<T: ListItem, E>(itemView: View): RecyclerView.
 }
 
 
-abstract class AbstractAdapter<T: ListItem, E>(val extra: E): ListAdapter<T, AbstractViewHolder<out T, E>>(DiffCallBack<T>()) {
+abstract class AbstractAdapter<T : ListItem, E>(
+    val extra: E,
+    diffCallBack: DiffUtil.ItemCallback<T> = DiffCallBack()
+) : ListAdapter<T, AbstractViewHolder<out T, E>>(diffCallBack) {
 
     override fun onBindViewHolder(holder: AbstractViewHolder<out T, E>, position: Int) {
         holder.bindData(getItem(position), extra)
@@ -61,7 +58,7 @@ abstract class AbstractAdapter<T: ListItem, E>(val extra: E): ListAdapter<T, Abs
         super.onViewDetachedFromWindow(holder)
     }
 
-    class DiffCallBack<T: ListItem>: DiffUtil.ItemCallback<T>() {
+    class DiffCallBack<T : ListItem> : DiffUtil.ItemCallback<T>() {
         override fun areItemsTheSame(oldItem: T, newItem: T): Boolean {
             if (oldItem::class.java == newItem::class.java && oldItem is HasUniqueId<*> && newItem is HasUniqueId<*>)
                 return oldItem.id == newItem.id

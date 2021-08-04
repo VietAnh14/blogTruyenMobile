@@ -5,8 +5,8 @@ import android.view.ViewGroup
 import com.vianh.blogtruyen.databinding.EmptyItemBinding
 import com.vianh.blogtruyen.databinding.HistoryItemBinding
 import com.vianh.blogtruyen.databinding.TimeItemBinding
-import com.vianh.blogtruyen.features.base.AbstractAdapter
-import com.vianh.blogtruyen.features.base.AbstractViewHolder
+import com.vianh.blogtruyen.features.list.AbstractAdapter
+import com.vianh.blogtruyen.features.list.AbstractViewHolder
 import com.vianh.blogtruyen.utils.loadNetWorkImage
 
 class HistoryAdapter(private val viewModel: HistoryViewModel) :

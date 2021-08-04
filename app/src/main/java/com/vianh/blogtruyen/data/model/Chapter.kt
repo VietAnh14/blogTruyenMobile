@@ -8,6 +8,7 @@ data class Chapter(
     val id: String,
     val url: String,
     val name: String,
+    val number: Int,
     val pages: List<String> = listOf(),
     var read: Boolean = false
 ): Parcelable

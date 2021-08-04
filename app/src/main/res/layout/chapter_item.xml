@@ -1,24 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
     android:clickable="true"
-    android:focusableInTouchMode="false"
+    android:background="?attr/selectableItemBackground"
     android:layout_width="match_parent"
     android:layout_height="50dp"
     android:focusable="true">
+
     <TextView
         android:id="@+id/chapterName"
         style="@style/TextAppearance.AppCompat.Body1"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
+        android:layout_weight="1"
         android:layout_height="match_parent"
         android:layout_gravity="center_vertical"
+        android:background="@android:color/transparent"
+        android:clickable="false"
+        android:focusable="false"
         android:paddingStart="10dp"
         android:paddingEnd="10dp"
-        android:background="?attr/selectableItemBackground"
-        android:clickable="true"
         android:ellipsize="end"
-        android:focusable="true"
         android:gravity="center_vertical"
         android:maxLines="1"
         android:text="Chapter 1"/>
-</FrameLayout>
+
+    <ImageButton
+        android:id="@+id/stateButton"
+        app:tint="?attr/colorControlActivated"
+        android:src="@drawable/ic_downloading"
+        android:padding="6dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:layout_gravity="center_vertical"
+        android:layout_marginEnd="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+</LinearLayout>

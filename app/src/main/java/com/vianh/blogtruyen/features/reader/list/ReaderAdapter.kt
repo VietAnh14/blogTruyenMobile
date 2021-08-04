@@ -12,7 +12,7 @@ import com.vianh.blogtruyen.databinding.TransitionPageBinding
 import com.vianh.blogtruyen.features.base.BaseViewHolder
 import com.vianh.blogtruyen.features.list.ListItem
 import com.vianh.blogtruyen.features.reader.ReaderViewModel
-import com.vianh.blogtruyen.utils.preloadSuspend
+import com.vianh.blogtruyen.utils.await
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
@@ -38,7 +38,7 @@ class ReaderAdapter(
         preloadJob = viewModel.viewModelScope.launch {
             for (page in pages) {
                 if (page is ReaderItem.PageItem) {
-                    requestManager.preloadSuspend(page.uri)
+                    requestManager.asFile().await(page.uri)
                 }
             }
         }

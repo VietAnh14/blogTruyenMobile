@@ -15,4 +15,10 @@
         app:showAsAction="ifRoom"
         android:icon="@drawable/ic_bookmarks_24"
         android:title="@string/bookmarks" />
+
+    <item android:id="@+id/downloads"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/ic_downloading"
+        android:title="@string/downloaded"
+        />
 </menu>

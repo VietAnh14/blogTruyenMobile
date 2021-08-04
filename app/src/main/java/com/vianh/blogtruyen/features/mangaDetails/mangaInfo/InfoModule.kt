@@ -9,5 +9,5 @@ import org.koin.dsl.module
 val infoModule
     get() = module {
         single<MangaRepo> { MangaRepository(get(), get()) }
-        viewModel { parameters -> MangaDetailsViewModel(get(), get(), manga = parameters.get()) }
+        viewModel { parameters -> MangaDetailsViewModel(get(), get(), get(), manga = parameters.get()) }
     }

@@ -30,7 +30,7 @@ class MangaDetailsFragment : BaseFragment<MangaDetailsFragmentBinding>() {
     }
 
     private fun observe() {
-        viewModel.mangaLiveData.observe(viewLifecycleOwner, ::onContentChange)
+        viewModel.manga.observe(viewLifecycleOwner, ::onContentChange)
     }
 
     private fun onContentChange(manga: Manga) {
@@ -69,7 +69,7 @@ class MangaDetailsFragment : BaseFragment<MangaDetailsFragmentBinding>() {
         const val MANGA_BUNDLE_KEY = "MANGA_KEY"
 
         fun newInstance(manga: Manga): MangaDetailsFragment {
-            val bundle = Bundle().apply {
+            val bundle = Bundle(1).apply {
                 putParcelable(MANGA_BUNDLE_KEY, manga)
             }
             return MangaDetailsFragment().apply {

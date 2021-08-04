@@ -22,10 +22,17 @@ data class ChapterEntity(
     val name: String,
     val id: String,
     val mangaId: Int,
+    val number: Int,
     val isRead: Boolean = false
 ) {
     fun toChapter(): Chapter {
-        return Chapter(id, url, name)
+        return Chapter(
+            id = id,
+            url = url,
+            name = name,
+            number = number,
+            read = isRead
+        )
     }
 
     companion object {
@@ -35,7 +42,8 @@ data class ChapterEntity(
                 name = chapter.name,
                 id =  chapter.id,
                 mangaId = mangaId,
-                isRead = chapter.read
+                isRead = chapter.read,
+                number = chapter.number
             )
         }
     }
