@@ -19,6 +19,7 @@ import kotlin.collections.ArrayList
 class BlogtruyenProvider(private val client: OkHttpClient) : MangaProvider {
 
     companion object {
+        const val REFERER = BuildConfig.HOST
         private const val AJAX_LOAD_CHAPTER = BuildConfig.HOST + "/Chapter/LoadListChapter"
         private const val AJAX_LOAD_COMMENT = BuildConfig.HOST + "/Comment/AjaxLoadComment"
     }

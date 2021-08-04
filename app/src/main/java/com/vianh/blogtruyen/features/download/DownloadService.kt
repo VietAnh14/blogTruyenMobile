@@ -17,8 +17,6 @@ class DownloadService : LifecycleService() {
 
     private val downloadHelper by inject<DownloadHelper>()
 
-    private val downloadQueue = MutableStateFlow(listOf<Pair<DownloadItem, Flow<Int>>>())
-
     private var downloadJob: Job? = null
 
     override fun onCreate() {
@@ -43,27 +41,22 @@ class DownloadService : LifecycleService() {
 
     fun download(downloadIntent: DownloadIntent, startId: Int) {
         val downloadState: MutableStateFlow<DownloadState> = MutableStateFlow(DownloadState.Queued)
-        val downloadItem = DownloadItem(
-            startId,
-            downloadIntent.mangaId,
-            downloadIntent.coverUrl,
-            downloadIntent.mangaTitle,
-            downloadState,
-            downloadIntent.chapters
-        )
+        val manga = downloadIntent.manga
+        val chapter = downloadIntent.chapter
+        val downloadItem = DownloadItem(manga, chapter, downloadState)
 
-        val downloadFlow = downloadHelper.downloadManga(downloadItem)
+        val downloadFlow = downloadHelper.downloadChapter(downloadItem)
             .distinctUntilChanged()
             .debounce(100)
             .onStart {
                 val cover = Glide.with(this@DownloadService)
                     .asBitmap()
-                    .await(downloadIntent.coverUrl)
+                    .await(manga.imageUrl)
 
                 val startNotification = notificationHelper.builder
                     .setProgress(100, 0, false)
                     .setLargeIcon(cover)
-                    .setContentText(downloadIntent.mangaTitle)
+                    .setContentText(manga.title)
                     .build()
 
                 notificationHelper.updateForegroundNotification(startNotification)
@@ -72,7 +65,8 @@ class DownloadService : LifecycleService() {
                 notificationHelper.updateProgress(it)
                 downloadState.value = DownloadState.InProgress(it)
             }
-            .onCompletion { completeDownload(downloadItem) }
+            .catch { Timber.e(it) }
+            .onCompletion { completeDownload(downloadItem, startId) }
 
         downloadQueue.update {
             val new = ArrayList(it)
@@ -86,8 +80,8 @@ class DownloadService : LifecycleService() {
         }
     }
 
-    private fun completeDownload(downloadItem: DownloadItem) {
-        notificationHelper.sendDoneNotification(downloadItem.id, downloadItem.name)
+    private fun completeDownload(downloadItem: DownloadItem, startId: Int) {
+        notificationHelper.sendDoneNotification(startId, downloadItem.manga.title)
 
         val currentDownload = downloadQueue.value.toMutableList()
         val index = currentDownload.indexOfFirst { it.first == downloadItem }
@@ -105,6 +99,8 @@ class DownloadService : LifecycleService() {
 
 
     companion object {
+
+        val downloadQueue by lazy { MutableStateFlow(listOf<Pair<DownloadItem, Flow<Int>>>()) }
 
         private const val DOWNLOAD_INTENT_KEY = "DOWNLOAD_INTENT"
 

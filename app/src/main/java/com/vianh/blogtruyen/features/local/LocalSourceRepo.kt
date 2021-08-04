@@ -22,13 +22,12 @@ class LocalSourceRepo(private val context: Context, private val db: MangaDb) {
             .map { it.name.split("_").last().toInt() }
             .mapNotNull { db.mangaDao.getMangaById(it) }
             .map { it.toManga() }
-            .map { it.copy(imageUrl = findCoverById(it.id) ?: "") }
+            .map { it.copy(imageUrl = findCoverById(it.id)?.absolutePath.orEmpty()) }
     }
 
-    private fun findCoverById(mangaId: Int): String? {
+    fun findCoverById(mangaId: Int): File? {
         return getCoverDir().listFiles()
-            ?.first { it.isFile && it.nameWithoutExtension == mangaId.toString() }
-            ?.absolutePath
+            ?.firstOrNull { it.isFile && it.nameWithoutExtension == mangaId.toString() }
     }
 
     fun loadMangaDetail(): Manga {

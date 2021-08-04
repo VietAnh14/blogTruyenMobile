@@ -2,12 +2,11 @@ package com.vianh.blogtruyen.features.download
 
 import android.os.Parcelable
 import com.vianh.blogtruyen.data.model.Chapter
+import com.vianh.blogtruyen.data.model.Manga
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class DownloadIntent(
-    val mangaTitle: String,
-    val mangaId: Int,
-    val coverUrl: String,
-    val chapters: List<Chapter>
+    val manga: Manga,
+    val chapter: Chapter
 ): Parcelable

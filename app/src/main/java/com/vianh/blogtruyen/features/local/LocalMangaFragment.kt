@@ -34,8 +34,7 @@ class LocalMangaFragment : BaseFragment<HomeFragmentBinding>(),
 
     private fun setUpView() {
         with(requireBinding) {
-            hostActivity?.setupToolbar(toolbar)
-            toolbar.title = resources.getString(R.string.downloaded)
+            hostActivity?.setupToolbar(toolbar, resources.getString(R.string.downloaded))
 
             adapter = MangaFeedAdapter(this@LocalMangaFragment)
             feedRecycler.adapter = adapter

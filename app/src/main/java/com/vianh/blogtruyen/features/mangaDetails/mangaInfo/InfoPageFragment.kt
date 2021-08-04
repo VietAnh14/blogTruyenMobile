@@ -73,9 +73,11 @@ class InfoPageFragment : BaseFragment<ChapterPageFragmentBinding>(), ChapterVH.C
         with(requireBinding) {
             swipeRefreshLayout.setOnRefreshListener(this@InfoPageFragment)
             btnRead.setOnClickListener {
-                val manga = viewModel.currentManga
-                val downloadIntent =
-                    DownloadIntent(manga.title, manga.id, manga.imageUrl, manga.chapters.take(2))
+                val chapter = viewModel.currentManga.chapters.first()
+
+                // Clear chapter list when write to bundle
+                val manga = viewModel.currentManga.copy(chapters = emptyList())
+                val downloadIntent = DownloadIntent(manga, chapter)
                 DownloadService.start(requireContext(), downloadIntent)
             }
 
