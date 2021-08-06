@@ -10,8 +10,8 @@ import com.vianh.blogtruyen.utils.loadNetWorkImage
 
 class CommentVH(val binding: CommentItemBinding): RecyclerView.ViewHolder(binding.root) {
     var data: Comment? = null
-    val topCommentMargin = itemView.context.resources.getDimensionPixelSize(R.dimen.comment_margin)
-    val replyCommentMargin = itemView.context.resources.getDimensionPixelSize(R.dimen.reply_comment_margin)
+    private val topCommentMargin = itemView.context.resources.getDimensionPixelSize(R.dimen.comment_margin)
+    private val replyCommentMargin = itemView.context.resources.getDimensionPixelSize(R.dimen.reply_comment_margin)
 
     fun onBind(item: Comment) {
         data = item
@@ -31,9 +31,5 @@ class CommentVH(val binding: CommentItemBinding): RecyclerView.ViewHolder(bindin
                 leftMargin = replyCommentMargin
             }
         }
-    }
-
-    fun onRecycle() {
-
     }
 }

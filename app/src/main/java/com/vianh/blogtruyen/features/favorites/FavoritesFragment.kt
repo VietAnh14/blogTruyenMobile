@@ -31,7 +31,6 @@ class FavoritesFragment: BaseFragment<BookmarksFragmentBinding>(), MangaItemVH.M
     }
 
     private fun setup() {
-        hostActivity?.showBottomNav()
         setHasOptionsMenu(true)
 
         with(requireBinding) {

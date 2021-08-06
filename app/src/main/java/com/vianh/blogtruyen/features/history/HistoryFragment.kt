@@ -56,7 +56,6 @@ class HistoryFragment: BaseFragment<HistoryFragmentBinding>() {
 
     private fun setup() {
         hostActivity?.setupToolbar(requireBinding.toolbar)
-        hostActivity?.showBottomNav()
         setHasOptionsMenu(true)
 
         with(requireBinding.contentRecycler) {

@@ -12,8 +12,5 @@ class TestActivity: BaseActivity<MangaInfoItemBinding>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val result = runCatching {
-            "view model"
-        }
     }
 }

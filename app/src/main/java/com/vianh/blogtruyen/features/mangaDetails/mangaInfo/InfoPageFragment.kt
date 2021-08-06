@@ -94,18 +94,15 @@ class InfoPageFragment : BaseFragment<ChapterPageFragmentBinding>(), ChapterVH.C
         super.onDestroyView()
     }
 
-    companion object {
-        fun newInstance(): InfoPageFragment {
-            return InfoPageFragment()
-        }
-    }
-
     override fun onRefresh() {
         viewModel.loadMangaInfo()
     }
 
     override fun onChapterClick(chapter: ChapterItem) {
-        hostActivity?.changeFragment(ReaderFragment.newInstance(chapter.chapter, viewModel.currentManga), true)
+        hostActivity?.changeFragment(
+            ReaderFragment.newInstance(chapter.chapter, viewModel.currentManga, viewModel.isOffline),
+            true
+        )
     }
 
     override fun onStateButtonClick(item: ChapterItem) {
@@ -113,5 +110,11 @@ class InfoPageFragment : BaseFragment<ChapterPageFragmentBinding>(), ChapterVH.C
         val manga = viewModel.currentManga.copy(chapters = emptyList())
         val downloadIntent = DownloadIntent(manga, item.chapter)
         DownloadService.start(requireContext(), downloadIntent)
+    }
+
+    companion object {
+        fun newInstance(): InfoPageFragment {
+            return InfoPageFragment()
+        }
     }
 }

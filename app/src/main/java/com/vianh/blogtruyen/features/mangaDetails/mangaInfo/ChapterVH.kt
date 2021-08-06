@@ -34,8 +34,6 @@ class ChapterVH(
 
     @SuppressLint("ResourceType")
     fun onBind(item: ChapterItem) {
-
-        Timber.d("On bind called $bindingAdapterPosition")
         data = item
         binding.chapterName.text = item.chapter.name
         val textColor = if (item.chapter.read) {
