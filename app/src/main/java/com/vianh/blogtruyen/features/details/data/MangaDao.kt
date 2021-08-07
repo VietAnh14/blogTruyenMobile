@@ -1,8 +1,7 @@
-package com.vianh.blogtruyen.features.mangaDetails.data
+package com.vianh.blogtruyen.features.details.data
 
 import androidx.room.*
 import com.vianh.blogtruyen.data.local.dao.BaseDao
-import com.vianh.blogtruyen.data.local.entity.CategoryEntity
 import com.vianh.blogtruyen.data.local.entity.MangaCategory
 import com.vianh.blogtruyen.data.local.entity.MangaEntity
 

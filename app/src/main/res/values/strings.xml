@@ -13,6 +13,7 @@
     <string name="manga_details">Manga details</string>
     <string name="summary">Sơ lược</string>
     <string name="chapter">Danh sách chương:</string>
+    <string name="chapter_header_title">%1$d chương</string>
     <string name="comment">Bình luận</string>
     <string name="add_to_favorite">Theo dõi</string>
     <string name="manga_info">Thông tin</string>
@@ -20,4 +21,5 @@
     <string name="clear_all_history">Xóa toàn bộ lịch sử</string>
     <string name="empty_history">Empty history</string>
     <string name="downloaded">Downloaded</string>
+    <string name="sort_title">Sort</string>
 </resources>

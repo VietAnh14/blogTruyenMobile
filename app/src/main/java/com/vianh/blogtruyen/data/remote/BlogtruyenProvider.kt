@@ -92,6 +92,10 @@ class BlogtruyenProvider(private val client: OkHttpClient) : MangaProvider {
         }
     }
 
+    override suspend fun fetchNewFeed(): List<Manga> {
+        TODO("Not yet implemented")
+    }
+
     private fun parseComment(html: String): Map<Comment, List<Comment>> {
         val doc = Jsoup.parse(html)
         val commentSessions = doc.getElementsByClass("ul-comment")
@@ -186,7 +190,8 @@ class BlogtruyenProvider(private val client: OkHttpClient) : MangaProvider {
         val image = details.getElementsByClass("content")[0].child(0).attr("src")
         val id = details.getElementById("MangaId")
             ?.attr("value")?.toInt() ?: throwParseFail("Fail to parse manga")
-        val description = details.getElementsByClass("introduce")[0].text()
+        val description = details.getElementsByClass("introduce")[0]
+            .text().ifBlank { "Updating" }
         val category = details.getElementsByClass("catetgory")[0]
             .child(0)
             .children()

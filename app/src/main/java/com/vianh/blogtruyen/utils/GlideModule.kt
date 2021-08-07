@@ -26,7 +26,8 @@ class GlideModule : AppGlideModule(), KoinComponent {
                 ObjectKey(System.currentTimeMillis().toShort())
             )
 
-            this.setDiskCache(InternalCacheDiskCacheFactory(context, 400 * 1024 * 1024))
+            // TODO: Reduce to 200
+            this.setDiskCache(InternalCacheDiskCacheFactory(context, 200 * 1024 * 1024L))
         }
     }
 

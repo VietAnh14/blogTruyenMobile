@@ -9,7 +9,7 @@ import com.vianh.blogtruyen.features.favorites.UpdateFavoriteWorker
 import com.vianh.blogtruyen.features.favorites.favoriteModule
 import com.vianh.blogtruyen.features.history.historyModule
 import com.vianh.blogtruyen.features.local.localModule
-import com.vianh.blogtruyen.features.mangaDetails.mangaInfo.infoModule
+import com.vianh.blogtruyen.features.details.infoModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 import timber.log.Timber

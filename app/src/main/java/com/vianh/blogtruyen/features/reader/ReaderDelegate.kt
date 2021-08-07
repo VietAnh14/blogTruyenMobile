@@ -73,6 +73,7 @@ class ReaderDelegate(private val readerFragment: ReaderFragment, val viewModel: 
             toolbar.subtitle = content.chapter.name
 
             readerAdapter?.setPages(content.items)
+            readerRecycler.scrollToPosition(0)
         }
     }
 

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
+    android:paddingStart="10dp"
+    android:paddingEnd="10dp"
+    android:clickable="true"
+    android:gravity="center_vertical"
+    android:background="@drawable/divider_bg"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:focusable="true">
+    <TextView
+        android:id="@+id/chapter_number"
+        android:layout_weight="1"
+        android:paddingTop="6dp"
+        android:paddingBottom="6dp"
+        android:clickable="false"
+        android:focusable="false"
+        style="@style/TextAppearance.AppCompat.Medium"
+        android:textColor="@color/pureWhite"
+        android:text="@string/chapter_header_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/btn_toggle_sort"
+        android:text="@string/sort_title"
+        android:drawablePadding="4dp"
+        android:clickable="false"
+        android:focusable="false"
+        app:tint="@color/pureWhite"
+        app:drawableTint="@color/pureWhite"
+        android:padding="4dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:drawableEndCompat="@drawable/ic_arrow_circle_up" />
+</LinearLayout>

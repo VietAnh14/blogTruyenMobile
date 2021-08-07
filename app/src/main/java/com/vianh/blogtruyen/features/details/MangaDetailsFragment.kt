@@ -1,4 +1,4 @@
-package com.vianh.blogtruyen.features.mangaDetails
+package com.vianh.blogtruyen.features.details
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -20,7 +20,9 @@ class MangaDetailsFragment : BaseFragment<MangaDetailsFragmentBinding>() {
         savedInstanceState: Bundle?
     ): MangaDetailsFragmentBinding = MangaDetailsFragmentBinding.inflate(inflater, container, false)
 
-    private val viewModel by viewModel<MangaDetailsViewModel> { parametersOf(getManga()) }
+    private val viewModel: MangaDetailsViewModel by viewModel {
+        parametersOf(getManga(), getOfflineState())
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -51,7 +53,6 @@ class MangaDetailsFragment : BaseFragment<MangaDetailsFragmentBinding>() {
                 }
             }.attach()
         }
-        hostActivity?.hideBottomNav()
     }
 
     private fun getManga(): Manga {
@@ -65,12 +66,18 @@ class MangaDetailsFragment : BaseFragment<MangaDetailsFragmentBinding>() {
         }
     }
 
-    companion object {
-        const val MANGA_BUNDLE_KEY = "MANGA_KEY"
+    private fun getOfflineState(): Boolean {
+        return arguments?.getBoolean(OFFLINE_MODE_KEY) ?: false
+    }
 
-        fun newInstance(manga: Manga): MangaDetailsFragment {
-            val bundle = Bundle(1).apply {
+    companion object {
+        private const val MANGA_BUNDLE_KEY = "MANGA_KEY"
+        private const val OFFLINE_MODE_KEY = "OFFLINE"
+
+        fun newInstance(manga: Manga, isOffline: Boolean = false): MangaDetailsFragment {
+            val bundle = Bundle(2).apply {
                 putParcelable(MANGA_BUNDLE_KEY, manga)
+                putBoolean(OFFLINE_MODE_KEY, isOffline)
             }
             return MangaDetailsFragment().apply {
                 arguments = bundle

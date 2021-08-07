@@ -1,4 +1,4 @@
-package com.vianh.blogtruyen.features.mangaDetails.comments
+package com.vianh.blogtruyen.features.details.comments
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.vianh.blogtruyen.databinding.CommentPageFragmentBinding
 import com.vianh.blogtruyen.features.base.BaseFragment
-import com.vianh.blogtruyen.features.mangaDetails.MangaDetailsViewModel
+import com.vianh.blogtruyen.features.details.MangaDetailsViewModel
 import com.vianh.blogtruyen.utils.ScrollLoadMore
 import org.koin.androidx.viewmodel.ext.android.getViewModel
 

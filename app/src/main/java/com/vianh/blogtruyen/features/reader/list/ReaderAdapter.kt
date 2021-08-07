@@ -35,10 +35,12 @@ class ReaderAdapter(
         this.pages.addAll(pages)
 
         // Preload images
-        preloadJob = viewModel.viewModelScope.launch {
-            for (page in pages) {
-                if (page is ReaderItem.PageItem) {
-                    requestManager.asFile().await(page.uri)
+        if (!viewModel.isOffline) {
+            preloadJob = viewModel.viewModelScope.launch {
+                for (page in pages) {
+                    if (page is ReaderItem.PageItem) {
+                        requestManager.asFile().await(page.uri)
+                    }
                 }
             }
         }

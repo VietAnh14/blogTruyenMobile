@@ -6,7 +6,7 @@ import androidx.appcompat.widget.SearchView
 import com.vianh.blogtruyen.R
 import com.vianh.blogtruyen.databinding.HistoryFragmentBinding
 import com.vianh.blogtruyen.features.base.BaseFragment
-import com.vianh.blogtruyen.features.mangaDetails.MangaDetailsFragment
+import com.vianh.blogtruyen.features.details.MangaDetailsFragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class HistoryFragment: BaseFragment<HistoryFragmentBinding>() {
@@ -56,7 +56,6 @@ class HistoryFragment: BaseFragment<HistoryFragmentBinding>() {
 
     private fun setup() {
         hostActivity?.setupToolbar(requireBinding.toolbar)
-        hostActivity?.showBottomNav()
         setHasOptionsMenu(true)
 
         with(requireBinding.contentRecycler) {

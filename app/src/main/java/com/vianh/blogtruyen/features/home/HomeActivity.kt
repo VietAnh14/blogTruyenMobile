@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import androidx.fragment.app.commit
 import com.vianh.blogtruyen.R
@@ -15,12 +16,18 @@ import com.vianh.blogtruyen.features.history.HistoryFragment
 import com.vianh.blogtruyen.features.local.LocalMangaFragment
 import com.vianh.blogtruyen.views.ViewHeightAnimator
 
-class HomeActivity : BaseActivity<HomeActivityBinding>() {
+class HomeActivity : BaseActivity<HomeActivityBinding>(), FragmentManager.OnBackStackChangedListener {
 
     override fun createBinding(): HomeActivityBinding = HomeActivityBinding.inflate(layoutInflater)
 
     private lateinit var bottomNavAnimator: ViewHeightAnimator
 
+    private val rootFragments = setOf(
+        HomeFragment::class.java,
+        HistoryFragment::class.java,
+        FavoritesFragment::class.java,
+        LocalMangaFragment::class.java
+    )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,9 +48,11 @@ class HomeActivity : BaseActivity<HomeActivityBinding>() {
             }
 
             bottomNav.setOnItemReselectedListener {  }
-
             bottomNavAnimator = ViewHeightAnimator(bottomNav)
         }
+
+        supportFragmentManager.addOnBackStackChangedListener(this)
+        syncBottomNavState()
     }
 
     private fun setUpDefaultFragment() {
@@ -66,8 +75,7 @@ class HomeActivity : BaseActivity<HomeActivityBinding>() {
 
     fun navigateUp() {
         if (supportFragmentManager.backStackEntryCount > 0) {
-            supportFragmentManager
-                .popBackStack()
+            supportFragmentManager.popBackStack()
         } else {
             finish()
         }
@@ -103,6 +111,19 @@ class HomeActivity : BaseActivity<HomeActivityBinding>() {
             replace(R.id.host_fragment, fragment)
         }
         return true
+    }
+
+    override fun onBackStackChanged() {
+        syncBottomNavState()
+    }
+
+    private fun syncBottomNavState() {
+        val fragment = supportFragmentManager.findFragmentById(R.id.host_fragment) ?: return
+        if (rootFragments.contains(fragment::class.java)) {
+            showBottomNav()
+        } else {
+            hideBottomNav()
+        }
     }
 
     companion object {

@@ -6,8 +6,11 @@ import com.bumptech.glide.request.transition.Transition
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
 import com.vianh.blogtruyen.features.reader.list.PageLoadCallBack
 
-class SubsamplingScaleImageViewTarget<R>(val view: SubsamplingScaleImageView, val pageLoadCallBack: PageLoadCallBack<R>)
-    : CustomViewTarget<SubsamplingScaleImageView, R>(view) {
+class SubsamplingScaleImageViewTarget<R>(
+    val view: SubsamplingScaleImageView,
+    private val pageLoadCallBack: PageLoadCallBack<R>
+) : CustomViewTarget<SubsamplingScaleImageView, R>(view) {
+
     override fun onLoadFailed(errorDrawable: Drawable?) {
         pageLoadCallBack.onLoadFailed(errorDrawable)
     }

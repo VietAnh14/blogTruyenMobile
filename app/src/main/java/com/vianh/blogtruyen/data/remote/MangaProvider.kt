@@ -10,4 +10,5 @@ interface MangaProvider {
     suspend fun fetchChapterList(mangaId: Int): List<Chapter>
     suspend fun fetchChapterPage(link: String): List<String>
     suspend fun fetchComment(mangaId: Int, offset: Int): Map<Comment, List<Comment>>
+    suspend fun fetchNewFeed(): List<Manga>
 }

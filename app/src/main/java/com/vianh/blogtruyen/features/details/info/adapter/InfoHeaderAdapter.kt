@@ -1,11 +1,11 @@
-package com.vianh.blogtruyen.features.mangaDetails.mangaInfo.adapter
+package com.vianh.blogtruyen.features.details.info.adapter
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import com.vianh.blogtruyen.data.model.Manga
-import com.vianh.blogtruyen.features.mangaDetails.MangaDetailsViewModel
-import com.vianh.blogtruyen.features.mangaDetails.mangaInfo.MangaInfoHeaderVH
+import com.vianh.blogtruyen.features.details.MangaDetailsViewModel
+import com.vianh.blogtruyen.features.details.info.MangaInfoHeaderVH
 
 class InfoHeaderAdapter(private val viewModel: MangaDetailsViewModel): ListAdapter<Manga, MangaInfoHeaderVH>(
     DiffCallBack()

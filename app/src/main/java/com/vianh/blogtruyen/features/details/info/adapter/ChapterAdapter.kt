@@ -1,11 +1,11 @@
-package com.vianh.blogtruyen.features.mangaDetails.mangaInfo.adapter
+package com.vianh.blogtruyen.features.details.info.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import com.vianh.blogtruyen.databinding.ChapterItemBinding
-import com.vianh.blogtruyen.features.mangaDetails.mangaInfo.ChapterVH
+import com.vianh.blogtruyen.features.details.info.ChapterVH
 import kotlinx.coroutines.CoroutineScope
 
 class ChapterAdapter(

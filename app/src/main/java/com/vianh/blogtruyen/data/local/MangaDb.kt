@@ -4,14 +4,12 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import androidx.sqlite.db.SupportSQLiteDatabase
 import com.vianh.blogtruyen.data.local.dao.CategoryDao
 import com.vianh.blogtruyen.data.local.dao.ChapterDao
 import com.vianh.blogtruyen.features.history.data.HistoryDao
-import com.vianh.blogtruyen.features.mangaDetails.data.MangaDao
+import com.vianh.blogtruyen.features.details.data.MangaDao
 import com.vianh.blogtruyen.data.local.entity.*
 import com.vianh.blogtruyen.features.favorites.data.FavoriteDao
-import kotlinx.coroutines.*
 
 @Database(
     entities = [

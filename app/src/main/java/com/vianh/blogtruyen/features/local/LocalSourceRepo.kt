@@ -5,6 +5,7 @@ import com.vianh.blogtruyen.data.local.MangaDb
 import com.vianh.blogtruyen.data.local.entity.ChapterEntity
 import com.vianh.blogtruyen.data.model.Chapter
 import com.vianh.blogtruyen.data.model.Manga
+import com.vianh.blogtruyen.utils.toSafeFileName
 import java.io.File
 
 class LocalSourceRepo(private val context: Context, private val db: MangaDb) {
@@ -49,32 +50,40 @@ class LocalSourceRepo(private val context: Context, private val db: MangaDb) {
             }
 
             chapter
-        }
+        }.sortedByDescending { it.number }
     }
 
     suspend fun getChapterById(id: String): Chapter? {
         return db.chapterDao.findChapterById(id)?.toChapter()
     }
 
+    fun loadPages(manga: Manga, chapter: Chapter): List<String> {
+        val chapterDir = getChapterDir(manga.id, manga.title, chapter)
+        if (!chapterDir.exists())
+            throw IllegalStateException("Could not find chapter in local source")
+
+        val pages = chapterDir.listFiles() ?: throw IllegalStateException("No page found")
+        pages.sortBy { it.nameWithoutExtension }
+        return pages
+            .filter { it.nameWithoutExtension.toIntOrNull() != null }
+            .map { it.absolutePath }
+    }
+
     suspend fun upsertChapter(chapter: Chapter, mangaId: Int) {
-        // TODO: Keep read state
+        val readState = db.chapterDao.findChapterById(chapter.id)?.isRead ?: false
+        chapter.read = readState
         val entity = ChapterEntity.fromChapter(chapter, mangaId)
         db.chapterDao.upsert(entity)
     }
 
     fun getChapterDir(mangaId: Int, title: String, chapter: Chapter): File {
         val mangaDir = getLocalMangaDir(mangaId, title)
-        val chapterDir = File(mangaDir, String.format(FILE_FORMAT, chapter.number, chapter.id))
-        chapterDir.createDirs()
-
-        return chapterDir
+        return File(mangaDir, CHAPTER_FORMAT.format(chapter.number, chapter.id))
     }
 
     fun getLocalMangaDir(id: Int, title: String): File {
         val fileDir = getStorageDir()
-        val mangaDir = File(fileDir, FILE_FORMAT.format(title, id))
-        mangaDir.createDirs()
-        return mangaDir
+        return File(fileDir, MANGA_FORMAT.format(title.toSafeFileName(), id))
     }
 
     fun getStorageDir(): File {
@@ -88,17 +97,14 @@ class LocalSourceRepo(private val context: Context, private val db: MangaDb) {
         }
     }
 
-    fun File.createDirs() {
-        if (!exists())
-            mkdirs()
-    }
-
     companion object {
 
         const val COVER_DIR = "covers"
 
         const val LOCAL_MANGA_DIR = "localManga"
 
-        const val FILE_FORMAT = "%s_%s"
+        const val MANGA_FORMAT = "%s_%d"
+
+        const val CHAPTER_FORMAT = "%03d_%s"
     }
 }

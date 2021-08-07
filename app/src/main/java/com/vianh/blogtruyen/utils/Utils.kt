@@ -7,6 +7,7 @@ import android.net.Uri
 import android.view.View
 import android.view.Window
 import android.widget.ImageView
+import com.bumptech.glide.GenericTransitionOptions
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestBuilder
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
@@ -116,11 +117,12 @@ fun getMaxTextureSize(): Int {
 }
 
 fun getMimeType(uri: Uri, context: Context): String? {
-    return context.contentResolver.getType(uri)?.toLowerCase(Locale.ENGLISH)
+    return context.contentResolver.getType(uri)?.lowercase(Locale.ENGLISH)
 }
 
-fun ImageView.loadNetWorkImage(url: String) {
+inline fun ImageView.loadNetWorkImage(url: String) {
     Glide.with(context)
         .load(url)
+        .transition(GenericTransitionOptions.with(android.R.anim.fade_in))
         .into(this)
 }

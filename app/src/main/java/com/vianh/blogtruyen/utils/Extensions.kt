@@ -190,3 +190,13 @@ fun Context.getColorFromAttr(
     theme.resolveAttribute(attrColor, typedValue, resolveRefs)
     return typedValue.data
 }
+
+fun String.toSafeFileName(): String {
+    return this.replace(Regex.fromLiteral("[^a-zA-Z0-9\\.\\-]"), "_")
+}
+
+fun File.createDirs(): File {
+    if (!exists())
+        mkdirs()
+    return this
+}

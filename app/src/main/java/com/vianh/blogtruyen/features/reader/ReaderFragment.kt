@@ -32,7 +32,8 @@ class ReaderFragment : BaseFragment<ReaderFragmentBinding>() {
     private val viewModel by viewModel<ReaderViewModel> {
         parametersOf(
             arguments?.getParcelable(CHAPTER_KEY),
-            arguments?.getParcelable(MANGA_KEY)
+            arguments?.getParcelable(MANGA_KEY),
+            arguments?.getBoolean(OFFLINE_MODE_KEY)
         )
     }
 
@@ -47,7 +48,7 @@ class ReaderFragment : BaseFragment<ReaderFragmentBinding>() {
     }
 
     private fun observe() {
-        viewModel.content.observe(viewLifecycleOwner) { onContentChange(it) }
+        viewModel.uiState.observe(viewLifecycleOwner) { onContentChange(it) }
         viewModel.toast.observe(viewLifecycleOwner) { showToast(it) }
         viewModel.error.observe(viewLifecycleOwner) {
             Timber.e(it)
@@ -79,13 +80,15 @@ class ReaderFragment : BaseFragment<ReaderFragmentBinding>() {
     }
 
     companion object {
-        const val CHAPTER_KEY = "CHAPTER_BUNDLE_KEY"
-        const val MANGA_KEY = "MANGA_BUNDLE_KEY"
+        private const val CHAPTER_KEY = "CHAPTER_BUNDLE_KEY"
+        private const val MANGA_KEY = "MANGA_BUNDLE_KEY"
+        private const val OFFLINE_MODE_KEY = "OFFLINE"
 
-        fun newInstance(chapter: Chapter, manga: Manga): ReaderFragment {
-            val bundle = Bundle(2)
+        fun newInstance(chapter: Chapter, manga: Manga, isOffline: Boolean = false): ReaderFragment {
+            val bundle = Bundle(3)
             bundle.putParcelable(CHAPTER_KEY, chapter)
             bundle.putParcelable(MANGA_KEY, manga)
+            bundle.putBoolean(OFFLINE_MODE_KEY, isOffline)
             return ReaderFragment().apply {
                 arguments = bundle
             }

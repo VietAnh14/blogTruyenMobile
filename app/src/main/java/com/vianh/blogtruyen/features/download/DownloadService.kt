@@ -84,8 +84,6 @@ class DownloadService : LifecycleService() {
     }
 
     private fun completeDownload(downloadItem: DownloadItem, startId: Int) {
-        notificationHelper.sendDoneNotification(startId, downloadItem.manga.title)
-
         val currentDownload = downloadQueue.value.toMutableList()
         val index = currentDownload.indexOfFirst { it.first == downloadItem }
         if (index != -1) {
@@ -94,6 +92,7 @@ class DownloadService : LifecycleService() {
         }
 
         if (downloadQueue.value.isEmpty()) {
+            notificationHelper.sendDoneNotification(startId, downloadItem.manga.title)
             stopSelf()
         } else {
             downloadJob = downloadQueue.value.first().second.launchIn(lifecycleScope)

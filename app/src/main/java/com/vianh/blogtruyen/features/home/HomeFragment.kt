@@ -11,8 +11,7 @@ import com.vianh.blogtruyen.features.base.BaseFragment
 import com.vianh.blogtruyen.features.home.list.MangaFeedAdapter
 import com.vianh.blogtruyen.features.home.list.MangaItem
 import com.vianh.blogtruyen.features.home.list.MangaItemVH
-import com.vianh.blogtruyen.features.list.ListItem
-import com.vianh.blogtruyen.features.mangaDetails.MangaDetailsFragment
+import com.vianh.blogtruyen.features.details.MangaDetailsFragment
 import com.vianh.blogtruyen.utils.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -50,7 +49,6 @@ class HomeFragment: BaseFragment<HomeFragmentBinding>(), MangaItemVH.MangaClick 
     private fun setup() {
         val homeActivity = activity as? HomeActivity ?: return
         homeActivity.setupToolbar(requireBinding.toolbar)
-        homeActivity.showBottomNav()
 
         with(requireBinding.feedRecycler) {
             setHasFixedSize(true)

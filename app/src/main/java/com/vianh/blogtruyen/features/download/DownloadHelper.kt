@@ -9,6 +9,7 @@ import com.vianh.blogtruyen.features.local.LocalSourceRepo
 import com.vianh.blogtruyen.utils.await
 import com.vianh.blogtruyen.utils.cancelableCatching
 import com.vianh.blogtruyen.utils.copyTo
+import com.vianh.blogtruyen.utils.createDirs
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import okhttp3.OkHttpClient
@@ -40,6 +41,7 @@ class DownloadHelper(
     private val localSourceRepo: LocalSourceRepo
 ) {
 
+    // TODO: DOWNLOAD TO TEMP FILE WHILE PROCESSING
     fun downloadChapter(downloadItem: DownloadItem): Flow<Int> {
         return flow {
             val chapter = downloadItem.chapter
@@ -54,11 +56,13 @@ class DownloadHelper(
 
             val pages = mangaProvider.fetchChapterPage(chapter.url)
             var successPage = 0
-            val chapterDir = localSourceRepo.getChapterDir(manga.id, manga.title, chapter)
+            val chapterDir = localSourceRepo
+                .getChapterDir(manga.id, manga.title, chapter)
+                .createDirs()
 
             pages.forEachIndexed { index, page ->
                 val request = Request.Builder().url(page).build()
-                val fileName = "$index.${fileExtensionFromUrl(page)}"
+                val fileName = PAGE_FORMAT.format(index, fileExtensionFromUrl(page))
 
                 cancelableCatching {
                     val response = client.newCall(request).await()
@@ -85,5 +89,9 @@ class DownloadHelper(
 
     private fun fileExtensionFromUrl(url: String): String {
         return url.substringAfterLast(".", "obj")
+    }
+
+    companion object {
+        const val PAGE_FORMAT = "%03d.%s"
     }
 }

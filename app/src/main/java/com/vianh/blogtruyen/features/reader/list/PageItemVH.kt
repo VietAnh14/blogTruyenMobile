@@ -3,6 +3,7 @@ package com.vianh.blogtruyen.features.reader.list
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
+import android.webkit.URLUtil
 import androidx.core.view.updateLayoutParams
 import com.bumptech.glide.RequestManager
 import com.bumptech.glide.request.transition.Transition
@@ -44,21 +45,25 @@ class PageItemVH(
         data = boundItem
         binding.progressCircular.visible()
         binding.page.setOnImageEventListener(scaleImageListener)
-        glideRequestManager
-            .download(boundItem.uri)
-            .skipMemoryCache(true)
-            .dontAnimate()
-            .dontTransform()
-            .into(imgTarget)
+
+        if (URLUtil.isNetworkUrl(boundItem.uri)) {
+            glideRequestManager
+                .download(boundItem.uri)
+                .skipMemoryCache(true)
+                .dontAnimate()
+                .dontTransform()
+                .into(imgTarget)
+        } else {
+            onResourceReady(File(boundItem.uri), null)
+        }
     }
 
     override fun onRecycle() {
         with(binding) {
             page.recycle()
             page.invisible()
-            binding.root.updateLayoutParams {
-                height =
-                    itemView.context.resources.getDimensionPixelSize(R.dimen.page_item_min_height)
+            root.updateLayoutParams {
+                height = itemView.context.resources.getDimensionPixelSize(R.dimen.page_item_min_height)
             }
             glideRequestManager.clear(imgTarget)
         }
