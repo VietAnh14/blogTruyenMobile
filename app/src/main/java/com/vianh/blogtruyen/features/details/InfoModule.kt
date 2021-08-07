@@ -1,8 +1,7 @@
-package com.vianh.blogtruyen.features.mangaDetails
+package com.vianh.blogtruyen.features.details
 
-import com.vianh.blogtruyen.features.mangaDetails.MangaDetailsViewModel
-import com.vianh.blogtruyen.features.mangaDetails.data.MangaRepo
-import com.vianh.blogtruyen.features.mangaDetails.data.MangaRepository
+import com.vianh.blogtruyen.features.details.data.MangaRepo
+import com.vianh.blogtruyen.features.details.data.MangaRepository
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 

@@ -1,14 +1,13 @@
-package com.vianh.blogtruyen.features.mangaDetails.mangaInfo
+package com.vianh.blogtruyen.features.details.info
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.chip.Chip
-import com.vianh.blogtruyen.R
 import com.vianh.blogtruyen.data.model.Manga
 import com.vianh.blogtruyen.databinding.ChipItemBinding
 import com.vianh.blogtruyen.databinding.MangaInfoItemBinding
-import com.vianh.blogtruyen.features.mangaDetails.MangaDetailsViewModel
+import com.vianh.blogtruyen.features.details.MangaDetailsViewModel
 import com.vianh.blogtruyen.utils.loadNetWorkImage
 
 class MangaInfoHeaderVH(

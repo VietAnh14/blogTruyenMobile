@@ -1,9 +1,10 @@
 package com.vianh.blogtruyen.features.reader
 
 import com.bumptech.glide.RequestManager
-import com.vianh.blogtruyen.features.reader.list.ReaderItem
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class PageLoader(
@@ -13,13 +14,13 @@ class PageLoader(
 ) {
     private var loadingJob: Job? = null
 
-    fun startLoad(items: List<ReaderItem>) {
+    fun enqueue(uri: String): StateFlow<String> {
+        val result = MutableStateFlow("abc")
         loadingJob = scope.launch {
-            items.filterIsInstance<ReaderItem.PageItem>()
-                .forEach {
 
-                }
         }
+
+        return result
     }
 
     fun cancel() {

@@ -117,7 +117,7 @@ fun getMaxTextureSize(): Int {
 }
 
 fun getMimeType(uri: Uri, context: Context): String? {
-    return context.contentResolver.getType(uri)?.toLowerCase(Locale.ENGLISH)
+    return context.contentResolver.getType(uri)?.lowercase(Locale.ENGLISH)
 }
 
 inline fun ImageView.loadNetWorkImage(url: String) {

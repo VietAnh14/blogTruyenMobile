@@ -1,4 +1,4 @@
-package com.vianh.blogtruyen.features.mangaDetails
+package com.vianh.blogtruyen.features.details
 
 import android.os.Bundle
 import android.view.LayoutInflater

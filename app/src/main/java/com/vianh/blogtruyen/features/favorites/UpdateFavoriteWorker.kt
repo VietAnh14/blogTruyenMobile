@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.work.*
 import com.vianh.blogtruyen.data.model.Favorite
 import com.vianh.blogtruyen.features.favorites.data.FavoriteRepository
-import com.vianh.blogtruyen.features.mangaDetails.data.MangaRepo
+import com.vianh.blogtruyen.features.details.data.MangaRepo
 import kotlinx.coroutines.flow.first
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject

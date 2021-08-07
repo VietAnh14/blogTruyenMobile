@@ -1,11 +1,11 @@
-package com.vianh.blogtruyen.features.mangaDetails.mangaInfo
+package com.vianh.blogtruyen.features.details.info
 
 import android.annotation.SuppressLint
 import androidx.recyclerview.widget.RecyclerView
 import com.vianh.blogtruyen.R
 import com.vianh.blogtruyen.databinding.ChapterItemBinding
 import com.vianh.blogtruyen.features.download.DownloadState
-import com.vianh.blogtruyen.features.mangaDetails.mangaInfo.adapter.ChapterItem
+import com.vianh.blogtruyen.features.details.info.adapter.ChapterItem
 import com.vianh.blogtruyen.utils.getColorFromAttr
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job

@@ -1,4 +1,4 @@
-package com.vianh.blogtruyen.features.mangaDetails.mangaInfo.adapter
+package com.vianh.blogtruyen.features.details.info.adapter
 
 import com.vianh.blogtruyen.data.model.Chapter
 import com.vianh.blogtruyen.features.download.DownloadState

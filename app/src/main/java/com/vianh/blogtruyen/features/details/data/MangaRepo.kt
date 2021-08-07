@@ -1,4 +1,4 @@
-package com.vianh.blogtruyen.features.mangaDetails.data
+package com.vianh.blogtruyen.features.details.data
 
 import androidx.room.withTransaction
 import com.vianh.blogtruyen.data.local.MangaDb

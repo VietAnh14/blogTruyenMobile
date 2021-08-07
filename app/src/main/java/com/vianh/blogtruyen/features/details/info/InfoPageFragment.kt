@@ -1,4 +1,4 @@
-package com.vianh.blogtruyen.features.mangaDetails.mangaInfo
+package com.vianh.blogtruyen.features.details.info
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -6,16 +6,16 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ConcatAdapter
+import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.vianh.blogtruyen.data.model.Manga
+import com.vianh.blogtruyen.databinding.ChapterHeaderItemBinding
 import com.vianh.blogtruyen.databinding.ChapterPageFragmentBinding
 import com.vianh.blogtruyen.features.base.BaseFragment
 import com.vianh.blogtruyen.features.download.DownloadIntent
 import com.vianh.blogtruyen.features.download.DownloadService
-import com.vianh.blogtruyen.features.mangaDetails.MangaDetailsViewModel
-import com.vianh.blogtruyen.features.mangaDetails.mangaInfo.adapter.ChapterAdapter
-import com.vianh.blogtruyen.features.mangaDetails.mangaInfo.adapter.ChapterItem
-import com.vianh.blogtruyen.features.mangaDetails.mangaInfo.adapter.InfoHeaderAdapter
+import com.vianh.blogtruyen.features.details.MangaDetailsViewModel
+import com.vianh.blogtruyen.features.details.info.adapter.*
 import com.vianh.blogtruyen.features.reader.ReaderFragment
 import org.koin.androidx.viewmodel.ext.android.getViewModel
 import timber.log.Timber
@@ -34,6 +34,7 @@ class InfoPageFragment : BaseFragment<ChapterPageFragmentBinding>(), ChapterVH.C
 
     private var chapterAdapter: ChapterAdapter? = null
     private var headerAdapter: InfoHeaderAdapter? = null
+    private var chapterHeaderAdapter: ChapterHeaderAdapter? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -43,11 +44,16 @@ class InfoPageFragment : BaseFragment<ChapterPageFragmentBinding>(), ChapterVH.C
 
     private fun observe() {
         viewModel.chapters.observe(viewLifecycleOwner, this::onNewChapters)
+        viewModel.headerItem.observe(viewLifecycleOwner, this::onHeaderChange)
         viewModel.manga.observe(viewLifecycleOwner, this::onMangaChange)
         viewModel.isLoading.observe(viewLifecycleOwner, this::onLoadingChange)
         viewModel.isFavorite.observe(viewLifecycleOwner, this::onFavoriteStateChange)
 
         viewModel.error.observe(viewLifecycleOwner, { showToast(it.message) })
+    }
+
+    private fun onHeaderChange(headerItem: HeaderItem) {
+        chapterHeaderAdapter?.submitList(listOf(headerItem))
     }
 
     private fun onFavoriteStateChange(isFavorite: Boolean) {
@@ -66,8 +72,10 @@ class InfoPageFragment : BaseFragment<ChapterPageFragmentBinding>(), ChapterVH.C
     private fun setup() {
         chapterAdapter = ChapterAdapter(this, lifecycleScope)
         headerAdapter = InfoHeaderAdapter(viewModel)
+        chapterHeaderAdapter = ChapterHeaderAdapter(viewModel)
         with(requireBinding.chapterRecycler) {
-            adapter = ConcatAdapter(headerAdapter, chapterAdapter)
+            itemAnimator = null
+            adapter = ConcatAdapter(headerAdapter, chapterHeaderAdapter, chapterAdapter)
             setHasFixedSize(true)
         }
 

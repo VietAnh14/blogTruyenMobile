@@ -1,9 +1,9 @@
-package com.vianh.blogtruyen.features.mangaDetails
+package com.vianh.blogtruyen.features.details
 
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.vianh.blogtruyen.features.mangaDetails.mangaInfo.InfoPageFragment
-import com.vianh.blogtruyen.features.mangaDetails.comments.CommentPageFragment
+import com.vianh.blogtruyen.features.details.info.InfoPageFragment
+import com.vianh.blogtruyen.features.details.comments.CommentPageFragment
 
 class ContentPagerAdapter(fragment: MangaDetailsFragment): FragmentStateAdapter(fragment) {
     override fun getItemCount(): Int = 2
