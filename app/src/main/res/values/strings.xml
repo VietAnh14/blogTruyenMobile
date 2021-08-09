@@ -5,7 +5,7 @@
     <string name="loading_image_content">Loading image content</string>
     <string name="subscribe">Subscribe</string>
     <string name="media_image">Media image</string>
-    <string name="home_menu">Home</string>
+    <string name="home_menu">Home Page</string>
     <string name="history">History</string>
     <string name="bookmarks">Bookmarks</string>
     <string name="search">Search</string>
@@ -22,4 +22,8 @@
     <string name="empty_history">Empty history</string>
     <string name="downloaded">Downloaded</string>
     <string name="sort_title">Sort</string>
+    <string name="show_more">Xem thêm</string>
+    <string name="recent_update">Vừa cập nhật</string>
+    <string name="new_stories">Truyện mới đăng</string>
+    <string name="continue_reading">Đọc tiếp</string>
 </resources>

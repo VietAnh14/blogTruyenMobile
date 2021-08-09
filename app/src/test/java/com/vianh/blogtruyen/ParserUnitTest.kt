@@ -10,11 +10,11 @@ import org.junit.Assert.*
 
 class ParserUnitTest {
 
-    val client = OkHttpClient
+    private val client = OkHttpClient
         .Builder()
         .addInterceptor(BlogTruyenInterceptor())
         .build()
-    val blogtruyenProvider = BlogtruyenProvider(client)
+    private val blogtruyenProvider = BlogtruyenProvider(client)
 
 
 
@@ -26,6 +26,13 @@ class ParserUnitTest {
             val comments = blogtruyenProvider.fetchComment(mangaId, page)
             print(comments)
             assertEquals(20, comments.size)
+        }
+    }
+    
+    @Test
+    fun testParseNewFeed() {
+        runBlocking {
+            val response = blogtruyenProvider.fetchNewFeed()
         }
     }
 

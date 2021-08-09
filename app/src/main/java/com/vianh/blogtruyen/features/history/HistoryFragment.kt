@@ -77,4 +77,10 @@ class HistoryFragment: BaseFragment<HistoryFragmentBinding>() {
         super.onDestroyView()
         historyAdapter = null
     }
+
+    companion object {
+        fun newInstance(): HistoryFragment {
+            return HistoryFragment()
+        }
+    }
 }

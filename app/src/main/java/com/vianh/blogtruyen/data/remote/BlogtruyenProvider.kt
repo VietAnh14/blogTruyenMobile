@@ -5,16 +5,20 @@ import com.vianh.blogtruyen.data.model.Category
 import com.vianh.blogtruyen.data.model.Chapter
 import com.vianh.blogtruyen.data.model.Comment
 import com.vianh.blogtruyen.data.model.Manga
+import com.vianh.blogtruyen.utils.await
 import com.vianh.blogtruyen.utils.getBodyString
+import com.vianh.blogtruyen.utils.mapToSet
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.json.JSONArray
 import org.jsoup.Jsoup
+import org.jsoup.nodes.Document
 import org.jsoup.select.Elements
 import java.util.*
 import kotlin.collections.ArrayList
+import kotlin.collections.HashSet
 
 class BlogtruyenProvider(private val client: OkHttpClient) : MangaProvider {
 
@@ -92,8 +96,88 @@ class BlogtruyenProvider(private val client: OkHttpClient) : MangaProvider {
         }
     }
 
-    override suspend fun fetchNewFeed(): List<Manga> {
-        TODO("Not yet implemented")
+    override suspend fun fetchNewFeed(): FeedItem {
+        return withContext(Dispatchers.IO) {
+            val request = Request.Builder().url(BuildConfig.HOST_FULL).build()
+            val response = client.newCall(request).getBodyString()
+            val doc = Jsoup.parse(response)
+            val pinStories = getPinStories(doc)
+            val newUpdates = parseNewUpdate(doc)
+            val newManga = parseNewManga(doc)
+
+            FeedItem(pinStories, newUpdates, newManga)
+        }
+    }
+
+    private fun parseNewManga(doc: Document): List<Manga> {
+        val newStories = doc.getElementById("top-newest-story") ?: return emptyList()
+        return newStories.getElementsByTag("a").map {
+            val link = it.attr("href")
+            val title = it.attr("title")
+            val imageUrl = it.child(0).attr("src")
+            Manga(
+                id = idFromRelativeLink(link),
+                title = title,
+                link = link,
+                imageUrl = imageUrl,
+                uploadTitle = title,
+                description = "Updating"
+            )
+        }
+    }
+
+    private fun parseNewUpdate(doc: Document): List<Manga> {
+        val list = doc.getElementsByClass("list-mainpage")[0].child(0)
+        val listItems = list.getElementsByClass("storyitem")
+        return listItems.map {
+            val linkTag = it.child(0).child(0)
+            val link = linkTag.attr("href")
+            val id = link.split("/")[1].toInt()
+            val title = linkTag.attr("title")
+            val imageLink = linkTag.child(0).attr("src")
+
+            val des = it.child(1).child(1).text()
+            val categoryNodes = it
+                .getElementsByClass("category")[0]
+                .getElementsByTag("a")
+
+            val categories = categoryNodes.mapToSet { category ->
+                Category(category.attr("href"), category.text())
+            }
+
+            Manga(
+                id = id,
+                imageUrl = imageLink,
+                title = title,
+                uploadTitle = "",
+                description = des,
+                link = link,
+                categories = categories
+            )
+        }
+    }
+
+    private fun getPinStories(doc: Document): List<Manga> {
+        val pinedArticles = doc.getElementById("storyPinked")
+            ?.getElementsByTag("article")?.getOrNull(0) ?: return emptyList()
+        val mangaLinks = pinedArticles.getElementsByClass("tiptip")
+        return mangaLinks.map {
+            val link = it.attr("href")
+            val id = link.split("/")[1].toInt()
+            val imageUrl = it.child(0).attr("src")
+            val tip = pinedArticles.getElementById("tiptip-$id") ?: throwParseFail("Failed to parse")
+            val title = tip.child(0).text()
+            val des = tip.child(1).text().ifEmpty { "Updating" }
+
+            Manga(
+                id = id,
+                imageUrl = imageUrl,
+                title = title,
+                uploadTitle = "",
+                description = des,
+                link = link
+            )
+        }
     }
 
     private fun parseComment(html: String): Map<Comment, List<Comment>> {
@@ -257,6 +341,10 @@ class BlogtruyenProvider(private val client: OkHttpClient) : MangaProvider {
             }
         }
         return images
+    }
+
+    private fun idFromRelativeLink(link: String): Int {
+        return link.split('/')[1].toInt()
     }
 
     private fun throwParseFail(message: String): Nothing {
