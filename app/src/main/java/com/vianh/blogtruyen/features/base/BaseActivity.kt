@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewbinding.ViewBinding
-import com.vianh.blogtruyen.features.home.HomeActivity
 
 abstract class BaseActivity<B: ViewBinding>: AppCompatActivity() {
     lateinit var binding: B

@@ -43,11 +43,6 @@ class DownloadNotificationHelper(private val context: Context) {
         notificationManager.notify(id, builder.build())
     }
 
-    fun updateStartNotification() {
-
-    }
-
-
     fun updateProgress(progress: Int) {
         val notification = builder
             .setProgress(100, progress, false)

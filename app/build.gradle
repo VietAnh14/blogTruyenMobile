@@ -22,6 +22,8 @@ android {
     buildTypes {
         release {
             minifyEnabled true
+            shrinkResources true
+            multiDexEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             buildConfigField "String", "HOST", "\"https://m.blogtruyen.vn\""
             buildConfigField "String", "HOST_FULL", "\"https://blogtruyen.vn\""
@@ -73,7 +75,7 @@ dependencies {
     implementation 'androidx.recyclerview:recyclerview:1.2.1'
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
     implementation 'com.davemorrissey.labs:subsampling-scale-image-view-androidx:3.10.0'
-    implementation 'me.everything:overscroll-decor-android:1.1.0'
+    implementation 'io.github.everythingme:overscroll-decor-android:1.1.1'
 
     // Network
     implementation "com.squareup.okhttp3:okhttp:4.9.1"
@@ -96,7 +98,6 @@ dependencies {
     implementation "androidx.room:room-runtime:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
     implementation "androidx.room:room-ktx:$room_version"
-    implementation 'me.everything:overscroll-decor-android:1.1.0'
 
     // DI
     def koin_version = '3.1.2'

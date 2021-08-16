@@ -3,16 +3,13 @@ package com.vianh.blogtruyen.views
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Canvas
+import android.graphics.Matrix
 import android.util.AttributeSet
 import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.ScaleGestureDetector
 import android.view.ScaleGestureDetector.SimpleOnScaleGestureListener
 import androidx.recyclerview.widget.RecyclerView
-import timber.log.Timber
-import javax.security.auth.callback.Callback
-import kotlin.math.max
-import kotlin.math.min
 
 // https://stackoverflow.com/questions/37772918/android-change-recycler-view-column-no-on-pinch-zoom
 
@@ -22,26 +19,20 @@ class PinchRecyclerView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : RecyclerView(context, attrs, defStyleAttr) {
 
-    private var mActivePointerId = INVALID_POINTER_ID
-
     private val mScaleDetector: ScaleGestureDetector
     private val gestureDetector: GestureDetector
 
     var callBack: ReaderCallBack? = null
 
-    private var mScaleFactor = 1f
-
-    private var maxOffsetX = 0.0f
-    private var maxOffsetY = 0.0f
-
-    private var mLastTouchX = 0f
-    private var mLastTouchY = 0f
-
-    private var mPosX = 0f
-    private var mPosY = 0f
+    private var minOffsetX = 0.0f
+    private var minOffsetY = 0.0f
 
     private var width = 0f
     private var height = 0f
+
+    private var preScale = 0f
+
+    private val contentMatrix = Matrix()
 
     init {
         gestureDetector = GestureDetector(context, GestureListener())
@@ -58,96 +49,44 @@ class PinchRecyclerView @JvmOverloads constructor(
     override fun onTouchEvent(ev: MotionEvent): Boolean {
         mScaleDetector.onTouchEvent(ev)
         gestureDetector.onTouchEvent(ev)
-
-        val action = ev.action
-        when (action and MotionEvent.ACTION_MASK) {
-            MotionEvent.ACTION_DOWN -> {
-                val index = ev.actionIndex
-                mLastTouchX = ev.getX(index)
-                mLastTouchY = ev.getY(index)
-                mActivePointerId = ev.getPointerId(0)
-            }
-            MotionEvent.ACTION_MOVE -> {
-
-                /* this line is replaced because here came below isssue
-                java.lang.IllegalArgumentException: pointerIndex out of range
-                 ref http://stackoverflow.com/questions/6919292/pointerindex-out-of-range-android-multitouch
-                */
-                //final int pointerIndex = ev.findPointerIndex(mActivePointerId);
-                val pointerIndex = (action and MotionEvent.ACTION_POINTER_INDEX_MASK
-                        shr MotionEvent.ACTION_POINTER_INDEX_SHIFT)
-                val x = ev.getX(pointerIndex)
-                val y = ev.getY(pointerIndex)
-                val dx = x - mLastTouchX
-                val dy = y - mLastTouchY
-                mPosX += dx
-                mPosY += dy
-                if (mPosX > 0.0f) mPosX = 0.0f else if (mPosX < maxOffsetX) mPosX = maxOffsetX
-                if (mPosY > 0.0f) mPosY = 0.0f else if (mPosY < maxOffsetY) mPosY = maxOffsetY
-                mLastTouchX = x
-                mLastTouchY = y
-                invalidate()
-            }
-            MotionEvent.ACTION_UP -> {
-                mActivePointerId = INVALID_POINTER_ID
-            }
-            MotionEvent.ACTION_CANCEL -> {
-                mActivePointerId = INVALID_POINTER_ID
-            }
-            MotionEvent.ACTION_POINTER_UP -> {
-                val pointerIndex =
-                    action and MotionEvent.ACTION_POINTER_INDEX_MASK shr MotionEvent.ACTION_POINTER_INDEX_SHIFT
-                val pointerId = ev.getPointerId(pointerIndex)
-                if (pointerId == mActivePointerId) {
-                    val newPointerIndex = if (pointerIndex == 0) 1 else 0
-                    mLastTouchX = ev.getX(newPointerIndex)
-                    mLastTouchY = ev.getY(newPointerIndex)
-                    mActivePointerId = ev.getPointerId(newPointerIndex)
-                }
-            }
-        }
-        return super.onTouchEvent(ev)
+        return mScaleDetector.isInProgress || super.onTouchEvent(ev)
     }
 
+    private val mValues = FloatArray(9)
+    fun updateMatrixValues() {
+        contentMatrix.getValues(mValues)
+    }
 
     override fun dispatchDraw(canvas: Canvas) {
         canvas.apply {
             save()
-            if (mScaleFactor == 1.0f) {
-                mPosX = 0.0f
-                mPosY = 0.0f
-            }
-            translate(mPosX, mPosY)
-            scale(mScaleFactor, mScaleFactor)
+            updateMatrixValues()
+            concat(contentMatrix)
             super.dispatchDraw(canvas)
             restore()
-            invalidate()
         }
     }
 
     private inner class ScaleListener : SimpleOnScaleGestureListener() {
-        private var scaleFocusBeginX = 0f
-        private var scaleFocusBeginY = 0f
-
-        override fun onScaleBegin(detector: ScaleGestureDetector?): Boolean {
-            detector?.let {
-                scaleFocusBeginX = it.focusX
-                scaleFocusBeginY = it.focusY
-            }
-            return super.onScaleBegin(detector)
-        }
 
         override fun onScale(detector: ScaleGestureDetector): Boolean {
-            mScaleFactor *= detector.scaleFactor
-            mScaleFactor = max(1.0f, min(mScaleFactor, 3.0f))
-            maxOffsetX = width - width * mScaleFactor
-            maxOffsetY = height - height * mScaleFactor
 
-            val scaleDiffX = width/2 - mScaleFactor*detector.focusX
-            val scaleDiffY = height/2 - mScaleFactor*detector.focusY
-            mPosX = scaleDiffX
-            mPosY = scaleDiffY
-            invalidate()
+            val newScale = (preScale * detector.scaleFactor).coerceIn(1f, 3f)
+            minOffsetX = width - width * newScale
+            minOffsetY = height - height * newScale
+            preScale = newScale
+
+
+            updateMatrixValues()
+            val currentScale = mValues[Matrix.MSCALE_X]
+
+            // newScale = currentScale * scale < MAX_SCALE => scale < MAX_SCALE / scale (same for min)
+            val minScale = 1f/currentScale
+            val maxScale = 3f/currentScale
+            val factor = detector.scaleFactor.coerceIn(minScale, maxScale)
+            contentMatrix.postScale(factor, factor, detector.focusX, detector.focusY)
+
+            constrainsBoundAndInvalidate()
             return true
         }
     }
@@ -160,13 +99,45 @@ class PinchRecyclerView @JvmOverloads constructor(
         override fun onDoubleTap(e: MotionEvent?): Boolean {
             return super.onDoubleTap(e)
         }
+
+        override fun onScroll(
+            e1: MotionEvent?,
+            e2: MotionEvent?,
+            distanceX: Float,
+            distanceY: Float
+        ): Boolean {
+            contentMatrix.postTranslate(-distanceX, -distanceY)
+            constrainsBoundAndInvalidate()
+            return true
+        }
+    }
+
+    fun constrainsBoundAndInvalidate() {
+        updateMatrixValues()
+        val currentDx = mValues[Matrix.MTRANS_X]
+        val currentDy = mValues[Matrix.MTRANS_Y]
+
+        // offset to translate back in if current offset is out of bounds
+        var dx: Float = 0f
+        var dy: Float = 0f
+
+        if (currentDx < minOffsetX) {
+            dx = minOffsetX - currentDx
+        } else if (currentDx > 0) {
+            dx = -currentDx
+        }
+
+        if (currentDy < minOffsetY) {
+            dy = minOffsetY - currentDy
+        } else if (currentDy > 0) {
+            dy = -currentDy
+        }
+
+        contentMatrix.postTranslate(dx, dy)
+        postInvalidate()
     }
 
     interface ReaderCallBack {
         fun onSingleTap(): Boolean
-    }
-
-    companion object {
-        private const val INVALID_POINTER_ID = -1
     }
 }

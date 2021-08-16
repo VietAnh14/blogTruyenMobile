@@ -3,11 +3,12 @@ package com.vianh.blogtruyen.features.feed
 import androidx.annotation.DrawableRes
 import com.vianh.blogtruyen.R
 import com.vianh.blogtruyen.data.model.Manga
-import com.vianh.blogtruyen.features.list.HasUniqueId
-import com.vianh.blogtruyen.features.list.ListItem
+import com.vianh.blogtruyen.features.base.list.HasUniqueId
+import com.vianh.blogtruyen.features.base.list.ListItem
 
 sealed class NewFeedItem: ListItem {
-    data class MangaItem(val item: Manga, override val viewType: Int): NewFeedItem(), HasUniqueId<Int> {
+    data class MangaItem(val item: Manga, override val viewType: Int): NewFeedItem(),
+        HasUniqueId<Int> {
         override val id: Int
             get() = item.id
     }

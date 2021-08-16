@@ -1,4 +1,4 @@
-package com.vianh.blogtruyen.features.list
+package com.vianh.blogtruyen.features.base.list
 
 import androidx.viewbinding.ViewBinding
 import com.vianh.blogtruyen.features.base.BaseViewHolder

@@ -7,8 +7,8 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.vianh.blogtruyen.R
 import com.vianh.blogtruyen.databinding.*
-import com.vianh.blogtruyen.features.list.AbstractAdapter
-import com.vianh.blogtruyen.features.list.AbstractViewHolder
+import com.vianh.blogtruyen.features.base.list.AbstractAdapter
+import com.vianh.blogtruyen.features.base.list.AbstractViewHolder
 import com.vianh.blogtruyen.utils.loadNetWorkImage
 import jp.wasabeef.glide.transformations.BlurTransformation
 

@@ -12,8 +12,8 @@ import com.vianh.blogtruyen.R
 import com.vianh.blogtruyen.databinding.FeedFragmentBinding
 import com.vianh.blogtruyen.features.base.BaseFragment
 import com.vianh.blogtruyen.features.details.MangaDetailsFragment
-import com.vianh.blogtruyen.features.home.HomeFragment
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import com.vianh.blogtruyen.features.list.HomeFragment
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import java.util.concurrent.TimeUnit
 
 class NewFeedFragment : BaseFragment<FeedFragmentBinding>(), SwipeRefreshLayout.OnRefreshListener,
@@ -26,7 +26,8 @@ class NewFeedFragment : BaseFragment<FeedFragmentBinding>(), SwipeRefreshLayout.
         return FeedFragmentBinding.inflate(inflater, container, false)
     }
 
-    private val viewModel by viewModel<NewFeedViewModel>()
+    // Scope to activity
+    private val viewModel by sharedViewModel<NewFeedViewModel>()
 
     private var pinAdapter: NewFeedAdapter? = null
     private var updateAdapter: NewFeedAdapter? = null

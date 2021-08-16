@@ -8,7 +8,7 @@ import timber.log.Timber
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.EmptyCoroutineContext
 
-open class BaseVM: ViewModel() {
+abstract class BaseVM: ViewModel() {
     val isLoading = SingleLiveEvent<Boolean>()
     val error = SingleLiveEvent<Throwable>()
     val toast = SingleLiveEvent<String>()

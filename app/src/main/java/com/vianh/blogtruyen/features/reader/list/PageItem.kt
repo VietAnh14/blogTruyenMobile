@@ -1,6 +1,6 @@
 package com.vianh.blogtruyen.features.reader.list
 
-import com.vianh.blogtruyen.features.list.ListItem
+import com.vianh.blogtruyen.features.base.list.ListItem
 
 sealed class ReaderItem : ListItem {
     data class PageItem(val uri: String): ReaderItem() {

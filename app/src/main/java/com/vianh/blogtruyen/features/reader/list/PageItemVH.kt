@@ -12,7 +12,7 @@ import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
 import com.vianh.blogtruyen.R
 import com.vianh.blogtruyen.databinding.MangaPageItemBinding
 import com.vianh.blogtruyen.features.base.BaseViewHolder
-import com.vianh.blogtruyen.features.list.ListItem
+import com.vianh.blogtruyen.features.base.list.ListItem
 import com.vianh.blogtruyen.utils.SubsamplingScaleImageViewTarget
 import com.vianh.blogtruyen.utils.gone
 import com.vianh.blogtruyen.utils.invisible

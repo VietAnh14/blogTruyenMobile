@@ -1,8 +1,8 @@
 package com.vianh.blogtruyen.features.reader.list
 
 import com.vianh.blogtruyen.databinding.TransitionPageBinding
-import com.vianh.blogtruyen.features.list.BaseVH
-import com.vianh.blogtruyen.features.list.ListItem
+import com.vianh.blogtruyen.features.base.list.BaseVH
+import com.vianh.blogtruyen.features.base.list.ListItem
 import com.vianh.blogtruyen.features.reader.ReaderViewModel
 import com.vianh.blogtruyen.utils.gone
 import com.vianh.blogtruyen.utils.visible

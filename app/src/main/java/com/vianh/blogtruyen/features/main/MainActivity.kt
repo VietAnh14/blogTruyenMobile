@@ -1,7 +1,6 @@
-package com.vianh.blogtruyen.features.home
+package com.vianh.blogtruyen.features.main
 
 import android.os.Bundle
-import android.view.View
 import androidx.annotation.IdRes
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
@@ -12,13 +11,13 @@ import com.vianh.blogtruyen.R
 import com.vianh.blogtruyen.databinding.HomeActivityBinding
 import com.vianh.blogtruyen.features.base.BaseActivity
 import com.vianh.blogtruyen.features.favorites.FavoritesFragment
-import com.vianh.blogtruyen.features.favorites.UpdateFavoriteWorker
 import com.vianh.blogtruyen.features.feed.NewFeedFragment
 import com.vianh.blogtruyen.features.history.HistoryFragment
 import com.vianh.blogtruyen.features.local.LocalMangaFragment
 import com.vianh.blogtruyen.views.ViewHeightAnimator
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class HomeActivity : BaseActivity<HomeActivityBinding>(), FragmentManager.OnBackStackChangedListener {
+class MainActivity : BaseActivity<HomeActivityBinding>(), FragmentManager.OnBackStackChangedListener {
 
     override fun createBinding(): HomeActivityBinding = HomeActivityBinding.inflate(layoutInflater)
 

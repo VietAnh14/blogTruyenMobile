@@ -1,10 +1,9 @@
-package com.vianh.blogtruyen.features.home
+package com.vianh.blogtruyen.features.list
 
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.vianh.blogtruyen.data.DataManager
 import com.vianh.blogtruyen.features.base.BaseVM
-import com.vianh.blogtruyen.features.home.list.MangaItem
 import com.vianh.blogtruyen.utils.SingleLiveEvent
 import kotlinx.coroutines.flow.MutableStateFlow
 

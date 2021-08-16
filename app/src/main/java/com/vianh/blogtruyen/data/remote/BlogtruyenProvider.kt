@@ -132,9 +132,11 @@ class BlogtruyenProvider(private val client: OkHttpClient) : MangaProvider {
         return listItems.map {
             val linkTag = it.child(0).child(0)
             val link = linkTag.attr("href")
-            val id = link.split("/")[1].toInt()
+            val id = idFromRelativeLink(link)
             val title = linkTag.attr("title")
-            val imageLink = linkTag.child(0).attr("src")
+            val imageLink = linkTag.getElementsByTag("img")
+                .last()!!
+                .attr("src")
 
             val des = it.child(1).child(1).text()
             val categoryNodes = it

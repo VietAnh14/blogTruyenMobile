@@ -1,11 +1,11 @@
-package com.vianh.blogtruyen.features.home.list
+package com.vianh.blogtruyen.features.list
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import com.vianh.blogtruyen.features.list.AbstractAdapter
-import com.vianh.blogtruyen.features.list.AbstractViewHolder
+import com.vianh.blogtruyen.features.base.list.AbstractAdapter
+import com.vianh.blogtruyen.features.base.list.AbstractViewHolder
 
-class MangaFeedAdapter(val itemClick: MangaItemVH.MangaClick): AbstractAdapter<MangaItem, Unit>(Unit) {
+class MangaListAdapter(val itemClick: MangaItemVH.MangaClick): AbstractAdapter<MangaItem, Unit>(Unit) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AbstractViewHolder<MangaItem, Unit> {
         val inflater = LayoutInflater.from(parent.context)

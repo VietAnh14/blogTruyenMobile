@@ -6,9 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import com.vianh.blogtruyen.databinding.BookmarksFragmentBinding
 import com.vianh.blogtruyen.features.base.BaseFragment
-import com.vianh.blogtruyen.features.home.list.MangaFeedAdapter
-import com.vianh.blogtruyen.features.home.list.MangaItem
-import com.vianh.blogtruyen.features.home.list.MangaItemVH
+import com.vianh.blogtruyen.features.list.MangaListAdapter
+import com.vianh.blogtruyen.features.list.MangaItem
+import com.vianh.blogtruyen.features.list.MangaItemVH
 import com.vianh.blogtruyen.features.details.MangaDetailsFragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -22,7 +22,7 @@ class FavoritesFragment: BaseFragment<BookmarksFragmentBinding>(), MangaItemVH.M
     }
 
     private val viewModel: FavoriteViewModel by viewModel()
-    private lateinit var feedAdapter: MangaFeedAdapter
+    private lateinit var listAdapter: MangaListAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -38,8 +38,8 @@ class FavoritesFragment: BaseFragment<BookmarksFragmentBinding>(), MangaItemVH.M
 
             feedRecycler.apply {
                 setHasFixedSize(true)
-                adapter = MangaFeedAdapter(this@FavoritesFragment).also {
-                    feedAdapter = it
+                adapter = MangaListAdapter(this@FavoritesFragment).also {
+                    listAdapter = it
                 }
             }
         }
@@ -47,12 +47,18 @@ class FavoritesFragment: BaseFragment<BookmarksFragmentBinding>(), MangaItemVH.M
 
     private fun bindViewModel() {
         viewModel.content.observe(viewLifecycleOwner) {
-            feedAdapter.submitList(it)
+            listAdapter.submitList(it)
         }
     }
 
     override fun onMangaItemClick(mangaItem: MangaItem) {
         val detailsFragment = MangaDetailsFragment.newInstance(mangaItem.manga)
         hostActivity?.changeFragment(detailsFragment, true)
+    }
+
+    companion object {
+        fun newInstance(): FavoritesFragment {
+            return FavoritesFragment()
+        }
     }
 }

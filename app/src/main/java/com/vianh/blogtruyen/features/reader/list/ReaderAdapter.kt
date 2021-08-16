@@ -10,7 +10,7 @@ import com.vianh.blogtruyen.databinding.LoadingPageItemBinding
 import com.vianh.blogtruyen.databinding.MangaPageItemBinding
 import com.vianh.blogtruyen.databinding.TransitionPageBinding
 import com.vianh.blogtruyen.features.base.BaseViewHolder
-import com.vianh.blogtruyen.features.list.ListItem
+import com.vianh.blogtruyen.features.base.list.ListItem
 import com.vianh.blogtruyen.features.reader.ReaderViewModel
 import com.vianh.blogtruyen.utils.await
 import kotlinx.coroutines.Job
