@@ -8,6 +8,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.vianh.blogtruyen.data.model.Chapter
 import com.vianh.blogtruyen.data.model.Manga
 import com.vianh.blogtruyen.databinding.ChapterHeaderItemBinding
 import com.vianh.blogtruyen.databinding.ChapterPageFragmentBinding
@@ -48,8 +49,17 @@ class InfoPageFragment : BaseFragment<ChapterPageFragmentBinding>(), ChapterVH.C
         viewModel.manga.observe(viewLifecycleOwner, this::onMangaChange)
         viewModel.isLoading.observe(viewLifecycleOwner, this::onLoadingChange)
         viewModel.isFavorite.observe(viewLifecycleOwner, this::onFavoriteStateChange)
+        viewModel.toReaderEvent.observe(viewLifecycleOwner, this::toReaderFragment)
+        viewModel.readButtonState.observe(viewLifecycleOwner, this::onButtonStateChange)
 
         viewModel.error.observe(viewLifecycleOwner, { showToast(it.message) })
+    }
+
+    private fun onButtonStateChange(buttonState: Pair<Boolean, Int>) {
+        with(requireBinding.btnRead) {
+            isEnabled = buttonState.first
+            setText(buttonState.second)
+        }
     }
 
     private fun onHeaderChange(headerItem: HeaderItem) {
@@ -82,7 +92,7 @@ class InfoPageFragment : BaseFragment<ChapterPageFragmentBinding>(), ChapterVH.C
         with(requireBinding) {
             swipeRefreshLayout.setOnRefreshListener(this@InfoPageFragment)
             btnRead.setOnClickListener {
-
+                viewModel.continueReading()
             }
 
             actionFollow.setOnClickListener {
@@ -96,6 +106,12 @@ class InfoPageFragment : BaseFragment<ChapterPageFragmentBinding>(), ChapterVH.C
         requireBinding.swipeRefreshLayout.isRefreshing = isLoading
     }
 
+    private fun toReaderFragment(chapter: Chapter) {
+        hostActivity?.changeFragment(
+            ReaderFragment
+            .newInstance(chapter, viewModel.currentManga, viewModel.isOffline), true)
+    }
+
     override fun onDestroyView() {
         chapterAdapter = null
         headerAdapter = null
@@ -107,10 +123,7 @@ class InfoPageFragment : BaseFragment<ChapterPageFragmentBinding>(), ChapterVH.C
     }
 
     override fun onChapterClick(chapter: ChapterItem) {
-        hostActivity?.changeFragment(
-            ReaderFragment.newInstance(chapter.chapter, viewModel.currentManga, viewModel.isOffline),
-            true
-        )
+        toReaderFragment(chapter.chapter)
     }
 
     override fun onStateButtonClick(item: ChapterItem) {

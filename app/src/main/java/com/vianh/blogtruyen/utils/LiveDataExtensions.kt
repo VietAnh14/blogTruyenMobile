@@ -1,8 +1,9 @@
 package com.vianh.blogtruyen.utils
 
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.transform
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.asLiveData
+import kotlinx.coroutines.flow.*
+import kotlin.coroutines.CoroutineContext
 
 inline fun <T> Flow<List<T>>.ifEmpty(crossinline block: suspend () -> List<T>): Flow<List<T>> {
     return transform { value ->
@@ -17,4 +18,12 @@ inline fun <T, R> Flow<List<T>>.mapList(crossinline transform: (T) -> R): Flow<L
     return map { items ->
         items.map { transform.invoke(it) }
     }
+}
+
+inline fun <T> Flow<T>.asLiveDataDistinct(context: CoroutineContext, start: T): LiveData<T> {
+    return this.onStart { emit(start) }.distinctUntilChanged().asLiveData(context)
+}
+
+inline fun <T> Flow<T>.asLiveDataDistinct(context: CoroutineContext): LiveData<T> {
+    return this.distinctUntilChanged().asLiveData(context)
 }

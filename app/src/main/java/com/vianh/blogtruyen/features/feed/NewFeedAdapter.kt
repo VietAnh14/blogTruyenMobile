@@ -11,6 +11,7 @@ import com.vianh.blogtruyen.features.base.list.AbstractAdapter
 import com.vianh.blogtruyen.features.base.list.AbstractViewHolder
 import com.vianh.blogtruyen.utils.loadNetWorkImage
 import jp.wasabeef.glide.transformations.BlurTransformation
+import timber.log.Timber
 
 class NewFeedAdapter(private val itemClick: ItemClick) : AbstractAdapter<NewFeedItem, Unit>(Unit) {
     override fun onCreateViewHolder(
