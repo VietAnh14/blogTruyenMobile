@@ -96,7 +96,7 @@ class InfoPageFragment : BaseFragment<ChapterPageFragmentBinding>(), ChapterVH.C
             }
 
             actionFollow.setOnClickListener {
-                viewModel.toggleFavorite(!requireBinding.actionFollow.isChecked)
+                viewModel.toggleFavorite()
             }
         }
 

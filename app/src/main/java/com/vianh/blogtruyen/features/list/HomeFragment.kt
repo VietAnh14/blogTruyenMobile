@@ -5,12 +5,15 @@ import android.content.Context
 import android.os.Bundle
 import android.view.*
 import androidx.appcompat.widget.SearchView
+import androidx.lifecycle.lifecycleScope
 import com.vianh.blogtruyen.R
 import com.vianh.blogtruyen.databinding.HomeFragmentBinding
 import com.vianh.blogtruyen.features.base.BaseFragment
 import com.vianh.blogtruyen.features.details.MangaDetailsFragment
 import com.vianh.blogtruyen.features.main.MainActivity
 import com.vianh.blogtruyen.utils.*
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class HomeFragment: BaseFragment<HomeFragmentBinding>(), MangaItemVH.MangaClick {
@@ -58,7 +61,7 @@ class HomeFragment: BaseFragment<HomeFragmentBinding>(), MangaItemVH.MangaClick 
         }
 
         requireBinding.swipeRefreshLayout.setOnRefreshListener {
-            viewModel.loadPage(1, true)
+            viewModel.loadPage(1)
         }
     }
 
@@ -80,6 +83,18 @@ class HomeFragment: BaseFragment<HomeFragmentBinding>(), MangaItemVH.MangaClick 
                 }
             })
         }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.refresh) {
+            lifecycleScope.launch {
+                requireBinding.feedRecycler.scrollToPosition(0)
+                viewModel.loadPage(1)
+            }
+            return true
+        }
+
+        return super.onOptionsItemSelected(item)
     }
 
     override fun onMangaItemClick(mangaItem: MangaItem) {

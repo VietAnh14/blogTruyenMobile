@@ -4,7 +4,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.vianh.blogtruyen.databinding.BookmarksFragmentBinding
+import com.vianh.blogtruyen.databinding.HomeFragmentBinding
 import com.vianh.blogtruyen.features.base.BaseFragment
 import com.vianh.blogtruyen.features.list.MangaListAdapter
 import com.vianh.blogtruyen.features.list.MangaItem
@@ -12,13 +14,13 @@ import com.vianh.blogtruyen.features.list.MangaItemVH
 import com.vianh.blogtruyen.features.details.MangaDetailsFragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class FavoritesFragment: BaseFragment<BookmarksFragmentBinding>(), MangaItemVH.MangaClick {
+class FavoritesFragment: BaseFragment<HomeFragmentBinding>(), MangaItemVH.MangaClick {
     override fun createBinding(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): BookmarksFragmentBinding {
-        return BookmarksFragmentBinding.inflate(inflater, container, false)
+    ): HomeFragmentBinding {
+        return HomeFragmentBinding.inflate(inflater, container, false)
     }
 
     private val viewModel: FavoriteViewModel by viewModel()
@@ -42,6 +44,8 @@ class FavoritesFragment: BaseFragment<BookmarksFragmentBinding>(), MangaItemVH.M
                     listAdapter = it
                 }
             }
+
+            swipeRefreshLayout.isEnabled = false
         }
     }
 

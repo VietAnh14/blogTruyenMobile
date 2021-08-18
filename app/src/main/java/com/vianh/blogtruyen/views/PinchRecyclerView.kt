@@ -10,8 +10,9 @@ import android.view.MotionEvent
 import android.view.ScaleGestureDetector
 import android.view.ScaleGestureDetector.SimpleOnScaleGestureListener
 import androidx.recyclerview.widget.RecyclerView
+import timber.log.Timber
 
-// https://stackoverflow.com/questions/37772918/android-change-recycler-view-column-no-on-pinch-zoom
+// Referred https://stackoverflow.com/questions/12479859/view-with-horizontal-and-vertical-pan-drag-and-pinch-zoom/38205219#38205219
 
 class PinchRecyclerView @JvmOverloads constructor(
     context: Context,
@@ -32,7 +33,8 @@ class PinchRecyclerView @JvmOverloads constructor(
 
     private var preScale = 0f
 
-    private val contentMatrix = Matrix()
+    private val transformsMatrix = Matrix()
+    private val invertMatrix = Matrix()
 
     init {
         gestureDetector = GestureDetector(context, GestureListener())
@@ -45,23 +47,32 @@ class PinchRecyclerView @JvmOverloads constructor(
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
     }
 
+    override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
+        ev?.transform(invertMatrix)
+        return super.dispatchTouchEvent(ev)
+    }
+
     @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(ev: MotionEvent): Boolean {
-        mScaleDetector.onTouchEvent(ev)
+        // Transform to scaled event for detector to work properly
+        ev.transform(transformsMatrix)
         gestureDetector.onTouchEvent(ev)
-        return mScaleDetector.isInProgress || super.onTouchEvent(ev)
+        mScaleDetector.onTouchEvent(ev)
+
+        // Transform back to normal event
+        ev.transform(invertMatrix)
+        return super.onTouchEvent(ev)
     }
 
     private val mValues = FloatArray(9)
     fun updateMatrixValues() {
-        contentMatrix.getValues(mValues)
+        transformsMatrix.getValues(mValues)
     }
 
     override fun dispatchDraw(canvas: Canvas) {
         canvas.apply {
             save()
-            updateMatrixValues()
-            concat(contentMatrix)
+            concat(transformsMatrix)
             super.dispatchDraw(canvas)
             restore()
         }
@@ -80,12 +91,11 @@ class PinchRecyclerView @JvmOverloads constructor(
             updateMatrixValues()
             val currentScale = mValues[Matrix.MSCALE_X]
 
-            // newScale = currentScale * scale < MAX_SCALE => scale < MAX_SCALE / scale (same for min)
+            // newScale = currentScale * scale < MAX_SCALE => scale < MAX_SCALE / currentScale (same for min)
             val minScale = 1f/currentScale
             val maxScale = 3f/currentScale
             val factor = detector.scaleFactor.coerceIn(minScale, maxScale)
-            contentMatrix.postScale(factor, factor, detector.focusX, detector.focusY)
-
+            transformsMatrix.postScale(factor, factor, detector.focusX, detector.focusY)
             constrainsBoundAndInvalidate()
             return true
         }
@@ -106,7 +116,7 @@ class PinchRecyclerView @JvmOverloads constructor(
             distanceX: Float,
             distanceY: Float
         ): Boolean {
-            contentMatrix.postTranslate(-distanceX, -distanceY)
+            transformsMatrix.postTranslate(-distanceX, -distanceY)
             constrainsBoundAndInvalidate()
             return true
         }
@@ -133,7 +143,8 @@ class PinchRecyclerView @JvmOverloads constructor(
             dy = -currentDy
         }
 
-        contentMatrix.postTranslate(dx, dy)
+        transformsMatrix.postTranslate(dx, dy)
+        transformsMatrix.invert(invertMatrix)
         postInvalidate()
     }
 

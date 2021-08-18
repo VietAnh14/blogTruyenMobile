@@ -53,8 +53,7 @@ class ReaderViewModel(
                 .map { ReaderItem.PageItem(it) }
                 .toMutableList()
 
-
-            val transitionItemType = if (getCurrentChapterPos() <= 0) {
+            val transitionItemType = if (currentChapter.value.number >= manga.chapters.size) {
                 ReaderItem.TransitionItem.NO_NEXT_CHAPTER
             } else {
                 ReaderItem.TransitionItem.END_CURRENT
@@ -68,25 +67,22 @@ class ReaderViewModel(
     }
 
     fun toPreviousChapter() {
-        val currentChapterPos = getCurrentChapterPos()
-        if (currentChapterPos in 0 until manga.chapters.lastIndex) {
-            currentChapter.value = manga.chapters[currentChapterPos + 1]
+        val currentChapterNum = currentChapter.value.number
+        val preChapter = manga.chapters.find { it.number == currentChapterNum - 1 }
+        if (preChapter != null) {
+            currentChapter.value = preChapter
         } else {
-            toast.call("No previous chapter available")
+            toast.call("No previous chapter")
         }
     }
 
     fun toNextChapter() {
-        val currentChapterPos = getCurrentChapterPos()
-        if (currentChapterPos in 1..manga.chapters.lastIndex) {
-            currentChapter.value = manga.chapters[currentChapterPos - 1]
+        val currentChapterNum = currentChapter.value.number
+        val nextChapter = manga.chapters.find { it.number == currentChapterNum + 1 }
+        if (nextChapter != null) {
+            currentChapter.value = nextChapter
         } else {
-            toast.call("No next chapter available")
+            toast.call("No next chapter")
         }
-    }
-
-    private fun getCurrentChapterPos(): Int {
-        val chapterId = currentChapter.value.id
-        return manga.chapters.indexOfFirst { it.id == chapterId }
     }
 }

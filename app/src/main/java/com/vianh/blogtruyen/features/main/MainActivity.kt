@@ -74,6 +74,32 @@ class MainActivity : BaseActivity<HomeActivityBinding>(), FragmentManager.OnBack
         }
     }
 
+    private fun findCurrentFragment(): Fragment? {
+        return supportFragmentManager.findFragmentById(R.id.host_fragment)
+    }
+
+    override fun onBackPressed() {
+        val currentFragment = findCurrentFragment()
+        if (currentFragment == null) {
+            finish()
+            return
+        }
+
+        when {
+            currentFragment is NewFeedFragment -> {
+                super.onBackPressed()
+            }
+
+            rootFragments.contains(currentFragment::class.java) -> {
+                binding.bottomNav.selectedItemId = R.id.home_menu
+            }
+
+            else -> {
+                super.onBackPressed()
+            }
+        }
+    }
+
     fun navigateUp() {
         if (supportFragmentManager.backStackEntryCount > 0) {
             supportFragmentManager.popBackStack()

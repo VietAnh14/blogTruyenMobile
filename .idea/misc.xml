@@ -7,10 +7,18 @@
         <entry key="app/src/main/res/drawable/btn_state_list.xml" value="0.24791666666666667" />
         <entry key="app/src/main/res/drawable/round_corner_bg.xml" value="0.24791666666666667" />
         <entry key="app/src/main/res/drawable/round_corners_bg.xml" value="0.24791666666666667" />
-        <entry key="app/src/main/res/layout/chapter_page_fragment.xml" value="0.23715277777777777" />
+        <entry key="app/src/main/res/layout/bookmarks_fragment.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/chapter_page_fragment.xml" value="0.22" />
+        <entry key="app/src/main/res/layout/feed_fragment.xml" value="0.23715277777777777" />
+        <entry key="app/src/main/res/layout/home_activity.xml" value="0.23715277777777777" />
         <entry key="app/src/main/res/layout/home_fragment.xml" value="0.21388888888888888" />
         <entry key="app/src/main/res/layout/main_tab_fragment.xml" value="0.23715277777777777" />
         <entry key="app/src/main/res/layout/manga_details_fragment.xml" value="0.21388888888888888" />
+        <entry key="app/src/main/res/layout/manga_page_item.xml" value="0.33" />
+        <entry key="app/src/main/res/layout/new_upload_item.xml" value="0.23470790378006873" />
+        <entry key="app/src/main/res/layout/reader_fragment.xml" value="0.23470790378006873" />
+        <entry key="app/src/main/res/menu/history_toolbar_menu.xml" value="0.23715277777777777" />
+        <entry key="app/src/main/res/menu/home_bottom_nav_menu.xml" value="0.23715277777777777" />
         <entry key="app/src/main/res/menu/home_toolbar_menu.xml" value="0.23715277777777777" />
       </map>
     </option>

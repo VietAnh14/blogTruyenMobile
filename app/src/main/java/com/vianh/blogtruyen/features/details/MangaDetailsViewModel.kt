@@ -23,11 +23,11 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 
 class MangaDetailsViewModel(
+    manga: Manga,
+    val isOffline: Boolean,
     private val repo: MangaRepo,
     private val favoriteRepo: FavoriteRepository,
     private val localSourceRepo: LocalSourceRepo,
-    val isOffline: Boolean,
-    manga: Manga
 ) : BaseVM() {
 
     val toReaderEvent = SingleLiveEvent<Chapter>()
@@ -52,38 +52,44 @@ class MangaDetailsViewModel(
         .distinctUntilChanged()
         .map { downloadItem -> downloadItem.associateBy { it.chapter.id } }
 
-    val headerItem = combine(mainChapters, descendingSort) { chapters, isDescending ->
+    val headerItem = combine(
+        mainChapters,
+        descendingSort
+    ) { chapters, isDescending ->
         HeaderItem(chapters.size, isDescending)
     }.asLiveDataDistinct(Dispatchers.Default)
 
-    val chapters: LiveData<List<ChapterItem>> =
-        combine(mainChapters, downloadingState, descendingSort) { main, downloading, isDescending ->
-            val downloadedIds = if (isOffline)
-                emptySet()
-            else
-                localSourceRepo.getChapters(manga.id).map { it.id }.toSet()
+    val chapters = combine(
+        mainChapters,
+        downloadingState,
+        descendingSort
+    ) { main, downloading, isDescending ->
+        val downloadedIds = if (isOffline)
+            emptySet()
+        else
+            localSourceRepo.getChapters(manga.id).map { it.id }.toSet()
 
-            val chapters = main.map {
-                var state: DownloadState = DownloadState.NotDownloaded
-                if (isOffline || downloadedIds.contains(it.id)) {
-                    state = DownloadState.Completed
-                }
-
-                val downloadItem = downloading[it.id]
-                if (downloadItem != null) {
-                    ChapterItem(it, downloadItem.state)
-                } else {
-                    ChapterItem(it, MutableStateFlow(state))
-                }
+        val chapters = main.map {
+            var state: DownloadState = DownloadState.NotDownloaded
+            if (isOffline || downloadedIds.contains(it.id)) {
+                state = DownloadState.Completed
             }
 
-            // Already sorted by des when load
-            if (!isDescending) {
-                chapters.sortedBy { it.chapter.number }
+            val downloadItem = downloading[it.id]
+            if (downloadItem != null) {
+                ChapterItem(it, downloadItem.state)
             } else {
-                chapters
+                ChapterItem(it, MutableStateFlow(state))
             }
-        }.asLiveDataDistinct(viewModelScope.coroutineContext + Dispatchers.Default)
+        }
+
+        // Already sorted by des when load
+        if (!isDescending) {
+            chapters.sortedBy { it.chapter.number }
+        } else {
+            chapters
+        }
+    }.asLiveDataDistinct(viewModelScope.coroutineContext + Dispatchers.Default)
 
     val isFavorite: LiveData<Boolean> = favoriteRepo
         .observeFavoriteState(manga.id)
@@ -157,9 +163,9 @@ class MangaDetailsViewModel(
         }
     }
 
-    fun toggleFavorite(isFavorite: Boolean) {
+    fun toggleFavorite() {
         launchJob {
-            if (isFavorite)
+            if (isFavorite.value == false)
                 favoriteRepo.addToFavorite(currentManga)
             else
                 favoriteRepo.removeFromFavorite(currentManga.id)

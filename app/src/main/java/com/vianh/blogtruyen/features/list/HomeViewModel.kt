@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.vianh.blogtruyen.data.DataManager
 import com.vianh.blogtruyen.features.base.BaseVM
 import com.vianh.blogtruyen.utils.SingleLiveEvent
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 
 class HomeViewModel(private val dataManager: DataManager) : BaseVM() {
@@ -20,7 +21,7 @@ class HomeViewModel(private val dataManager: DataManager) : BaseVM() {
     }
 
 
-    fun loadPage(offset: Int = page, reload: Boolean = false) {
+    fun loadPage(offset: Int = page) {
         if (isLoading.value == true) {
             return
         }
@@ -35,10 +36,10 @@ class HomeViewModel(private val dataManager: DataManager) : BaseVM() {
                 .fetchNewManga(offset)
                 .map { MangaItem(it) }
 
-            page = offset + 1
-            val newList = if (reload) mangaItems else listContent.value.plus(mangaItems)
-            listContent.value = newList
+            val newList = if (offset == 1) mangaItems else listContent.value.plus(mangaItems)
 
+            listContent.value = newList
+            page = offset + 1
             pageReload.setValue(false)
         }
     }
