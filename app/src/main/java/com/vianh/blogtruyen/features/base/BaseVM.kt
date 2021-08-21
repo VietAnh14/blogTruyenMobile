@@ -36,7 +36,7 @@ abstract class BaseVM: ViewModel() {
         block: suspend CoroutineScope.() -> Unit
     ): Job = viewModelScope.launch(coroutineContext + errorHandler, coroutineStart, block)
 
-    protected fun createExceptionHandler() =
+    protected open fun createExceptionHandler() =
         CoroutineExceptionHandler { _, throwable ->
             if (throwable !is CancellationException) {
                 Timber.e(throwable)

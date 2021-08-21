@@ -8,6 +8,8 @@ import com.vianh.blogtruyen.data.model.Manga
 import com.vianh.blogtruyen.features.base.BaseVM
 import com.vianh.blogtruyen.features.local.LocalSourceRepo
 import com.vianh.blogtruyen.features.reader.list.ReaderItem
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -38,7 +40,7 @@ class ReaderViewModel(
         }.launchIn(viewModelScope)
     }
 
-    private fun loadPages() {
+    fun loadPages() {
         loadPageJob?.cancel()
         loadPageJob = launchJob {
             listItems.value = listOf(ReaderItem.LoadingItem)
@@ -83,6 +85,15 @@ class ReaderViewModel(
             currentChapter.value = nextChapter
         } else {
             toast.call("No next chapter")
+        }
+    }
+
+    override fun createExceptionHandler(): CoroutineExceptionHandler {
+        return CoroutineExceptionHandler { _, throwable ->
+            if (throwable !is CancellationException) {
+                toast.call(throwable.message ?: "Unknown error")
+                listItems.value = listOf(ReaderItem.ErrorItem(throwable))
+            }
         }
     }
 }

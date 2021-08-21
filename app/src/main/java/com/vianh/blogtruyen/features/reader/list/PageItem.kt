@@ -7,6 +7,11 @@ sealed class ReaderItem : ListItem {
         override val viewType: Int = ListItem.PAGE_ITEM
     }
 
+    data class ErrorItem(val exception: Throwable? = null): ReaderItem() {
+        override val viewType: Int
+            get() = ListItem.ERROR_TYPE
+    }
+
     object LoadingItem: ReaderItem() {
         override val viewType: Int
             get() = ListItem.LOADING_ITEM

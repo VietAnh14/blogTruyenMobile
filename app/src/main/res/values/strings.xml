@@ -28,4 +28,9 @@
     <string name="continue_reading">Đọc tiếp</string>
     <string name="start_reading">Bắt đầu đọc</string>
     <string name="refresh">Refresh</string>
+    <string name="next_chapter_guide">Release to go to next chapter</string>
+    <string name="end_chapter">End chapter, pull down to go to next chapter</string>
+    <string name="pull_down_guild">End chapter, pull down to go to next chapter</string>
+    <string name="no_next_chapter">End chapter, no next chapter available</string>
+    <string name="retry">Retry</string>
 </resources>

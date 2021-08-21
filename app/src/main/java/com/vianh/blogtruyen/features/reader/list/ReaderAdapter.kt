@@ -6,10 +6,13 @@ import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
+import com.vianh.blogtruyen.databinding.ErrorReaderItemBinding
 import com.vianh.blogtruyen.databinding.LoadingPageItemBinding
 import com.vianh.blogtruyen.databinding.MangaPageItemBinding
 import com.vianh.blogtruyen.databinding.TransitionPageBinding
 import com.vianh.blogtruyen.features.base.BaseViewHolder
+import com.vianh.blogtruyen.features.base.list.AbstractAdapter
+import com.vianh.blogtruyen.features.base.list.AbstractViewHolder
 import com.vianh.blogtruyen.features.base.list.ListItem
 import com.vianh.blogtruyen.features.reader.ReaderViewModel
 import com.vianh.blogtruyen.utils.await
@@ -20,19 +23,12 @@ class ReaderAdapter(
     private val requestManager: RequestManager,
     private val viewModel: ReaderViewModel,
     private val tileSize: Int
-) : RecyclerView.Adapter<BaseViewHolder>() {
+) : AbstractAdapter<ReaderItem, Unit>(Unit) {
 
-    private val pages = mutableListOf<ListItem>()
     private var preloadJob: Job? = null
 
-    override fun getItemCount(): Int {
-        return pages.size
-    }
-
-    fun setPages(pages: List<ListItem>) {
+    fun setPages(pages: List<ReaderItem>) {
         cancelImagePreloads()
-        this.pages.clear()
-        this.pages.addAll(pages)
 
         // Preload images
         if (!viewModel.isOffline) {
@@ -44,16 +40,18 @@ class ReaderAdapter(
                 }
             }
         }
-        notifyDataSetChanged()
+        submitList(pages)
     }
 
     private fun cancelImagePreloads() {
         preloadJob?.cancel()
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int
+    ): AbstractViewHolder<out ReaderItem, Unit> {
         val inflater = LayoutInflater.from(parent.context)
-
         return when (viewType) {
             ListItem.PAGE_ITEM -> {
                 val binding = MangaPageItemBinding.inflate(inflater, parent, false)
@@ -80,20 +78,12 @@ class ReaderAdapter(
                 )
             )
 
+            ListItem.ERROR_TYPE -> ErrorVH(
+                ErrorReaderItemBinding.inflate(inflater, parent, false),
+                viewModel
+            )
+
             else -> throw IllegalArgumentException("Unknown view type $viewType")
         }
-    }
-
-    override fun onViewRecycled(holder: BaseViewHolder) {
-        holder.onRecycle()
-        super.onViewRecycled(holder)
-    }
-
-    override fun onBindViewHolder(holder: BaseViewHolder, position: Int) {
-        holder.onBind(pages[position])
-    }
-
-    override fun getItemViewType(position: Int): Int {
-        return pages[position].viewType
     }
 }
