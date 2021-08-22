@@ -1,51 +1,54 @@
 package com.vianh.blogtruyen.features.reader.list
 
+import com.vianh.blogtruyen.R
 import com.vianh.blogtruyen.databinding.TransitionPageBinding
-import com.vianh.blogtruyen.features.list.BaseVH
-import com.vianh.blogtruyen.features.list.ListItem
+import com.vianh.blogtruyen.features.base.list.AbstractViewHolder
+import com.vianh.blogtruyen.features.base.list.BaseVH
+import com.vianh.blogtruyen.features.base.list.ListItem
 import com.vianh.blogtruyen.features.reader.ReaderViewModel
 import com.vianh.blogtruyen.utils.gone
 import com.vianh.blogtruyen.utils.visible
 import me.everything.android.ui.overscroll.IOverScrollState
 import kotlin.math.min
 
-class TransitionPageVH(binding: TransitionPageBinding, val viewModel: ReaderViewModel) :
-    BaseVH<TransitionPageBinding>(binding) {
-    var data: ReaderItem.TransitionItem? = null
-    private var releaseToLaunch = false
+class TransitionPageVH(val binding: TransitionPageBinding, val viewModel: ReaderViewModel) :
+    AbstractViewHolder<ReaderItem.TransitionItem, Unit>(binding.root) {
+    private var canProcess = false
 
-    override fun onBind(item: ListItem) {
-        val transitionItem = item as ReaderItem.TransitionItem
-        data = transitionItem
-        when (transitionItem.transitionType) {
-            ReaderItem.TransitionItem.END_CURRENT -> endChapter()
+    override fun onBind(data: ReaderItem.TransitionItem, extra: Unit) {
+        canProcess = false
+        when (data.transitionType) {
+            ReaderItem.TransitionItem.END_CURRENT -> setupTransitionPage()
             ReaderItem.TransitionItem.NO_NEXT_CHAPTER -> endNoNextChapter()
         }
     }
 
     fun onOverScroll(offset: Int, state: Int) {
-        if (data?.transitionType == ReaderItem.TransitionItem.NO_NEXT_CHAPTER)
+        if (boundData?.transitionType == ReaderItem.TransitionItem.NO_NEXT_CHAPTER)
             return
 
-        val progress = min(offset, 100)
-        if (state == IOverScrollState.STATE_BOUNCE_BACK && releaseToLaunch) {
-            releaseToLaunch = false
-            viewModel.toNextChapter()
-        } else {
-            binding.progressCircular.progress = offset
-            if (progress >= 100) {
-                releaseToLaunch = true
-                binding.description.text = "Release to go to next chapter"
+        with(binding) {
+            if (state == IOverScrollState.STATE_BOUNCE_BACK && canProcess) {
+                canProcess = false
+                viewModel.toNextChapter()
+                return
+            }
+
+            val progress = min(offset, 100)
+            progressCircular.progress = progress
+            if (progress >= 100 && state != IOverScrollState.STATE_BOUNCE_BACK) {
+                canProcess = true
+                description.setText(R.string.next_chapter_guide)
             } else {
-                binding.description.text = "End chapter, pull down to go to next chapter"
-                releaseToLaunch = false
+                canProcess = false
+                description.setText(R.string.pull_down_guild)
             }
         }
     }
 
-    private fun endChapter() {
+    private fun setupTransitionPage() {
         with(binding) {
-            description.text = "End chapter, pull down to go to next chapter"
+            description.setText(R.string.end_chapter)
             nextIcon.visible()
             progressCircular.show()
             progressCircular.progress = 0
@@ -54,7 +57,7 @@ class TransitionPageVH(binding: TransitionPageBinding, val viewModel: ReaderView
 
     private fun endNoNextChapter() {
         with(binding) {
-            description.text = "End chapter, no next chapter available"
+            description.setText(R.string.no_next_chapter)
             nextIcon.gone()
             progressCircular.hide()
         }

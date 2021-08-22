@@ -1,22 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView
+<com.vianh.blogtruyen.views.MangaGridItem
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="270dp"
-    android:layout_marginStart="2dp"
-    android:layout_marginEnd="2dp"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="4dp"
+    android:layout_marginEnd="4dp"
     app:cardBackgroundColor="?attr/colorPrimary"
     android:layout_marginBottom="10dp"
-    app:cardCornerRadius="0dp"
+    app:cardCornerRadius="8dp"
     app:cardElevation="10dp">
 
     <ImageView
         android:id="@+id/imageCover"
-        android:layout_marginTop="10dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginEnd="10dp"
         android:contentDescription="@string/media_image"
         android:scaleType="centerCrop"
         android:src="@drawable/one_punch" />
@@ -42,13 +40,13 @@
         android:layout_height="match_parent"
         android:layout_gravity="bottom"
         android:background="@drawable/bottom_shadow_gradient"
-        android:layout_marginEnd="@dimen/manga_feed_item_margin"
         android:ellipsize="end"
         android:gravity="bottom"
         android:maxLines="2"
+        android:text="manga name"
         android:paddingStart="5dp"
         android:paddingEnd="5dp"
         android:paddingBottom="10dp"
         android:textColor="@android:color/white"
         android:textSize="12sp" />
-</com.google.android.material.card.MaterialCardView>
+</com.vianh.blogtruyen.views.MangaGridItem>

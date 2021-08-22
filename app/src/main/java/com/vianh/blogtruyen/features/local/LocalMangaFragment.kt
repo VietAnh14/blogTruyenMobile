@@ -8,9 +8,9 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.vianh.blogtruyen.R
 import com.vianh.blogtruyen.databinding.HomeFragmentBinding
 import com.vianh.blogtruyen.features.base.BaseFragment
-import com.vianh.blogtruyen.features.home.list.MangaFeedAdapter
-import com.vianh.blogtruyen.features.home.list.MangaItem
-import com.vianh.blogtruyen.features.home.list.MangaItemVH
+import com.vianh.blogtruyen.features.list.MangaListAdapter
+import com.vianh.blogtruyen.features.list.MangaItem
+import com.vianh.blogtruyen.features.list.MangaItemVH
 import com.vianh.blogtruyen.features.details.MangaDetailsFragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -25,7 +25,7 @@ class LocalMangaFragment : BaseFragment<HomeFragmentBinding>(),
     }
 
     private val viewModel by viewModel<LocalViewModel>()
-    private var adapter: MangaFeedAdapter? = null
+    private var adapter: MangaListAdapter? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -37,7 +37,7 @@ class LocalMangaFragment : BaseFragment<HomeFragmentBinding>(),
         with(requireBinding) {
             hostActivity?.setupToolbar(toolbar, resources.getString(R.string.downloaded))
 
-            adapter = MangaFeedAdapter(this@LocalMangaFragment)
+            adapter = MangaListAdapter(this@LocalMangaFragment)
             feedRecycler.adapter = adapter
 
             swipeRefreshLayout.setOnRefreshListener(this@LocalMangaFragment)
@@ -62,5 +62,11 @@ class LocalMangaFragment : BaseFragment<HomeFragmentBinding>(),
 
     override fun onRefresh() {
         viewModel.loadMangaList()
+    }
+
+    companion object {
+        fun newInstance(): LocalMangaFragment {
+            return LocalMangaFragment()
+        }
     }
 }

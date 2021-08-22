@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.vianh.blogtruyen.views.MangaGridItem
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="120dp"
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="8dp"
+    app:cardBackgroundColor="?attr/colorPrimary"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="10dp">
+
+    <ImageView
+        android:id="@+id/imageCover"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:contentDescription="@string/media_image"
+        android:scaleType="centerCrop"
+        android:src="@drawable/one_punch" />
+
+    <TextView
+        android:id="@+id/mangaName"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="bottom"
+        android:background="@drawable/bottom_shadow_gradient"
+        android:ellipsize="end"
+        android:gravity="bottom"
+        android:maxLines="2"
+        android:text="manga name"
+        android:paddingStart="5dp"
+        android:paddingEnd="5dp"
+        android:paddingBottom="10dp"
+        android:textColor="@android:color/white"
+        android:textSize="12sp" />
+</com.vianh.blogtruyen.views.MangaGridItem>

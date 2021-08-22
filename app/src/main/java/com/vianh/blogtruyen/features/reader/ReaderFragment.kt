@@ -50,10 +50,6 @@ class ReaderFragment : BaseFragment<ReaderFragmentBinding>() {
     private fun observe() {
         viewModel.uiState.observe(viewLifecycleOwner) { onContentChange(it) }
         viewModel.toast.observe(viewLifecycleOwner) { showToast(it) }
-        viewModel.error.observe(viewLifecycleOwner) {
-            Timber.e(it)
-            showToast(it.message)
-        }
     }
 
     private fun setup() {

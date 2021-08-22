@@ -1,4 +1,4 @@
-package com.vianh.blogtruyen.features.list
+package com.vianh.blogtruyen.features.base.list
 
 import android.view.View
 import androidx.recyclerview.widget.DiffUtil

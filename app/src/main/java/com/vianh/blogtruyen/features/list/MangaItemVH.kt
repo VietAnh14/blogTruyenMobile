@@ -1,15 +1,13 @@
-package com.vianh.blogtruyen.features.home.list
+package com.vianh.blogtruyen.features.list
 
-import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.bumptech.glide.Glide
 import com.vianh.blogtruyen.databinding.FeedItemBinding
-import com.vianh.blogtruyen.features.list.AbstractViewHolder
+import com.vianh.blogtruyen.features.base.list.AbstractViewHolder
 import com.vianh.blogtruyen.utils.gone
 import com.vianh.blogtruyen.utils.loadNetWorkImage
 
-@SuppressLint("UnsafeOptInUsageError")
 class MangaItemVH(private val binding: FeedItemBinding, clickListener: MangaClick) :
     AbstractViewHolder<MangaItem, Unit>(binding.root) {
 

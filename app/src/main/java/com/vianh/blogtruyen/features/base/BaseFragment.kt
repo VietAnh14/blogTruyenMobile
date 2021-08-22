@@ -5,20 +5,19 @@ import android.os.Bundle
 import android.view.*
 import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
-import androidx.core.graphics.Insets
 import androidx.core.view.OnApplyWindowInsetsListener
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
-import com.vianh.blogtruyen.features.home.HomeActivity
+import com.vianh.blogtruyen.features.main.MainActivity
 
 abstract class BaseFragment<B : ViewBinding> : Fragment(), OnApplyWindowInsetsListener {
     var binding: B? = null
     val requireBinding: B
         get() = checkNotNull(binding)
 
-    var hostActivity: HomeActivity? = null
+    var hostActivity: MainActivity? = null
 
     abstract fun createBinding(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): B
 
@@ -66,7 +65,7 @@ abstract class BaseFragment<B : ViewBinding> : Fragment(), OnApplyWindowInsetsLi
     }
 
     fun setupToolbar(toolbar: Toolbar) {
-        (activity as HomeActivity).setupToolbar(toolbar)
+        (activity as MainActivity).setupToolbar(toolbar)
     }
 
     fun showToast(message: String?) {
@@ -75,7 +74,7 @@ abstract class BaseFragment<B : ViewBinding> : Fragment(), OnApplyWindowInsetsLi
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        hostActivity = context as? HomeActivity
+        hostActivity = context as? MainActivity
     }
 
     override fun onDetach() {

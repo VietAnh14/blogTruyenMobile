@@ -8,6 +8,8 @@ import com.vianh.blogtruyen.data.model.Manga
 import com.vianh.blogtruyen.features.base.BaseVM
 import com.vianh.blogtruyen.features.local.LocalSourceRepo
 import com.vianh.blogtruyen.features.reader.list.ReaderItem
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -38,7 +40,7 @@ class ReaderViewModel(
         }.launchIn(viewModelScope)
     }
 
-    private fun loadPages() {
+    fun loadPages() {
         loadPageJob?.cancel()
         loadPageJob = launchJob {
             listItems.value = listOf(ReaderItem.LoadingItem)
@@ -53,8 +55,7 @@ class ReaderViewModel(
                 .map { ReaderItem.PageItem(it) }
                 .toMutableList()
 
-
-            val transitionItemType = if (getCurrentChapterPos() <= 0) {
+            val transitionItemType = if (currentChapter.value.number >= manga.chapters.size) {
                 ReaderItem.TransitionItem.NO_NEXT_CHAPTER
             } else {
                 ReaderItem.TransitionItem.END_CURRENT
@@ -68,25 +69,31 @@ class ReaderViewModel(
     }
 
     fun toPreviousChapter() {
-        val currentChapterPos = getCurrentChapterPos()
-        if (currentChapterPos in 0 until manga.chapters.lastIndex) {
-            currentChapter.value = manga.chapters[currentChapterPos + 1]
+        val currentChapterNum = currentChapter.value.number
+        val preChapter = manga.chapters.find { it.number == currentChapterNum - 1 }
+        if (preChapter != null) {
+            currentChapter.value = preChapter
         } else {
-            toast.call("No previous chapter available")
+            toast.call("No previous chapter")
         }
     }
 
     fun toNextChapter() {
-        val currentChapterPos = getCurrentChapterPos()
-        if (currentChapterPos in 1..manga.chapters.lastIndex) {
-            currentChapter.value = manga.chapters[currentChapterPos - 1]
+        val currentChapterNum = currentChapter.value.number
+        val nextChapter = manga.chapters.find { it.number == currentChapterNum + 1 }
+        if (nextChapter != null) {
+            currentChapter.value = nextChapter
         } else {
-            toast.call("No next chapter available")
+            toast.call("No next chapter")
         }
     }
 
-    private fun getCurrentChapterPos(): Int {
-        val chapterId = currentChapter.value.id
-        return manga.chapters.indexOfFirst { it.id == chapterId }
+    override fun createExceptionHandler(): CoroutineExceptionHandler {
+        return CoroutineExceptionHandler { _, throwable ->
+            if (throwable !is CancellationException) {
+                toast.call(throwable.message ?: "Unknown error")
+                listItems.value = listOf(ReaderItem.ErrorItem(throwable))
+            }
+        }
     }
 }

@@ -1,10 +1,15 @@
 package com.vianh.blogtruyen.features.reader.list
 
-import com.vianh.blogtruyen.features.list.ListItem
+import com.vianh.blogtruyen.features.base.list.ListItem
 
 sealed class ReaderItem : ListItem {
     data class PageItem(val uri: String): ReaderItem() {
         override val viewType: Int = ListItem.PAGE_ITEM
+    }
+
+    data class ErrorItem(val exception: Throwable? = null): ReaderItem() {
+        override val viewType: Int
+            get() = ListItem.ERROR_TYPE
     }
 
     object LoadingItem: ReaderItem() {

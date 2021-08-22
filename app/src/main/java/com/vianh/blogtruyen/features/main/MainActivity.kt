@@ -1,7 +1,7 @@
-package com.vianh.blogtruyen.features.home
+package com.vianh.blogtruyen.features.main
 
 import android.os.Bundle
-import android.view.View
+import androidx.annotation.IdRes
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -11,22 +11,23 @@ import com.vianh.blogtruyen.R
 import com.vianh.blogtruyen.databinding.HomeActivityBinding
 import com.vianh.blogtruyen.features.base.BaseActivity
 import com.vianh.blogtruyen.features.favorites.FavoritesFragment
-import com.vianh.blogtruyen.features.favorites.UpdateFavoriteWorker
+import com.vianh.blogtruyen.features.feed.NewFeedFragment
 import com.vianh.blogtruyen.features.history.HistoryFragment
 import com.vianh.blogtruyen.features.local.LocalMangaFragment
 import com.vianh.blogtruyen.views.ViewHeightAnimator
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class HomeActivity : BaseActivity<HomeActivityBinding>(), FragmentManager.OnBackStackChangedListener {
+class MainActivity : BaseActivity<HomeActivityBinding>(), FragmentManager.OnBackStackChangedListener {
 
     override fun createBinding(): HomeActivityBinding = HomeActivityBinding.inflate(layoutInflater)
 
     private lateinit var bottomNavAnimator: ViewHeightAnimator
 
     private val rootFragments = setOf(
-        HomeFragment::class.java,
         HistoryFragment::class.java,
         FavoritesFragment::class.java,
-        LocalMangaFragment::class.java
+        LocalMangaFragment::class.java,
+        NewFeedFragment::class.java
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,7 +40,7 @@ class HomeActivity : BaseActivity<HomeActivityBinding>(), FragmentManager.OnBack
         with(binding) {
             bottomNav.setOnItemSelectedListener {
                 when (it.itemId) {
-                    R.id.home_menu -> changeFragment(HomeFragment())
+                    R.id.home_menu -> changeFragment(NewFeedFragment.newInstance())
                     R.id.history -> changeFragment(HistoryFragment())
                     R.id.bookmarks -> changeFragment(FavoritesFragment())
                     R.id.downloads -> changeFragment(LocalMangaFragment())
@@ -57,7 +58,7 @@ class HomeActivity : BaseActivity<HomeActivityBinding>(), FragmentManager.OnBack
 
     private fun setUpDefaultFragment() {
         val defaultFragment =
-            supportFragmentManager.findFragmentById(R.id.host_fragment) ?: HomeFragment()
+            supportFragmentManager.findFragmentById(R.id.host_fragment) ?: NewFeedFragment()
         changeFragment(defaultFragment)
     }
 
@@ -69,6 +70,32 @@ class HomeActivity : BaseActivity<HomeActivityBinding>(), FragmentManager.OnBack
             setDisplayShowHomeEnabled(backStackCount > 0)
             if (title != null) {
                 setTitle(title)
+            }
+        }
+    }
+
+    private fun findCurrentFragment(): Fragment? {
+        return supportFragmentManager.findFragmentById(R.id.host_fragment)
+    }
+
+    override fun onBackPressed() {
+        val currentFragment = findCurrentFragment()
+        if (currentFragment == null) {
+            finish()
+            return
+        }
+
+        when {
+            currentFragment is NewFeedFragment -> {
+                super.onBackPressed()
+            }
+
+            rootFragments.contains(currentFragment::class.java) -> {
+                binding.bottomNav.selectedItemId = R.id.home_menu
+            }
+
+            else -> {
+                super.onBackPressed()
             }
         }
     }
@@ -87,14 +114,6 @@ class HomeActivity : BaseActivity<HomeActivityBinding>(), FragmentManager.OnBack
 
     fun showBottomNav() {
         bottomNavAnimator.show()
-    }
-
-    fun hideSystemUI() {
-        window.decorView.systemUiVisibility = flagHideSystemUI
-    }
-
-    fun showSystemUI() {
-        window.decorView.systemUiVisibility = flagShowSystemUI
     }
 
     fun changeFragment(
@@ -126,19 +145,7 @@ class HomeActivity : BaseActivity<HomeActivityBinding>(), FragmentManager.OnBack
         }
     }
 
-    companion object {
-
-        const val flagHideSystemUI = (View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-                // Set the content to appear under the system bars so that the
-                // content doesn't resize when the system bars hide and show.
-                or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                // Hide the nav bar and status bar
-                or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                or View.SYSTEM_UI_FLAG_FULLSCREEN)
-
-        const val flagShowSystemUI = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN)
+    fun selectBottomNavItem(@IdRes menuId: Int) {
+        binding.bottomNav.selectedItemId = menuId
     }
 }

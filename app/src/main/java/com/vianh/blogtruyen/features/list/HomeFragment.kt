@@ -1,18 +1,19 @@
-package com.vianh.blogtruyen.features.home
+package com.vianh.blogtruyen.features.list
 
 import android.app.SearchManager
 import android.content.Context
 import android.os.Bundle
 import android.view.*
 import androidx.appcompat.widget.SearchView
+import androidx.lifecycle.lifecycleScope
 import com.vianh.blogtruyen.R
 import com.vianh.blogtruyen.databinding.HomeFragmentBinding
 import com.vianh.blogtruyen.features.base.BaseFragment
-import com.vianh.blogtruyen.features.home.list.MangaFeedAdapter
-import com.vianh.blogtruyen.features.home.list.MangaItem
-import com.vianh.blogtruyen.features.home.list.MangaItemVH
 import com.vianh.blogtruyen.features.details.MangaDetailsFragment
+import com.vianh.blogtruyen.features.main.MainActivity
 import com.vianh.blogtruyen.utils.*
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class HomeFragment: BaseFragment<HomeFragmentBinding>(), MangaItemVH.MangaClick {
@@ -24,7 +25,7 @@ class HomeFragment: BaseFragment<HomeFragmentBinding>(), MangaItemVH.MangaClick 
 
     private val viewModel by viewModel<HomeViewModel>()
 
-    private var feedAdapter: MangaFeedAdapter? = null
+    private var listAdapter: MangaListAdapter? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -43,24 +44,24 @@ class HomeFragment: BaseFragment<HomeFragmentBinding>(), MangaItemVH.MangaClick 
     }
 
     private fun onContentChange(mangaItems: List<MangaItem>) {
-        feedAdapter?.submitList(mangaItems)
+        listAdapter?.submitList(mangaItems)
     }
 
     private fun setup() {
-        val homeActivity = activity as? HomeActivity ?: return
+        val homeActivity = activity as? MainActivity ?: return
         homeActivity.setupToolbar(requireBinding.toolbar)
 
         with(requireBinding.feedRecycler) {
             setHasFixedSize(true)
 //            addItemDecoration(GridItemSpacingDecorator(20))
-            adapter = MangaFeedAdapter(this@HomeFragment).also { feedAdapter = it }
+            adapter = MangaListAdapter(this@HomeFragment).also { listAdapter = it }
             addOnScrollListener(ScrollLoadMore(2) {
                 viewModel.loadPage()
             })
         }
 
         requireBinding.swipeRefreshLayout.setOnRefreshListener {
-            viewModel.loadPage(1, true)
+            viewModel.loadPage(1)
         }
     }
 
@@ -84,13 +85,31 @@ class HomeFragment: BaseFragment<HomeFragmentBinding>(), MangaItemVH.MangaClick 
         }
     }
 
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.refresh) {
+            lifecycleScope.launch {
+                requireBinding.feedRecycler.scrollToPosition(0)
+                viewModel.loadPage(1)
+            }
+            return true
+        }
+
+        return super.onOptionsItemSelected(item)
+    }
+
     override fun onMangaItemClick(mangaItem: MangaItem) {
-        val activity = activity as HomeActivity
+        val activity = activity as MainActivity
         activity.changeFragment(MangaDetailsFragment.newInstance(mangaItem.manga), true)
     }
 
     override fun onDestroyView() {
-        feedAdapter = null
+        listAdapter = null
         super.onDestroyView()
+    }
+
+    companion object {
+        fun newInstance(): HomeFragment {
+            return HomeFragment()
+        }
     }
 }

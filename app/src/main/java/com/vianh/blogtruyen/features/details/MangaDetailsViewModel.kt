@@ -1,31 +1,36 @@
 package com.vianh.blogtruyen.features.details
 
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.asLiveData
+import androidx.lifecycle.viewModelScope
+import com.vianh.blogtruyen.R
 import com.vianh.blogtruyen.data.model.Chapter
 import com.vianh.blogtruyen.data.model.Comment
 import com.vianh.blogtruyen.data.model.Manga
 import com.vianh.blogtruyen.features.base.BaseVM
+import com.vianh.blogtruyen.features.details.data.MangaRepo
+import com.vianh.blogtruyen.features.details.info.adapter.ChapterItem
+import com.vianh.blogtruyen.features.details.info.adapter.HeaderItem
 import com.vianh.blogtruyen.features.download.DownloadService
 import com.vianh.blogtruyen.features.download.DownloadState
 import com.vianh.blogtruyen.features.favorites.data.FavoriteRepository
 import com.vianh.blogtruyen.features.local.LocalSourceRepo
-import com.vianh.blogtruyen.features.details.data.MangaRepo
-import com.vianh.blogtruyen.features.details.info.adapter.ChapterItem
-import com.vianh.blogtruyen.features.details.info.adapter.HeaderItem
+import com.vianh.blogtruyen.utils.SingleLiveEvent
+import com.vianh.blogtruyen.utils.asLiveDataDistinct
 import com.vianh.blogtruyen.utils.mapList
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.Job
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
-import kotlin.coroutines.EmptyCoroutineContext
 
 class MangaDetailsViewModel(
+    manga: Manga,
+    val isOffline: Boolean,
     private val repo: MangaRepo,
     private val favoriteRepo: FavoriteRepository,
     private val localSourceRepo: LocalSourceRepo,
-    val isOffline: Boolean,
-    manga: Manga
 ) : BaseVM() {
+
+    val toReaderEvent = SingleLiveEvent<Chapter>()
 
     private var commentPage = 1
     private var hasNextCommentPage = true
@@ -40,18 +45,25 @@ class MangaDetailsViewModel(
     private val downloadingState = DownloadService
         .downloadQueue
         .mapList { pair -> pair.first }
-        .transformLatest {
-            val mangaChapter = it.filter { it.manga.id == manga.id }
+        .transformLatest { downloadItems ->
+            val mangaChapter = downloadItems.filter { it.manga.id == manga.id }
             emit(mangaChapter)
         }
         .distinctUntilChanged()
         .map { downloadItem -> downloadItem.associateBy { it.chapter.id } }
 
-    val headerItem = combine(mainChapters, descendingSort) { chapters, isDescending ->
+    val headerItem = combine(
+        mainChapters,
+        descendingSort
+    ) { chapters, isDescending ->
         HeaderItem(chapters.size, isDescending)
-    }.distinctUntilChanged().asLiveData(Dispatchers.Default)
+    }.asLiveDataDistinct(Dispatchers.Default)
 
-    val chapters = combine(mainChapters, downloadingState, descendingSort) { main, downloading, isDescending ->
+    val chapters = combine(
+        mainChapters,
+        downloadingState,
+        descendingSort
+    ) { main, downloading, isDescending ->
         val downloadedIds = if (isOffline)
             emptySet()
         else
@@ -77,13 +89,25 @@ class MangaDetailsViewModel(
         } else {
             chapters
         }
-    }.distinctUntilChanged().asLiveData(viewModelScope.coroutineContext + Dispatchers.Default)
+    }.asLiveDataDistinct(viewModelScope.coroutineContext + Dispatchers.Default)
 
     val isFavorite: LiveData<Boolean> = favoriteRepo
         .observeFavoriteState(manga.id)
         .map { it != null }
         .distinctUntilChanged()
         .asLiveData(viewModelScope.coroutineContext)
+
+    val readButtonState = mainChapters.map { chapters ->
+        val enable = chapters.isNotEmpty()
+        val chapter = chapters.firstOrNull { it.read }
+        val textId = if (chapter != null)
+            R.string.continue_reading
+        else
+            R.string.start_reading
+
+        Pair(enable, textId)
+    }.asLiveDataDistinct(Dispatchers.Default, Pair(false, R.string.start_reading))
+
 
     val manga = mangaFlow.asLiveData(viewModelScope.coroutineContext)
     val comments: MutableLiveData<List<Comment>> = MutableLiveData(listOf())
@@ -93,31 +117,31 @@ class MangaDetailsViewModel(
     }
 
     fun loadMangaInfo() {
-        loadDetails()
-        loadChapters()
-    }
-
-    private fun loadDetails() {
         launchLoading {
-            // Keep current chapter
-            mangaFlow.value = repo
-                .fetchMangaDetails(mangaFlow.value, !isOffline)
-                .copy(chapters = currentManga.chapters)
+            supervisorScope {
+                launch { loadDetails() }
+                launch { loadChapters() }
+            }
         }
     }
 
-    private fun loadChapters() {
-        launchJob {
-            val fetchChapters = if (isOffline)
-                localSourceRepo.getChapters(currentManga.id)
-            else
-                repo.loadChapter(currentManga.id)
+    private suspend fun loadDetails() {
+        // Keep current chapter
+        mangaFlow.value = repo
+            .fetchMangaDetails(mangaFlow.value, !isOffline)
+            .copy(chapters = currentManga.chapters)
+    }
 
-            mangaFlow.update { it.copy(chapters = fetchChapters) }
-            mainChapters.value = fetchChapters
+    private suspend fun loadChapters() {
+        val fetchChapters = if (isOffline)
+            localSourceRepo.getChapters(currentManga.id)
+        else
+            repo.loadChapter(currentManga.id)
 
-            favoriteRepo.clearNewChapters(currentManga.id)
-        }
+        mangaFlow.update { it.copy(chapters = fetchChapters) }
+        mainChapters.value = fetchChapters
+
+        favoriteRepo.clearNewChapters(currentManga.id)
     }
 
     fun loadComments(offset: Int = commentPage) {
@@ -139,9 +163,9 @@ class MangaDetailsViewModel(
         }
     }
 
-    fun toggleFavorite(isFavorite: Boolean) {
+    fun toggleFavorite() {
         launchJob {
-            if (isFavorite)
+            if (isFavorite.value == false)
                 favoriteRepo.addToFavorite(currentManga)
             else
                 favoriteRepo.removeFromFavorite(currentManga.id)
@@ -150,5 +174,14 @@ class MangaDetailsViewModel(
 
     fun toggleSortType() {
         descendingSort.update { !it }
+    }
+
+    fun continueReading() {
+        val chapters = mainChapters.value
+        val lastReadChapter = chapters
+            .filter { it.read }
+            .maxByOrNull { it.number } ?: chapters.first { it.number == 1 }
+
+        toReaderEvent.setValue(lastReadChapter)
     }
 }

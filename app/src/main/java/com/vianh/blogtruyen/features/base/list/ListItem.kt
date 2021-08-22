@@ -1,4 +1,4 @@
-package com.vianh.blogtruyen.features.list
+package com.vianh.blogtruyen.features.base.list
 
 interface ListItem {
     val viewType: Int

@@ -4,7 +4,7 @@ import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.vianh.blogtruyen.data.model.Manga
 import com.vianh.blogtruyen.features.base.BaseVM
-import com.vianh.blogtruyen.features.home.list.MangaItem
+import com.vianh.blogtruyen.features.list.MangaItem
 import com.vianh.blogtruyen.utils.mapList
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow

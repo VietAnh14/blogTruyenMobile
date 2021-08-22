@@ -9,13 +9,11 @@ import android.view.animation.Interpolator
 import androidx.annotation.AttrRes
 import androidx.annotation.ColorInt
 import com.bumptech.glide.RequestBuilder
-import com.bumptech.glide.RequestManager
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.suspendCancellableCoroutine
 import okhttp3.Call
 import okhttp3.Callback
@@ -28,7 +26,6 @@ import java.io.IOException
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
-import kotlin.math.sin
 
 class HttpError(private val code: Int, message: String?) : Exception(message) {
     override val message: String?
@@ -199,4 +196,8 @@ fun File.createDirs(): File {
     if (!exists())
         mkdirs()
     return this
+}
+
+inline fun <T, R> Iterable<T>.mapToSet(transform: (T) -> R): Set<R> {
+    return mapTo(HashSet<R>(), transform)
 }
