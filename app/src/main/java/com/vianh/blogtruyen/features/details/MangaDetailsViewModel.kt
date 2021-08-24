@@ -19,6 +19,7 @@ import com.vianh.blogtruyen.features.local.LocalSourceRepo
 import com.vianh.blogtruyen.utils.SingleLiveEvent
 import com.vianh.blogtruyen.utils.asLiveDataDistinct
 import com.vianh.blogtruyen.utils.mapList
+import com.vianh.blogtruyen.utils.mapToSet
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 
@@ -67,7 +68,7 @@ class MangaDetailsViewModel(
         val downloadedIds = if (isOffline)
             emptySet()
         else
-            localSourceRepo.getChapters(manga.id).map { it.id }.toSet()
+            localSourceRepo.getChapters(manga.id).mapToSet { it.id }
 
         val chapters = main.map {
             var state: DownloadState = DownloadState.NotDownloaded
@@ -84,10 +85,10 @@ class MangaDetailsViewModel(
         }
 
         // Already sorted by des when load
-        if (!isDescending) {
-            chapters.sortedBy { it.chapter.number }
-        } else {
+        if (isDescending) {
             chapters
+        } else {
+            chapters.sortedBy { it.chapter.number }
         }
     }.asLiveDataDistinct(viewModelScope.coroutineContext + Dispatchers.Default)
 
@@ -100,10 +101,7 @@ class MangaDetailsViewModel(
     val readButtonState = mainChapters.map { chapters ->
         val enable = chapters.isNotEmpty()
         val chapter = chapters.firstOrNull { it.read }
-        val textId = if (chapter != null)
-            R.string.continue_reading
-        else
-            R.string.start_reading
+        val textId = if (chapter != null) R.string.continue_reading else R.string.start_reading
 
         Pair(enable, textId)
     }.asLiveDataDistinct(Dispatchers.Default, Pair(false, R.string.start_reading))

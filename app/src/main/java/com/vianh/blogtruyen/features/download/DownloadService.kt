@@ -71,11 +71,7 @@ class DownloadService : LifecycleService() {
                 completeDownload(downloadItem, startId)
             }
 
-        downloadQueue.update {
-            val new = ArrayList(it)
-            new.add(Pair(downloadItem, downloadFlow))
-            new
-        }
+        downloadQueue.update { it + (downloadItem to downloadFlow) }
 
         val isDownloading = downloadJob?.isActive
         if (isDownloading == null || !isDownloading) {

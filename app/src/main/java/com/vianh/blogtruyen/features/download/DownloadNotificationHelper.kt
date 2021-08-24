@@ -24,7 +24,6 @@ class DownloadNotificationHelper(private val context: Context) {
 
         return NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ID)
             .setSmallIcon(android.R.drawable.stat_sys_download)
-            .setLargeIcon((ContextCompat.getDrawable(context, R.drawable.lazy_corgi) as BitmapDrawable).bitmap)
             .setTicker(title)
             .setOnlyAlertOnce(true)
             .setContentTitle(title)
@@ -57,16 +56,16 @@ class DownloadNotificationHelper(private val context: Context) {
 
     companion object {
         const val NOTIFICATION_ID = 100
-        private const val CHANNEL_NAME = "DOWNLOAD CHANNEL"
-        private const val NOTIFICATION_CHANNEL_ID = "DOWNLOAD"
+        const val CHANNEL_NAME = "DOWNLOAD CHANNEL"
+        const val NOTIFICATION_CHANNEL_ID = "DOWNLOAD"
 
         fun createNotificationChannel(context: Context) {
             // Create the NotificationChannel, but only on API 26+ because
             // the NotificationChannel class is new and not in the support library
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 val importance = NotificationManager.IMPORTANCE_DEFAULT
-                val channel =
-                    NotificationChannel(NOTIFICATION_CHANNEL_ID, CHANNEL_NAME, importance).apply {
+                val channel = NotificationChannel(NOTIFICATION_CHANNEL_ID, CHANNEL_NAME, importance)
+                    .apply {
                         description = "Blogtruyen download service"
                     }
                 // Register the channel with the system

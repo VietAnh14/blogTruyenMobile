@@ -3,6 +3,7 @@ package com.vianh.blogtruyen.features.base
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.viewbinding.ViewBinding
 
 abstract class BaseActivity<B: ViewBinding>: AppCompatActivity() {
@@ -15,6 +16,18 @@ abstract class BaseActivity<B: ViewBinding>: AppCompatActivity() {
     }
 
     abstract fun createBinding(): B
+
+    fun setupToolbar(toolbar: Toolbar, title: String? = null) {
+        setSupportActionBar(toolbar)
+        supportActionBar?.apply {
+            val backStackCount = supportFragmentManager.backStackEntryCount
+            setDisplayHomeAsUpEnabled(backStackCount > 0)
+            setDisplayShowHomeEnabled(backStackCount > 0)
+            if (title != null) {
+                setTitle(title)
+            }
+        }
+    }
 
     fun hideSystemUI() {
         window.decorView.systemUiVisibility = flagHideSystemUI
