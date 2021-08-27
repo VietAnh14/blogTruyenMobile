@@ -1,13 +1,14 @@
 package com.vianh.blogtruyen.features.main
 
-import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.vianh.blogtruyen.features.base.BaseVM
+import com.vianh.blogtruyen.features.favorites.data.FavoriteRepository
+import com.vianh.blogtruyen.utils.asLiveDataDistinct
+import kotlinx.coroutines.Dispatchers
 
-class MainViewModel: BaseVM() {
+class MainViewModel(private val favoriteRepository: FavoriteRepository): BaseVM() {
 
-    val selectedTabPos = MutableLiveData<Int>(0)
-
-    fun changeTab(pos: Int) {
-        selectedTabPos.value = pos
-    }
+    val notificationCount = favoriteRepository
+        .getTotalNotificationCount()
+        .asLiveDataDistinct(viewModelScope.coroutineContext + Dispatchers.Default)
 }

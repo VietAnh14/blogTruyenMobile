@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.vianh.blogtruyen.R
 import com.vianh.blogtruyen.databinding.BookmarksFragmentBinding
 import com.vianh.blogtruyen.databinding.HomeFragmentBinding
 import com.vianh.blogtruyen.features.base.BaseFragment
@@ -36,7 +37,7 @@ class FavoritesFragment: BaseFragment<HomeFragmentBinding>(), MangaItemVH.MangaC
         setHasOptionsMenu(true)
 
         with(requireBinding) {
-            hostActivity?.setupToolbar(toolbar)
+            hostActivity?.setupToolbar(toolbar, getString(R.string.bookmarks))
 
             feedRecycler.apply {
                 setHasFixedSize(true)

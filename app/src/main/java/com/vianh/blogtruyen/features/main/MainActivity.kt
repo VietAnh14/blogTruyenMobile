@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.annotation.IdRes
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.vianh.blogtruyen.R
@@ -17,12 +18,14 @@ import com.vianh.blogtruyen.features.feed.NewFeedFragment
 import com.vianh.blogtruyen.features.history.HistoryFragment
 import com.vianh.blogtruyen.features.local.LocalMangaFragment
 import com.vianh.blogtruyen.views.ViewHeightAnimator
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
 class MainActivity : BaseActivity<HomeActivityBinding>(), FragmentManager.OnBackStackChangedListener {
 
     override fun createBinding(): HomeActivityBinding = HomeActivityBinding.inflate(layoutInflater)
 
+    private val viewModel: MainViewModel by viewModel()
     private lateinit var bottomNavAnimator: ViewHeightAnimator
 
     private val navigationHelper = NavigationHelper(this, R.id.host_fragment)
@@ -36,10 +39,27 @@ class MainActivity : BaseActivity<HomeActivityBinding>(), FragmentManager.OnBack
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        bindViewModel()
         setupViews()
 
         if (!handleNewIntent(intent)) {
             setUpDefaultFragment()
+        }
+    }
+
+    private fun bindViewModel() {
+        viewModel.notificationCount.observe(this, this::onNotificationCountChange)
+    }
+
+    private fun onNotificationCountChange(num: Int) {
+        if (num == 0) {
+            binding.bottomNav.removeBadge(R.id.bookmarks)
+        } else {
+            binding.bottomNav.getOrCreateBadge(R.id.bookmarks).apply {
+                isVisible = true
+                number = num
+                backgroundColor = ContextCompat.getColor(this@MainActivity, R.color.colorAccent)
+            }
         }
     }
 
