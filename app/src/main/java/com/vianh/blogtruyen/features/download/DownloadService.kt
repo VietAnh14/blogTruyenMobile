@@ -88,7 +88,7 @@ class DownloadService : LifecycleService() {
         }
 
         if (downloadQueue.value.isEmpty()) {
-            notificationHelper.sendDoneNotification(startId, downloadItem.manga.title)
+            notificationHelper.sendDoneNotification(startId, downloadItem.manga)
             stopSelf()
         } else {
             downloadJob = downloadQueue.value.first().second.launchIn(lifecycleScope)

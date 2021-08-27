@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Blogtruyen</string>
+    <string name="summary">Sơ lược</string>
+    <string name="chapter">Danh sách chương:</string>
+    <string name="chapter_header_title">%1$d chương</string>
+    <string name="comment">Bình luận</string>
+    <string name="manga_info">Thông tin</string>
+    <string name="search_by_google">Tìm kiếm trên google</string>
+    <string name="clear_all_history">Xóa toàn bộ lịch sử</string>
+    <string name="show_more">Xem thêm</string>
+    <string name="recent_update">Vừa cập nhật</string>
+    <string name="new_stories">Truyện mới đăng</string>
+    <string name="continue_reading">Đọc tiếp</string>
+    <string name="start_reading">Bắt đầu đọc</string>
+    <string name="retry">Thử lại</string>
+    <string name="subscribe">Theo dõi</string>
+    <string name="home_menu">Trang chủ</string>
+    <string name="history">Lịch sử</string>
+    <string name="bookmarks">Đánh dấu</string>
+    <string name="search">Tìm</string>
+    <string name="search_hint">Tìm truyện</string>
+    <string name="manga_details">Nội dung</string>
+    <string name="empty_history">Lịch sử trống</string>
+    <string name="downloaded">Đã tải</string>
+    <string name="sort_title">Xắp xếp</string>
+    <string name="refresh">Làm mới</string>
+    <string name="next_chapter_guide">Thả để tới chương tiếp theo</string>
+    <string name="pull_down_guild">Kéo xuống để đi tới chương tiếp theo</string>
+    <string name="no_next_chapter">Hết, không có chương tiếp theo</string>
+</resources>

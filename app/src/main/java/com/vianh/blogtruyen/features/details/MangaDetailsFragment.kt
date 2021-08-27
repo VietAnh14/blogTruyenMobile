@@ -1,5 +1,8 @@
 package com.vianh.blogtruyen.features.details
 
+import android.app.PendingIntent
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,6 +13,8 @@ import com.vianh.blogtruyen.R
 import com.vianh.blogtruyen.data.model.Manga
 import com.vianh.blogtruyen.databinding.MangaDetailsFragmentBinding
 import com.vianh.blogtruyen.features.base.BaseFragment
+import com.vianh.blogtruyen.features.main.MainActivity
+import com.vianh.blogtruyen.utils.PendingIntentHelper
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 
@@ -71,8 +76,8 @@ class MangaDetailsFragment : BaseFragment<MangaDetailsFragmentBinding>() {
     }
 
     companion object {
-        private const val MANGA_BUNDLE_KEY = "MANGA_KEY"
-        private const val OFFLINE_MODE_KEY = "OFFLINE"
+        const val MANGA_BUNDLE_KEY = "MANGA_KEY"
+        const val OFFLINE_MODE_KEY = "OFFLINE"
 
         fun newInstance(manga: Manga, isOffline: Boolean = false): MangaDetailsFragment {
             val bundle = Bundle(2).apply {
@@ -82,6 +87,17 @@ class MangaDetailsFragment : BaseFragment<MangaDetailsFragmentBinding>() {
             return MangaDetailsFragment().apply {
                 arguments = bundle
             }
+        }
+
+        fun getPendingIntent(context: Context, manga: Manga, isOffline: Boolean = false): PendingIntent {
+            val intent = Intent(context, MainActivity::class.java).apply {
+                addFlags(PendingIntentHelper.UPDATE_INTENT_FLAGS)
+                action = MainActivity.ACTION_DOWNLOAD_COMPLETE
+                putExtra(MANGA_BUNDLE_KEY, manga)
+                putExtra(OFFLINE_MODE_KEY, isOffline)
+            }
+
+            return PendingIntent.getActivity(context, 0, intent, PendingIntentHelper.getPendingFlagCompat())
         }
     }
 }

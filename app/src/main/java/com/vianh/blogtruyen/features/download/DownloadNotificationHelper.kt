@@ -4,13 +4,12 @@ import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
-import android.graphics.drawable.BitmapDrawable
 import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import androidx.core.content.ContextCompat
 import com.vianh.blogtruyen.R
 import com.vianh.blogtruyen.data.model.Manga
+import com.vianh.blogtruyen.features.details.MangaDetailsFragment
 
 class DownloadNotificationHelper(private val context: Context) {
 
@@ -35,10 +34,13 @@ class DownloadNotificationHelper(private val context: Context) {
             .setAutoCancel(false)
     }
 
-    fun sendDoneNotification(id: Int, title: String) {
+    fun sendDoneNotification(id: Int, manga: Manga) {
         builder.setProgress(0, 0, false)
-        builder.setContentText("Downloaded $title")
-        builder.setSmallIcon(android.R.drawable.stat_sys_download_done)
+            .setContentText("Downloaded ${manga.title}")
+            .setSmallIcon(android.R.drawable.stat_sys_download_done)
+            .setContentIntent(MangaDetailsFragment.getPendingIntent(context, manga, true))
+            .setAutoCancel(true)
+
         notificationManager.notify(id, builder.build())
     }
 
@@ -56,8 +58,8 @@ class DownloadNotificationHelper(private val context: Context) {
 
     companion object {
         const val NOTIFICATION_ID = 100
-        const val CHANNEL_NAME = "DOWNLOAD CHANNEL"
-        const val NOTIFICATION_CHANNEL_ID = "DOWNLOAD"
+        const val NOTIFICATION_CHANNEL_ID = "NOTIFICATION CHANNEL"
+        private const val CHANNEL_NAME = "BLOG NOTIFICATION"
 
         fun createNotificationChannel(context: Context) {
             // Create the NotificationChannel, but only on API 26+ because

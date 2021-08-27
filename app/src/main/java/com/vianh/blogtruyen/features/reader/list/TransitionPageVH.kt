@@ -48,7 +48,7 @@ class TransitionPageVH(val binding: TransitionPageBinding, val viewModel: Reader
 
     private fun setupTransitionPage() {
         with(binding) {
-            description.setText(R.string.end_chapter)
+            description.setText(R.string.pull_down_guild)
             nextIcon.visible()
             progressCircular.show()
             progressCircular.progress = 0

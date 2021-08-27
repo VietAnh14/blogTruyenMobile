@@ -7,8 +7,10 @@ import androidx.annotation.IdRes
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.vianh.blogtruyen.R
+import com.vianh.blogtruyen.data.model.Manga
 import com.vianh.blogtruyen.databinding.HomeActivityBinding
 import com.vianh.blogtruyen.features.base.BaseActivity
+import com.vianh.blogtruyen.features.details.MangaDetailsFragment
 import com.vianh.blogtruyen.features.favorites.FavoritesFragment
 import com.vianh.blogtruyen.features.favorites.UpdateFavoriteWorker
 import com.vianh.blogtruyen.features.feed.NewFeedFragment
@@ -134,6 +136,12 @@ class MainActivity : BaseActivity<HomeActivityBinding>(), FragmentManager.OnBack
                 selectBottomNavItem(R.id.bookmarks)
                 true
             }
+            ACTION_DOWNLOAD_COMPLETE -> {
+                val manga = intent.getParcelableExtra<Manga>(MangaDetailsFragment.MANGA_BUNDLE_KEY) ?: return false
+                val isOffline = intent.getBooleanExtra(MangaDetailsFragment.OFFLINE_MODE_KEY, false)
+                changeFragment(MangaDetailsFragment.newInstance(manga, isOffline), true)
+                true
+            }
             else -> false
         }
     }
@@ -157,6 +165,7 @@ class MainActivity : BaseActivity<HomeActivityBinding>(), FragmentManager.OnBack
 
     companion object {
         const val ACTION_FAVORITE_UPDATE = "com.vianh.favorite.update"
+        const val ACTION_DOWNLOAD_COMPLETE = "com.vianh.download.complete"
         fun newIntent(context: Context): Intent {
             return Intent(context, MainActivity::class.java)
         }

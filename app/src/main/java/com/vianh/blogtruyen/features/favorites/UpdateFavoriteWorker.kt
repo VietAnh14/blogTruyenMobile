@@ -13,6 +13,7 @@ import com.vianh.blogtruyen.features.details.data.MangaRepo
 import com.vianh.blogtruyen.features.download.DownloadNotificationHelper
 import com.vianh.blogtruyen.features.favorites.data.FavoriteRepository
 import com.vianh.blogtruyen.features.main.MainActivity
+import com.vianh.blogtruyen.utils.PendingIntentHelper
 import kotlinx.coroutines.flow.first
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -39,16 +40,11 @@ class UpdateFavoriteWorker(context: Context, workerParameters: WorkerParameters)
 
     private fun sendNewUpdateNotification(message: String) {
         val intent = MainActivity.newIntent(applicationContext).apply {
-            addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+            addFlags(PendingIntentHelper.UPDATE_INTENT_FLAGS)
             action = MainActivity.ACTION_FAVORITE_UPDATE
         }
 
-        val pendingFlags = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-        } else {
-            0
-        }
-        val pendingIntent = PendingIntent.getActivity(applicationContext, 0, intent, pendingFlags)
+        val pendingIntent = PendingIntent.getActivity(applicationContext, 0, intent, PendingIntentHelper.getPendingFlagCompat())
 
         val builder = NotificationCompat.Builder(
             applicationContext,

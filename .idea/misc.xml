@@ -8,9 +8,13 @@
         <entry key="app/src/main/res/drawable/round_corner_bg.xml" value="0.24791666666666667" />
         <entry key="app/src/main/res/drawable/round_corners_bg.xml" value="0.24791666666666667" />
         <entry key="app/src/main/res/layout/bookmarks_fragment.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/category_view.xml" value="0.23715277777777777" />
         <entry key="app/src/main/res/layout/chapter_page_fragment.xml" value="0.22" />
+        <entry key="app/src/main/res/layout/comment_item.xml" value="0.23715277777777777" />
+        <entry key="app/src/main/res/layout/comment_page_fragment.xml" value="0.23715277777777777" />
         <entry key="app/src/main/res/layout/error_reader_item.xml" value="0.25" />
         <entry key="app/src/main/res/layout/feed_fragment.xml" value="0.23715277777777777" />
+        <entry key="app/src/main/res/layout/feed_item.xml" value="0.25" />
         <entry key="app/src/main/res/layout/home_activity.xml" value="0.23715277777777777" />
         <entry key="app/src/main/res/layout/home_fragment.xml" value="0.21388888888888888" />
         <entry key="app/src/main/res/layout/main_tab_fragment.xml" value="0.23715277777777777" />
