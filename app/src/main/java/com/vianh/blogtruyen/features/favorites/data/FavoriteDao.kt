@@ -22,5 +22,5 @@ abstract class FavoriteDao: BaseDao<FavoriteEntity>() {
     abstract fun observeByMangaId(mangaId: Int): Flow<FavoriteWithManga?>
 
     @Query("Select sum(newChapterCount) from favorites")
-    abstract fun getTotalNotification(): Flow<Int>
+    abstract fun getTotalNotification(): Flow<Int?>
 }

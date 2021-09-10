@@ -4,7 +4,9 @@ import android.content.Context
 import android.os.Bundle
 import android.view.*
 import android.widget.Toast
+import androidx.annotation.MenuRes
 import androidx.appcompat.widget.Toolbar
+import androidx.core.content.ContextCompat
 import androidx.core.view.OnApplyWindowInsetsListener
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -12,14 +14,19 @@ import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
 import com.vianh.blogtruyen.features.main.MainActivity
 
-abstract class BaseFragment<B : ViewBinding> : Fragment(), OnApplyWindowInsetsListener {
+abstract class BaseFragment<B : ViewBinding> : Fragment(), OnApplyWindowInsetsListener,
+    Toolbar.OnMenuItemClickListener {
     var binding: B? = null
     val requireBinding: B
         get() = checkNotNull(binding)
 
     var hostActivity: MainActivity? = null
 
-    abstract fun createBinding(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): B
+    abstract fun createBinding(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): B
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -38,7 +45,12 @@ abstract class BaseFragment<B : ViewBinding> : Fragment(), OnApplyWindowInsetsLi
 
     open fun onWindowInsetsChange(root: View?, insets: WindowInsetsCompat): WindowInsetsCompat {
         val systemBarInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-        view?.setPadding(systemBarInsets.left, systemBarInsets.top, systemBarInsets.right, systemBarInsets.bottom)
+        view?.setPadding(
+            systemBarInsets.left,
+            systemBarInsets.top,
+            systemBarInsets.right,
+            systemBarInsets.bottom
+        )
         return WindowInsetsCompat.CONSUMED
     }
 
@@ -46,26 +58,33 @@ abstract class BaseFragment<B : ViewBinding> : Fragment(), OnApplyWindowInsetsLi
         return onWindowInsetsChange(view, insets)
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
-    }
-
     override fun onDestroyView() {
         binding = null
         super.onDestroyView()
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == android.R.id.home) {
-            hostActivity?.navigateUp()
-            return true
+    fun setupToolbar(toolbar: Toolbar, title: String? = null, @MenuRes menuId: Int? = null) {
+        if (menuId != null)
+            toolbar.inflateMenu(menuId)
+
+        if (title != null)
+            toolbar.title = title
+
+        if (hostActivity?.canNavigateUp() == true) {
+            toolbar.navigationIcon = ContextCompat.getDrawable(
+                requireContext(),
+                androidx.appcompat.R.drawable.abc_ic_ab_back_material
+            )
         }
-        return super.onOptionsItemSelected(item)
+
+        toolbar.setOnMenuItemClickListener(this)
+        toolbar.setNavigationOnClickListener {
+            activity?.onBackPressed()
+        }
     }
 
-    fun setupToolbar(toolbar: Toolbar) {
-        (activity as MainActivity).setupToolbar(toolbar)
+    override fun onMenuItemClick(item: MenuItem): Boolean {
+        return false
     }
 
     fun showToast(message: String?) {

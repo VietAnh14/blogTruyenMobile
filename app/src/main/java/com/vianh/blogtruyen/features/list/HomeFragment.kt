@@ -48,8 +48,7 @@ class HomeFragment: BaseFragment<HomeFragmentBinding>(), MangaItemVH.MangaClick 
     }
 
     private fun setup() {
-        val homeActivity = activity as? MainActivity ?: return
-        homeActivity.setupToolbar(requireBinding.toolbar)
+        setupToolbar(requireBinding.toolbar)
 
         with(requireBinding.feedRecycler) {
             setHasFixedSize(true)
@@ -85,7 +84,7 @@ class HomeFragment: BaseFragment<HomeFragmentBinding>(), MangaItemVH.MangaClick 
         }
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+    override fun onMenuItemClick(item: MenuItem): Boolean {
         if (item.itemId == R.id.refresh) {
             lifecycleScope.launch {
                 requireBinding.feedRecycler.scrollToPosition(0)
@@ -94,7 +93,7 @@ class HomeFragment: BaseFragment<HomeFragmentBinding>(), MangaItemVH.MangaClick 
             return true
         }
 
-        return super.onOptionsItemSelected(item)
+        return super.onMenuItemClick(item)
     }
 
     override fun onMangaItemClick(mangaItem: MangaItem) {

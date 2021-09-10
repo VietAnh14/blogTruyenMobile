@@ -55,7 +55,7 @@ class HistoryFragment: BaseFragment<HistoryFragmentBinding>() {
     }
 
     private fun setup() {
-        hostActivity?.setupToolbar(requireBinding.toolbar)
+        setupToolbar(requireBinding.toolbar)
         setHasOptionsMenu(true)
 
         with(requireBinding.contentRecycler) {
@@ -64,12 +64,12 @@ class HistoryFragment: BaseFragment<HistoryFragmentBinding>() {
         }
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+    override fun onMenuItemClick(item: MenuItem): Boolean {
         return if (item.itemId == R.id.clear_all) {
             viewModel.clearAllHistory()
             true
         } else {
-            super.onOptionsItemSelected(item)
+            super.onMenuItemClick(item)
         }
     }
 

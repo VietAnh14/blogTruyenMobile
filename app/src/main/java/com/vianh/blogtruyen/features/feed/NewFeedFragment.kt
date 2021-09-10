@@ -1,9 +1,10 @@
 package com.vianh.blogtruyen.features.feed
 
+import android.app.SearchManager
+import android.content.Context
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
@@ -13,6 +14,7 @@ import com.vianh.blogtruyen.databinding.FeedFragmentBinding
 import com.vianh.blogtruyen.features.base.BaseFragment
 import com.vianh.blogtruyen.features.details.MangaDetailsFragment
 import com.vianh.blogtruyen.features.list.HomeFragment
+import com.vianh.blogtruyen.features.search.SearchFragment
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import java.util.concurrent.TimeUnit
 
@@ -45,7 +47,13 @@ class NewFeedFragment : BaseFragment<FeedFragmentBinding>(), SwipeRefreshLayout.
         with(requireBinding) {
             swipeRefreshLayout.setOnRefreshListener(this@NewFeedFragment)
 
-            pinStoriesRecycler.layoutManager = createLayoutManager()
+            pinStoriesRecycler.layoutManager = object: LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false) {
+                override fun checkLayoutParams(lp: RecyclerView.LayoutParams?): Boolean {
+                    lp?.width = (width * 0.85).toInt()
+                    return super.checkLayoutParams(lp)
+                }
+            }
+
             pinStoriesRecycler.adapter =
                 NewFeedAdapter(this@NewFeedFragment).also { pinAdapter = it }
             PagerSnapHelper().attachToRecyclerView(pinStoriesRecycler)
@@ -76,6 +84,55 @@ class NewFeedFragment : BaseFragment<FeedFragmentBinding>(), SwipeRefreshLayout.
                 layoutManager = createLayoutManager()
                 adapter = NewFeedAdapter(this@NewFeedFragment).also { historyAdapter = it }
             }
+        }
+
+        inflateToolBar()
+    }
+
+    private fun inflateToolBar() {
+        with(requireBinding.toolbar) {
+            setupToolbar(this)
+
+            val activity = activity ?: return
+            val searchManager = activity.getSystemService(Context.SEARCH_SERVICE) as? SearchManager
+
+            if (searchManager != null) {
+                val searchItem = menu.findItem(R.id.search_bar)
+                val searchView = searchItem.actionView as SearchView
+
+                searchView.maxWidth = Int.MAX_VALUE
+                searchView.requestFocus()
+                searchView.queryHint = getString(R.string.search)
+                searchView.setSearchableInfo(searchManager.getSearchableInfo(activity.componentName))
+                searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
+                    override fun onQueryTextSubmit(query: String?): Boolean {
+                        if (query.isNullOrBlank()) {
+                            return false
+                        }
+
+                        searchView.clearFocus()
+                        hostActivity?.changeFragment(SearchFragment.newInstance(query), true)
+                        return true
+                    }
+
+                    override fun onQueryTextChange(newText: String?): Boolean {
+                        return false
+                    }
+                })
+            }
+        }
+    }
+
+    override fun onMenuItemClick(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.search_bar -> {
+                true
+            }
+            R.id.refresh -> {
+                viewModel.loadFeed()
+                true
+            }
+            else -> super.onMenuItemClick(item)
         }
     }
 

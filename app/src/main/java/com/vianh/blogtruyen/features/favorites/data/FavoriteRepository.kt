@@ -52,7 +52,7 @@ class FavoriteRepo(private val db: MangaDb) : FavoriteRepository {
     }
 
     override fun getTotalNotificationCount(): Flow<Int> {
-        return db.favoriteDao.getTotalNotification()
+        return db.favoriteDao.getTotalNotification().map { it ?: 0 }
     }
 
     override fun observeFavorite(): Flow<List<Favorite>> {

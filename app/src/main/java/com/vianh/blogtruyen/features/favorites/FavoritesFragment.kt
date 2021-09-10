@@ -37,7 +37,7 @@ class FavoritesFragment: BaseFragment<HomeFragmentBinding>(), MangaItemVH.MangaC
         setHasOptionsMenu(true)
 
         with(requireBinding) {
-            hostActivity?.setupToolbar(toolbar, getString(R.string.bookmarks))
+            setupToolbar(toolbar, getString(R.string.bookmarks))
 
             feedRecycler.apply {
                 setHasFixedSize(true)

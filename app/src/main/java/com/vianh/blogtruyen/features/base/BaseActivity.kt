@@ -17,17 +17,7 @@ abstract class BaseActivity<B: ViewBinding>: AppCompatActivity() {
 
     abstract fun createBinding(): B
 
-    fun setupToolbar(toolbar: Toolbar, title: String? = null) {
-        setSupportActionBar(toolbar)
-        supportActionBar?.apply {
-            val backStackCount = supportFragmentManager.backStackEntryCount
-            setDisplayHomeAsUpEnabled(backStackCount > 0)
-            setDisplayShowHomeEnabled(backStackCount > 0)
-            if (title != null) {
-                setTitle(title)
-            }
-        }
-    }
+    fun canNavigateUp(): Boolean = supportFragmentManager.backStackEntryCount > 0
 
     fun hideSystemUI() {
         window.decorView.systemUiVisibility = flagHideSystemUI

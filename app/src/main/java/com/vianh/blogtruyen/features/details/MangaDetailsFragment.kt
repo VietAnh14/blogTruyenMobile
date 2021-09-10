@@ -8,6 +8,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
+import androidx.viewpager2.widget.ViewPager2
+import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.vianh.blogtruyen.R
 import com.vianh.blogtruyen.data.model.Manga
@@ -31,7 +33,6 @@ class MangaDetailsFragment : BaseFragment<MangaDetailsFragmentBinding>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setupToolbar(requireBinding.toolbar)
         setup()
         observe()
     }
@@ -47,8 +48,8 @@ class MangaDetailsFragment : BaseFragment<MangaDetailsFragmentBinding>() {
     }
 
     private fun setup() {
+        setupToolbar(requireBinding.toolbar)
         with(requireBinding) {
-            hostActivity?.setupToolbar(toolbar)
             pager.adapter = ContentPagerAdapter(this@MangaDetailsFragment)
             TabLayoutMediator(tabLayout, pager) { tab, position ->
                 tab.text = when (position) {
