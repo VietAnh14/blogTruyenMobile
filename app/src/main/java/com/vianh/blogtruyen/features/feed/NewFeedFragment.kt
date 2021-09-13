@@ -1,10 +1,7 @@
 package com.vianh.blogtruyen.features.feed
 
-import android.app.SearchManager
-import android.content.Context
 import android.os.Bundle
 import android.view.*
-import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
@@ -86,46 +83,13 @@ class NewFeedFragment : BaseFragment<FeedFragmentBinding>(), SwipeRefreshLayout.
             }
         }
 
-        inflateToolBar()
-    }
-
-    private fun inflateToolBar() {
-        with(requireBinding.toolbar) {
-            setupToolbar(this)
-
-            val activity = activity ?: return
-            val searchManager = activity.getSystemService(Context.SEARCH_SERVICE) as? SearchManager
-
-            if (searchManager != null) {
-                val searchItem = menu.findItem(R.id.search_bar)
-                val searchView = searchItem.actionView as SearchView
-
-                searchView.maxWidth = Int.MAX_VALUE
-                searchView.requestFocus()
-                searchView.queryHint = getString(R.string.search)
-                searchView.setSearchableInfo(searchManager.getSearchableInfo(activity.componentName))
-                searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
-                    override fun onQueryTextSubmit(query: String?): Boolean {
-                        if (query.isNullOrBlank()) {
-                            return false
-                        }
-
-                        searchView.clearFocus()
-                        hostActivity?.changeFragment(SearchFragment.newInstance(query), true)
-                        return true
-                    }
-
-                    override fun onQueryTextChange(newText: String?): Boolean {
-                        return false
-                    }
-                })
-            }
-        }
+        setupToolbar(requireBinding.toolbar)
     }
 
     override fun onMenuItemClick(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.search_bar -> {
+                hostActivity?.changeFragment(SearchFragment.newInstance(), true)
                 true
             }
             R.id.refresh -> {
@@ -215,6 +179,14 @@ class NewFeedFragment : BaseFragment<FeedFragmentBinding>(), SwipeRefreshLayout.
 
     override fun onItemClick(item: NewFeedItem.MangaItem) {
         hostActivity?.changeFragment(MangaDetailsFragment.newInstance(item.item), true)
+    }
+
+    override fun onRetryClick() {
+        // Not supported
+    }
+
+    override fun onReload() {
+        // Not supported
     }
 
     override fun onDestroyView() {

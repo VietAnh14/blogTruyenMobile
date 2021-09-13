@@ -2,11 +2,10 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        app:showAsAction="collapseActionView|always"
+        app:showAsAction="ifRoom"
         android:icon="@drawable/ic_search_24"
         android:title="@string/search"
-        android:id="@+id/search_bar"
-        app:actionViewClass="androidx.appcompat.widget.SearchView" />
+        android:id="@+id/search_bar" />
     <item android:id="@+id/refresh"
         android:icon="@drawable/ic_refresh"
         android:title="@string/refresh"

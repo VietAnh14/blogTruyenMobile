@@ -7,6 +7,7 @@ import com.vianh.blogtruyen.data.model.Comment
 import com.vianh.blogtruyen.data.model.Manga
 import com.vianh.blogtruyen.utils.await
 import com.vianh.blogtruyen.utils.getBodyString
+import com.vianh.blogtruyen.utils.hideSystemUI
 import com.vianh.blogtruyen.utils.mapToSet
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -107,6 +108,48 @@ class BlogtruyenProvider(private val client: OkHttpClient) : MangaProvider {
 
             FeedItem(pinStories, newUpdates, newManga)
         }
+    }
+
+    override suspend fun searchByName(query: String, pageNumber: Int): List<Manga> {
+        return withContext(Dispatchers.IO) {
+            val url = "${BuildConfig.HOST_FULL}/timkiem/nangcao/1/0/-1/-1?txt=$query&p=$pageNumber"
+            val request = Request.Builder().url(url).build()
+            val response = client.newCall(request).getBodyString()
+            val doc = Jsoup.parse(response)
+            parseSearchDetails(doc)
+        }
+    }
+
+    private fun parseSearchDetails(doc: Document): List<Manga> {
+        val searchContent = doc
+            .getElementsByClass("list-manga-bycate").getOrNull(0) ?: return emptyList()
+
+        val searchResultList = searchContent.removeClass("upperCase")
+        val infos = searchResultList.select("p:not([class])")
+        val hiddenTips = searchResultList.getElementsByClass("hidden tiptip-content")
+
+        val mangas = infos.mapIndexed { index, element ->
+            val a = element.getElementsByTag("a")[0]
+            val tip = hiddenTips.getOrNull(index)
+
+            val link = a.attr("href")
+            val title = a.text()
+            val id = idFromRelativeLink(link)
+            val imageUrl = tip?.getElementsByTag("img")?.attr("src")
+            val rawDes = tip?.getElementsByClass("al-j fs-12")?.getOrNull(0)?.text()
+            val des = if (rawDes.isNullOrBlank()) "Updating" else rawDes
+
+            Manga(
+                id = id,
+                imageUrl = imageUrl.orEmpty(),
+                title = title,
+                uploadTitle = title,
+                description = des,
+                link = link
+            )
+        }
+
+        return mangas
     }
 
     private fun parseNewManga(doc: Document): List<Manga> {

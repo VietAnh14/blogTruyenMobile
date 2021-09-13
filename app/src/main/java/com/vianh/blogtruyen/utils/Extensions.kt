@@ -6,8 +6,10 @@ import android.view.Gravity
 import android.view.View
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.Interpolator
+import android.view.inputmethod.InputMethodManager
 import androidx.annotation.AttrRes
 import androidx.annotation.ColorInt
+import androidx.core.content.ContextCompat
 import com.bumptech.glide.RequestBuilder
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
@@ -26,6 +28,10 @@ import java.io.IOException
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
+import androidx.core.content.ContextCompat.getSystemService
+
+
+
 
 class HttpError(private val code: Int, message: String?) : Exception(message) {
     override val message: String?
@@ -200,4 +206,14 @@ fun File.createDirs(): File {
 
 inline fun <T, R> Iterable<T>.mapToSet(transform: (T) -> R): Set<R> {
     return mapTo(HashSet<R>(), transform)
+}
+
+fun View.showSoftKeyBoard() {
+    val keyboard: InputMethodManager? = ContextCompat.getSystemService(context, InputMethodManager::class.java)
+    keyboard?.showSoftInput(this, 0)
+}
+
+fun View.hideSoftKeyboard() {
+    val keyboard: InputMethodManager? = ContextCompat.getSystemService(context, InputMethodManager::class.java)
+    keyboard?.hideSoftInputFromWindow(windowToken, 0)
 }

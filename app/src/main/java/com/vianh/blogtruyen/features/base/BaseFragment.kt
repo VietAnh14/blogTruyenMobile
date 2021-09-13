@@ -64,8 +64,10 @@ abstract class BaseFragment<B : ViewBinding> : Fragment(), OnApplyWindowInsetsLi
     }
 
     fun setupToolbar(toolbar: Toolbar, title: String? = null, @MenuRes menuId: Int? = null) {
-        if (menuId != null)
+        if (menuId != null) {
+            toolbar.menu.clear()
             toolbar.inflateMenu(menuId)
+        }
 
         if (title != null)
             toolbar.title = title
