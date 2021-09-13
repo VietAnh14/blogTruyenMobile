@@ -4,8 +4,8 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
+import com.vianh.blogtruyen.data.model.Chapter
 import com.vianh.blogtruyen.databinding.ChapterItemBinding
-import com.vianh.blogtruyen.features.details.info.ChapterVH
 import kotlinx.coroutines.CoroutineScope
 
 class ChapterAdapter(
@@ -13,13 +13,15 @@ class ChapterAdapter(
     private val scope: CoroutineScope
 ) : ListAdapter<ChapterItem, ChapterVH>(DiffCallback()) {
 
+    val selectedChapters = mutableSetOf<Chapter>()
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChapterVH {
         val inflater = LayoutInflater.from(parent.context)
         return ChapterVH(ChapterItemBinding.inflate(inflater, parent, false), chapterClick, scope)
     }
 
     override fun onBindViewHolder(holder: ChapterVH, position: Int) {
-        holder.onBind(getItem(position))
+        holder.onBind(getItem(position), selectedChapters)
     }
 
     override fun onViewRecycled(holder: ChapterVH) {
@@ -30,6 +32,24 @@ class ChapterAdapter(
     override fun onViewDetachedFromWindow(holder: ChapterVH) {
         holder.onDetached()
         super.onViewDetachedFromWindow(holder)
+    }
+
+    fun selectChapter(chapter: ChapterItem) {
+        if (selectedChapters.contains(chapter.chapter)) {
+            selectedChapters.remove(chapter.chapter)
+        } else {
+            selectedChapters.add(chapter.chapter)
+        }
+        notifyItemChanged(currentList.indexOf(chapter))
+    }
+
+    fun hasSelectedChapters(): Boolean {
+        return selectedChapters.isNotEmpty()
+    }
+
+    fun clearSelections() {
+        selectedChapters.clear()
+        notifyDataSetChanged()
     }
 
     class DiffCallback : DiffUtil.ItemCallback<ChapterItem>() {

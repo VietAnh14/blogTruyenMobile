@@ -13,12 +13,20 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
-
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
-            app:title="Manga name"
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize" />
+            android:layout_height="wrap_content">
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                app:title="Manga name"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize" />
+
+            <FrameLayout
+                android:id="@+id/cab_container"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize" />
+        </FrameLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
     <com.google.android.material.tabs.TabLayout

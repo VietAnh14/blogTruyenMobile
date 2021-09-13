@@ -3,14 +3,12 @@ package com.vianh.blogtruyen.features.reader.list
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.lifecycle.viewModelScope
-import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
 import com.vianh.blogtruyen.databinding.ErrorReaderItemBinding
 import com.vianh.blogtruyen.databinding.LoadingPageItemBinding
 import com.vianh.blogtruyen.databinding.MangaPageItemBinding
 import com.vianh.blogtruyen.databinding.TransitionPageBinding
-import com.vianh.blogtruyen.features.base.BaseViewHolder
 import com.vianh.blogtruyen.features.base.list.AbstractAdapter
 import com.vianh.blogtruyen.features.base.list.AbstractViewHolder
 import com.vianh.blogtruyen.features.base.list.ListItem

@@ -10,6 +10,7 @@ import com.vianh.blogtruyen.R
 import com.vianh.blogtruyen.databinding.FeedFragmentBinding
 import com.vianh.blogtruyen.features.base.BaseFragment
 import com.vianh.blogtruyen.features.details.MangaDetailsFragment
+import com.vianh.blogtruyen.features.feed.list.NewFeedAdapter
 import com.vianh.blogtruyen.features.list.HomeFragment
 import com.vianh.blogtruyen.features.search.SearchFragment
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel

@@ -1,16 +1,20 @@
 package com.vianh.blogtruyen.features.details.info
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ConcatAdapter
-import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.afollestad.materialcab.attached.AttachedCab
+import com.afollestad.materialcab.attached.destroy
+import com.afollestad.materialcab.createCab
+import com.vianh.blogtruyen.R
 import com.vianh.blogtruyen.data.model.Chapter
 import com.vianh.blogtruyen.data.model.Manga
-import com.vianh.blogtruyen.databinding.ChapterHeaderItemBinding
 import com.vianh.blogtruyen.databinding.ChapterPageFragmentBinding
 import com.vianh.blogtruyen.features.base.BaseFragment
 import com.vianh.blogtruyen.features.download.DownloadIntent
@@ -36,6 +40,8 @@ class InfoPageFragment : BaseFragment<ChapterPageFragmentBinding>(), ChapterVH.C
     private var chapterAdapter: ChapterAdapter? = null
     private var headerAdapter: InfoHeaderAdapter? = null
     private var chapterHeaderAdapter: ChapterHeaderAdapter? = null
+
+    private var cab: AttachedCab? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -112,6 +118,29 @@ class InfoPageFragment : BaseFragment<ChapterPageFragmentBinding>(), ChapterVH.C
             .newInstance(chapter, viewModel.currentManga, viewModel.isOffline), true)
     }
 
+    private fun updateCab() {
+        val selectedChapters = chapterAdapter?.selectedChapters ?: return
+        if (selectedChapters.isEmpty()) {
+            cab?.destroy()
+            return
+        }
+
+        if (cab == null) {
+            cab = createCab(R.id.cab_container) {
+                title(literal = selectedChapters.size.toString())
+                menu(R.menu.history_toolbar_menu)
+                onDestroy {
+                    cab = null
+                    chapterAdapter?.clearSelections()
+                    true
+                }
+                fadeIn()
+            }
+        }
+
+        cab?.title(literal = selectedChapters.size.toString())
+    }
+
     override fun onDestroyView() {
         chapterAdapter = null
         headerAdapter = null
@@ -123,7 +152,18 @@ class InfoPageFragment : BaseFragment<ChapterPageFragmentBinding>(), ChapterVH.C
     }
 
     override fun onChapterClick(chapter: ChapterItem) {
-        toReaderFragment(chapter.chapter)
+        if (chapterAdapter?.hasSelectedChapters() == true) {
+            chapterAdapter?.selectChapter(chapter)
+        } else {
+            toReaderFragment(chapter.chapter)
+        }
+
+        updateCab()
+    }
+
+    override fun onChapterLongClick(chapter: ChapterItem, view: View, position: Int) {
+        chapterAdapter?.selectChapter(chapter)
+        updateCab()
     }
 
     override fun onStateButtonClick(item: ChapterItem) {

@@ -3,12 +3,15 @@ package com.vianh.blogtruyen.utils
 import android.content.Context
 import android.util.TypedValue
 import android.view.Gravity
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.Interpolator
 import android.view.inputmethod.InputMethodManager
 import androidx.annotation.AttrRes
 import androidx.annotation.ColorInt
+import androidx.annotation.LayoutRes
 import androidx.core.content.ContextCompat
 import com.bumptech.glide.RequestBuilder
 import com.bumptech.glide.load.DataSource
@@ -28,10 +31,6 @@ import java.io.IOException
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
-import androidx.core.content.ContextCompat.getSystemService
-
-
-
 
 class HttpError(private val code: Int, message: String?) : Exception(message) {
     override val message: String?
@@ -216,4 +215,8 @@ fun View.showSoftKeyBoard() {
 fun View.hideSoftKeyboard() {
     val keyboard: InputMethodManager? = ContextCompat.getSystemService(context, InputMethodManager::class.java)
     keyboard?.hideSoftInputFromWindow(windowToken, 0)
+}
+
+inline fun ViewGroup.inflate(@LayoutRes layoutRes: Int): View {
+    return LayoutInflater.from(context).inflate(layoutRes, this, false)
 }

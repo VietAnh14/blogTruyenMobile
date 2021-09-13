@@ -77,6 +77,7 @@ dependencies {
     implementation 'com.davemorrissey.labs:subsampling-scale-image-view-androidx:3.10.0'
     implementation 'io.github.everythingme:overscroll-decor-android:1.1.1'
     implementation 'com.otaliastudios:zoomlayout:1.8.0'
+    implementation 'com.afollestad:material-cab:2.0.1'
 
     // Network
     implementation "com.squareup.okhttp3:okhttp:4.9.1"
