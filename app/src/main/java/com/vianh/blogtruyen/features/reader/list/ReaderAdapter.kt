@@ -53,11 +53,7 @@ class ReaderAdapter(
         return when (viewType) {
             ListItem.PAGE_ITEM -> {
                 val binding = MangaPageItemBinding.inflate(inflater, parent, false)
-                binding.page.setMaxTileSize(tileSize)
-                binding.page.setMinimumScaleType(SubsamplingScaleImageView.SCALE_TYPE_CENTER_CROP)
-                binding.page.setMinimumDpi(90)
-                binding.page.setMinimumTileDpi(180)
-                PageItemVH(binding, requestManager)
+                PageItemVH(binding, requestManager, tileSize)
             }
 
             ListItem.TRANSITION_ITEM -> TransitionPageVH(

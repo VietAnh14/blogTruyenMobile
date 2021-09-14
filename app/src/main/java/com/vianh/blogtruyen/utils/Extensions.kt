@@ -18,6 +18,7 @@ import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
+import com.vianh.blogtruyen.R
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.suspendCancellableCoroutine
 import okhttp3.Call
@@ -219,4 +220,10 @@ fun View.hideSoftKeyboard() {
 
 inline fun ViewGroup.inflate(@LayoutRes layoutRes: Int): View {
     return LayoutInflater.from(context).inflate(layoutRes, this, false)
+}
+
+inline fun Context.typeValue(resId: Int): TypedValue {
+    val outValue = TypedValue()
+    this.theme.resolveAttribute(resId, outValue, true)
+    return outValue
 }

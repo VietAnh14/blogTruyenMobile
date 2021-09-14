@@ -13,6 +13,8 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import timber.log.Timber
+import android.util.TypedValue
+import com.vianh.blogtruyen.utils.typeValue
 
 class ChapterVH(
     val binding: ChapterItemBinding,
@@ -40,14 +42,13 @@ class ChapterVH(
         }
     }
 
-    @SuppressLint("ResourceType")
     fun onBind(item: ChapterItem, selectedChapters: Set<Chapter>) {
         data = item
 
         if (selectedChapters.contains(item.chapter)) {
-            itemView.setBackgroundColor(R.color.colorPrimaryDark)
+            itemView.setBackgroundColor(itemView.context.typeValue(R.attr.colorControlHighlight).data)
         } else {
-            itemView.setBackgroundColor(android.R.color.transparent)
+            itemView.setBackgroundResource(itemView.context.typeValue(R.attr.selectableItemBackground).resourceId)
         }
 
         binding.chapterName.text = item.chapter.name
@@ -59,7 +60,7 @@ class ChapterVH(
         binding.chapterName.setTextColor(textColor)
 
         downloadJob = item.downloadState.onEach {
-            when(it) {
+            when (it) {
                 is DownloadState.NotDownloaded -> {
                     binding.stateButton.setImageResource(R.drawable.ic_file_download)
                 }

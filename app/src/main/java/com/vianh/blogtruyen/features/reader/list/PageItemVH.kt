@@ -22,7 +22,8 @@ import java.io.File
 
 class PageItemVH(
     val binding: MangaPageItemBinding,
-    private val glideRequestManager: RequestManager
+    private val glideRequestManager: RequestManager,
+    tileSize: Int
 ) : AbstractViewHolder<ReaderItem.PageItem, Unit>(binding.root), PageLoadCallBack<File>, View.OnClickListener {
 
     private val minHeight = itemView.context.resources.getDimensionPixelSize(R.dimen.page_item_min_height)
@@ -43,6 +44,15 @@ class PageItemVH(
                 showError(e)
             }
         }
+
+    init {
+        with(binding.page) {
+            setMaxTileSize(tileSize)
+            setMinimumScaleType(SubsamplingScaleImageView.SCALE_TYPE_CENTER_CROP)
+            setMinimumDpi(90)
+            setMinimumTileDpi(180)
+        }
+    }
 
     override fun onBind(data: ReaderItem.PageItem, extra: Unit) {
         binding.progressCircular.show()

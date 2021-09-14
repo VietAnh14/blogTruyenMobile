@@ -7,7 +7,10 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="android:windowBackground">@color/colorPrimary</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="colorControlHighlight">@color/lightGray</item>
+
+<!--        ripple-->
+        <item name="colorControlHighlight">#A9302F2F</item>
+
         <item name="titleTextColor">@android:color/white</item>
         <item name="android:textColorPrimary">@color/lightGray</item>
         <item name="colorControlNormal">@color/darkGray</item>
