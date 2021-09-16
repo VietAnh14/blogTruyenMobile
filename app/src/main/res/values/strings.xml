@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name" translatable="false">Blogtruyen</string>
+    <string name="app_name">Blogtruyen</string>
     <string name="lorem_5_sentences" translatable="false">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quam nulla porttitor massa id neque aliquam vestibulum. Posuere lorem ipsum dolor sit amet. Dignissim sodales ut eu sem. Nisl suscipit adipiscing bibendum est ultricies integer.</string>
     <string name="mock_title" translatable="false">This is a title</string>
     <string name="loading_image_content" translatable="false">Loading image content</string>
@@ -31,4 +31,7 @@
     <string name="pull_down_guild">End chapter, pull down to go to next chapter</string>
     <string name="retry">Retry</string>
     <string name="no_next_chapter">End chapter, no next chapter available</string>
+    <string name="select_all">Select all</string>
+    <string name="download">Download</string>
+    <string name="delete">Delete</string>
 </resources>

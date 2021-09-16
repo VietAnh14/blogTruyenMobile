@@ -81,11 +81,13 @@ class HistoryFragment: BaseFragment<HistoryFragmentBinding>() {
     }
 
     override fun onMenuItemClick(item: MenuItem): Boolean {
-        return if (item.itemId == R.id.clear_all) {
-            viewModel.clearAllHistory()
-            true
-        } else {
-            super.onMenuItemClick(item)
+        return when (item.itemId) {
+            R.id.clear_all -> {
+                viewModel.clearAllHistory()
+                true
+            }
+
+            else -> super.onMenuItemClick(item)
         }
     }
 

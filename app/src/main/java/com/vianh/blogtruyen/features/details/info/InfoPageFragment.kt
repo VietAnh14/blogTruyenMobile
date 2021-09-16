@@ -1,9 +1,8 @@
 package com.vianh.blogtruyen.features.details.info
 
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
@@ -50,15 +49,20 @@ class InfoPageFragment : BaseFragment<ChapterPageFragmentBinding>(), ChapterVH.C
     }
 
     private fun observe() {
-        viewModel.chapters.observe(viewLifecycleOwner, this::onNewChapters)
+        viewModel.chapterItems.observe(viewLifecycleOwner, this::onNewChapters)
         viewModel.headerItem.observe(viewLifecycleOwner, this::onHeaderChange)
         viewModel.manga.observe(viewLifecycleOwner, this::onMangaChange)
         viewModel.isLoading.observe(viewLifecycleOwner, this::onLoadingChange)
         viewModel.isFavorite.observe(viewLifecycleOwner, this::onFavoriteStateChange)
         viewModel.toReaderEvent.observe(viewLifecycleOwner, this::toReaderFragment)
         viewModel.readButtonState.observe(viewLifecycleOwner, this::onButtonStateChange)
+        viewModel.onNewPageSelected.observe(viewLifecycleOwner, this::onNewPageSelected)
 
         viewModel.error.observe(viewLifecycleOwner, { showToast(it.message) })
+    }
+
+    private fun onNewPageSelected(position: Int) {
+        cab?.destroy()
     }
 
     private fun onButtonStateChange(buttonState: Pair<Boolean, Int>) {
@@ -128,17 +132,36 @@ class InfoPageFragment : BaseFragment<ChapterPageFragmentBinding>(), ChapterVH.C
         if (cab == null) {
             cab = createCab(R.id.cab_container) {
                 title(literal = selectedChapters.size.toString())
-                menu(R.menu.history_toolbar_menu)
+                menu(R.menu.chapter_selection_menu)
                 onDestroy {
                     cab = null
                     chapterAdapter?.clearSelections()
                     true
                 }
+                onSelection { onMenuItemClick(it) }
                 fadeIn()
             }
         }
 
         cab?.title(literal = selectedChapters.size.toString())
+    }
+
+    override fun onMenuItemClick(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.select_all -> {
+                chapterAdapter?.selectChapters(viewModel.chapters.value)
+                updateCab()
+                true
+            }
+
+            R.id.download -> {
+                val chapters = chapterAdapter?.selectedChapters ?: return true
+                cab?.destroy()
+                DownloadService.download(requireContext(), viewModel.currentManga, chapters.toList())
+                true
+            }
+            else -> super.onMenuItemClick(item)
+        }
     }
 
     override fun onDestroyView() {
@@ -167,10 +190,7 @@ class InfoPageFragment : BaseFragment<ChapterPageFragmentBinding>(), ChapterVH.C
     }
 
     override fun onStateButtonClick(item: ChapterItem) {
-        // Clear chapter list when write to bundle
-        val manga = viewModel.currentManga.copy(chapters = emptyList())
-        val downloadIntent = DownloadIntent(manga, item.chapter)
-        DownloadService.start(requireContext(), downloadIntent)
+        DownloadService.download(requireContext(), viewModel.currentManga, listOf(item.chapter))
     }
 
     companion object {

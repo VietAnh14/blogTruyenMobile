@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
@@ -62,6 +63,13 @@ class MangaDetailsFragment : BaseFragment<MangaDetailsFragmentBinding>() {
                     else -> "Unknown"
                 }
             }.attach()
+
+            pager.registerOnPageChangeCallback(object: ViewPager2.OnPageChangeCallback() {
+                override fun onPageSelected(position: Int) {
+                    super.onPageSelected(position)
+                    viewModel.selectPage(position)
+                }
+            })
         }
     }
 

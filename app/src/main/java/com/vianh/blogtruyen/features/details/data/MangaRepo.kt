@@ -52,7 +52,7 @@ class MangaRepository(
             upsertManga(details, true)
             details
         } else {
-            db.mangaDao.getMangaById(manga.id)?.toManga()
+            db.mangaDao.getFullMangaById(manga.id)?.toManga()
                 ?: throw IllegalStateException("Cannot found Manga")
         }
     }

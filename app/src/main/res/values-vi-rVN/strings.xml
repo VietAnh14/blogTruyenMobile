@@ -28,4 +28,7 @@
     <string name="next_chapter_guide">Thả để tới chương tiếp theo</string>
     <string name="pull_down_guild">Kéo xuống để đi tới chương tiếp theo</string>
     <string name="no_next_chapter">Hết, không có chương tiếp theo</string>
+    <string name="select_all">Chọn toàn bộ</string>
+    <string name="download">Tải xuống</string>
+    <string name="delete">Xóa</string>
 </resources>

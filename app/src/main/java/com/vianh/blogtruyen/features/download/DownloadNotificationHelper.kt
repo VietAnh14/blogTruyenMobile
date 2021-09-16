@@ -25,8 +25,8 @@ class DownloadNotificationHelper(private val context: Context) {
             .setSmallIcon(android.R.drawable.stat_sys_download)
             .setTicker(title)
             .setOnlyAlertOnce(true)
-            .setContentTitle(title)
-            .setContentText("Downloading")
+            .setContentTitle("Downloading")
+            .setContentText("Processing")
             .setProgress(100, 0, false)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             // Set the intent that will fire when the user taps the notification

@@ -85,15 +85,14 @@ class HomeFragment: BaseFragment<HomeFragmentBinding>(), MangaItemVH.MangaClick 
     }
 
     override fun onMenuItemClick(item: MenuItem): Boolean {
-        if (item.itemId == R.id.refresh) {
-            lifecycleScope.launch {
+        return when (item.itemId) {
+            R.id.refresh -> {
                 requireBinding.feedRecycler.scrollToPosition(0)
                 viewModel.loadPage(1)
+                true
             }
-            return true
+            else -> super.onMenuItemClick(item)
         }
-
-        return super.onMenuItemClick(item)
     }
 
     override fun onMangaItemClick(mangaItem: MangaItem) {

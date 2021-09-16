@@ -43,6 +43,14 @@ class ChapterAdapter(
         notifyItemChanged(currentList.indexOf(chapter))
     }
 
+    fun selectChapters(chapters: List<Chapter>?) {
+        if (chapters.isNullOrEmpty())
+            return
+
+        selectedChapters.addAll(chapters)
+        notifyDataSetChanged()
+    }
+
     fun hasSelectedChapters(): Boolean {
         return selectedChapters.isNotEmpty()
     }

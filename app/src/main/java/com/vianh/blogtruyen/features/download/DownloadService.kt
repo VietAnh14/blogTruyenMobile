@@ -5,6 +5,8 @@ import android.content.Intent
 import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
+import com.vianh.blogtruyen.data.model.Chapter
+import com.vianh.blogtruyen.data.model.Manga
 import com.vianh.blogtruyen.utils.await
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.*
@@ -20,11 +22,11 @@ class DownloadService : LifecycleService() {
     private var downloadJob: Job? = null
 
     override fun onCreate() {
+        super.onCreate()
         startForeground(
             DownloadNotificationHelper.NOTIFICATION_ID,
             notificationHelper.getDownloadNotification().build()
         )
-        super.onCreate()
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -32,20 +34,25 @@ class DownloadService : LifecycleService() {
         val downloadIntent: DownloadIntent? = intent?.extras?.getParcelable(DOWNLOAD_INTENT_KEY)
         if (downloadIntent == null) {
             stopSelf()
-        } else {
-            download(downloadIntent, startId)
+            return START_NOT_STICKY
+        }
+
+        for (chapter in downloadIntent.chapters) {
+            download(downloadIntent.manga, chapter)
         }
 
         return START_NOT_STICKY
     }
 
-    fun download(downloadIntent: DownloadIntent, startId: Int) {
+    fun download(manga: Manga, chapter: Chapter) {
+        if (isChapterInQueue(chapter)) {
+            return
+        }
+
         val downloadState: MutableStateFlow<DownloadState> = MutableStateFlow(DownloadState.Queued)
-        val manga = downloadIntent.manga
-        val chapter = downloadIntent.chapter
         val downloadItem = DownloadItem(manga, chapter, downloadState)
 
-        val downloadFlow = downloadHelper.downloadChapter(downloadItem)
+        val downloadFlow = downloadHelper.getDownloadFlow(downloadItem)
             .distinctUntilChanged()
             .debounce(100)
             .onStart {
@@ -68,7 +75,7 @@ class DownloadService : LifecycleService() {
             .catch { Timber.e(it) }
             .onCompletion {
                 downloadState.value = DownloadState.Completed
-                completeDownload(downloadItem, startId)
+                completeDownload(downloadItem, chapter.id.hashCode())
             }
 
         downloadQueue.update { it + (downloadItem to downloadFlow) }
@@ -77,6 +84,15 @@ class DownloadService : LifecycleService() {
         if (isDownloading == null || !isDownloading) {
             downloadJob = downloadFlow.launchIn(lifecycleScope)
         }
+    }
+
+    fun isChapterInQueue(chapter: Chapter): Boolean {
+        for (item in downloadQueue.value) {
+            if (item.first.chapter == chapter)
+                return true
+        }
+
+        return false
     }
 
     private fun completeDownload(downloadItem: DownloadItem, startId: Int) {
@@ -102,9 +118,11 @@ class DownloadService : LifecycleService() {
 
         private const val DOWNLOAD_INTENT_KEY = "DOWNLOAD_INTENT"
 
-        fun start(context: Context, downloadIntent: DownloadIntent) {
+        fun download(context: Context, manga: Manga, chapters: List<Chapter>) {
+            // Don't save large items to bundle
+            val emptyChapterManga = manga.copy(chapters = emptyList())
             val intent = Intent(context, DownloadService::class.java)
-            intent.putExtra(DOWNLOAD_INTENT_KEY, downloadIntent)
+            intent.putExtra(DOWNLOAD_INTENT_KEY, DownloadIntent(emptyChapterManga, chapters))
             context.startService(intent)
         }
     }
