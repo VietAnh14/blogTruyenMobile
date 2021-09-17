@@ -97,6 +97,15 @@ class LocalSourceRepo(private val context: Context, private val db: MangaDb) {
         }
     }
 
+    fun deleteLocalManga(manga: Manga) {
+        val mangaDir = getLocalMangaDir(manga.id, manga.title)
+        mangaDir.deleteRecursively()
+        val cover = getCoverDir().listFiles { _, name ->
+            name.substringBeforeLast(".") == manga.id.toString()
+        }
+        cover?.getOrNull(0)?.delete()
+    }
+
     companion object {
 
         const val COVER_DIR = "covers"

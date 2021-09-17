@@ -42,7 +42,7 @@ class DownloadHelper(
 ) {
 
     // TODO: DOWNLOAD TO TEMP FILE WHILE PROCESSING
-    fun downloadChapter(downloadItem: DownloadItem): Flow<Int> {
+    fun getDownloadFlow(downloadItem: DownloadItem): Flow<Int> {
         return flow {
             val chapter = downloadItem.chapter
             val manga = downloadItem.manga

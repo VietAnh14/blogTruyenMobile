@@ -5,7 +5,9 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.vianh.blogtruyen.features.details.info.InfoPageFragment
 import com.vianh.blogtruyen.features.details.comments.CommentPageFragment
 
-class ContentPagerAdapter(fragment: MangaDetailsFragment): FragmentStateAdapter(fragment) {
+// Use view lifecycle to fix leak
+class ContentPagerAdapter(fragment: MangaDetailsFragment) :
+    FragmentStateAdapter(fragment.childFragmentManager, fragment.viewLifecycleOwner.lifecycle) {
     override fun getItemCount(): Int = 2
 
     override fun createFragment(position: Int): Fragment {

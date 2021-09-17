@@ -53,7 +53,7 @@ class ReaderFragment : BaseFragment<ReaderFragmentBinding>() {
     }
 
     private fun setup() {
-        hostActivity?.setupToolbar(requireBinding.toolbar)
+        setupToolbar(requireBinding.toolbar)
         readerDelegate.setUpReader(tileSize)
     }
 

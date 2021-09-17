@@ -8,5 +8,5 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class DownloadIntent(
     val manga: Manga,
-    val chapter: Chapter
+    val chapters: List<Chapter>
 ): Parcelable

@@ -3,8 +3,6 @@ package com.vianh.blogtruyen.features.reader.list
 import com.vianh.blogtruyen.R
 import com.vianh.blogtruyen.databinding.TransitionPageBinding
 import com.vianh.blogtruyen.features.base.list.AbstractViewHolder
-import com.vianh.blogtruyen.features.base.list.BaseVH
-import com.vianh.blogtruyen.features.base.list.ListItem
 import com.vianh.blogtruyen.features.reader.ReaderViewModel
 import com.vianh.blogtruyen.utils.gone
 import com.vianh.blogtruyen.utils.visible
@@ -48,7 +46,7 @@ class TransitionPageVH(val binding: TransitionPageBinding, val viewModel: Reader
 
     private fun setupTransitionPage() {
         with(binding) {
-            description.setText(R.string.end_chapter)
+            description.setText(R.string.pull_down_guild)
             nextIcon.visible()
             progressCircular.show()
             progressCircular.progress = 0

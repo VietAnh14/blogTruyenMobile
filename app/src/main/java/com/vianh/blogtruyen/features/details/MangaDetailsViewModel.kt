@@ -19,6 +19,7 @@ import com.vianh.blogtruyen.features.local.LocalSourceRepo
 import com.vianh.blogtruyen.utils.SingleLiveEvent
 import com.vianh.blogtruyen.utils.asLiveDataDistinct
 import com.vianh.blogtruyen.utils.mapList
+import com.vianh.blogtruyen.utils.mapToSet
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 
@@ -31,6 +32,7 @@ class MangaDetailsViewModel(
 ) : BaseVM() {
 
     val toReaderEvent = SingleLiveEvent<Chapter>()
+    val onNewPageSelected = SingleLiveEvent<Int>()
 
     private var commentPage = 1
     private var hasNextCommentPage = true
@@ -53,23 +55,31 @@ class MangaDetailsViewModel(
         .map { downloadItem -> downloadItem.associateBy { it.chapter.id } }
 
     val headerItem = combine(
-        mainChapters,
+        mainChapters.map { it.size }.distinctUntilChanged(),
         descendingSort
-    ) { chapters, isDescending ->
-        HeaderItem(chapters.size, isDescending)
+    ) { size, isDescending ->
+        HeaderItem(size, isDescending)
     }.asLiveDataDistinct(Dispatchers.Default)
 
-    val chapters = combine(
-        mainChapters,
-        downloadingState,
-        descendingSort
-    ) { main, downloading, isDescending ->
+    val chapters = combine(mainChapters, descendingSort) { newChapters, descending ->
+        // Already sorted by des when load
+        if (descending) {
+            newChapters
+        } else {
+            newChapters.sortedBy { it.number }
+        }
+    }.stateIn(viewModelScope + Dispatchers.Default, SharingStarted.Eagerly, listOf())
+
+    val chapterItems = combine(
+        chapters,
+        downloadingState
+    ) { mainChapters, downloading ->
         val downloadedIds = if (isOffline)
             emptySet()
         else
-            localSourceRepo.getChapters(manga.id).map { it.id }.toSet()
+            localSourceRepo.getChapters(manga.id).mapToSet { it.id }
 
-        val chapters = main.map {
+        mainChapters.map {
             var state: DownloadState = DownloadState.NotDownloaded
             if (isOffline || downloadedIds.contains(it.id)) {
                 state = DownloadState.Completed
@@ -82,14 +92,7 @@ class MangaDetailsViewModel(
                 ChapterItem(it, MutableStateFlow(state))
             }
         }
-
-        // Already sorted by des when load
-        if (!isDescending) {
-            chapters.sortedBy { it.chapter.number }
-        } else {
-            chapters
-        }
-    }.asLiveDataDistinct(viewModelScope.coroutineContext + Dispatchers.Default)
+    }.asLiveDataDistinct(Dispatchers.Default)
 
     val isFavorite: LiveData<Boolean> = favoriteRepo
         .observeFavoriteState(manga.id)
@@ -100,10 +103,7 @@ class MangaDetailsViewModel(
     val readButtonState = mainChapters.map { chapters ->
         val enable = chapters.isNotEmpty()
         val chapter = chapters.firstOrNull { it.read }
-        val textId = if (chapter != null)
-            R.string.continue_reading
-        else
-            R.string.start_reading
+        val textId = if (chapter != null) R.string.continue_reading else R.string.start_reading
 
         Pair(enable, textId)
     }.asLiveDataDistinct(Dispatchers.Default, Pair(false, R.string.start_reading))
@@ -183,5 +183,9 @@ class MangaDetailsViewModel(
             .maxByOrNull { it.number } ?: chapters.first { it.number == 1 }
 
         toReaderEvent.setValue(lastReadChapter)
+    }
+
+    fun selectPage(pos: Int) {
+        onNewPageSelected.setValue(pos)
     }
 }

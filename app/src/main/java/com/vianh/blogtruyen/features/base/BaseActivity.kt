@@ -3,6 +3,7 @@ package com.vianh.blogtruyen.features.base
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.viewbinding.ViewBinding
 
 abstract class BaseActivity<B: ViewBinding>: AppCompatActivity() {
@@ -15,6 +16,8 @@ abstract class BaseActivity<B: ViewBinding>: AppCompatActivity() {
     }
 
     abstract fun createBinding(): B
+
+    fun canNavigateUp(): Boolean = supportFragmentManager.backStackEntryCount > 0
 
     fun hideSystemUI() {
         window.decorView.systemUiVisibility = flagHideSystemUI

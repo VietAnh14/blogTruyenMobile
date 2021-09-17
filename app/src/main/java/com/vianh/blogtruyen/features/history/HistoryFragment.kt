@@ -42,7 +42,7 @@ class HistoryFragment: BaseFragment<HistoryFragmentBinding>() {
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.history_toolbar_menu, menu)
         val searchView = menu.findItem(R.id.search_bar).actionView as SearchView
-
+        searchView.maxWidth = Int.MAX_VALUE
         searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean = false
 
@@ -55,21 +55,39 @@ class HistoryFragment: BaseFragment<HistoryFragmentBinding>() {
     }
 
     private fun setup() {
-        hostActivity?.setupToolbar(requireBinding.toolbar)
+        setupToolbar(requireBinding.toolbar)
         setHasOptionsMenu(true)
 
         with(requireBinding.contentRecycler) {
             setHasFixedSize(true)
             adapter = HistoryAdapter(viewModel).also { historyAdapter = it }
         }
+
+        with(requireBinding.toolbar) {
+            val searchView = menu.findItem(R.id.search_bar).actionView as SearchView
+
+            searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
+                override fun onQueryTextSubmit(query: String?): Boolean {
+                    searchView.clearFocus()
+                    return false
+                }
+
+                override fun onQueryTextChange(newText: String?): Boolean {
+                    viewModel.filterHistory(newText ?: return false)
+                    return false
+                }
+            })
+        }
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return if (item.itemId == R.id.clear_all) {
-            viewModel.clearAllHistory()
-            true
-        } else {
-            super.onOptionsItemSelected(item)
+    override fun onMenuItemClick(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.clear_all -> {
+                viewModel.clearAllHistory()
+                true
+            }
+
+            else -> super.onMenuItemClick(item)
         }
     }
 

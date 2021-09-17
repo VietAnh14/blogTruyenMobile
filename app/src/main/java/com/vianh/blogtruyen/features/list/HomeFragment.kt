@@ -5,18 +5,17 @@ import android.content.Context
 import android.os.Bundle
 import android.view.*
 import androidx.appcompat.widget.SearchView
-import androidx.lifecycle.lifecycleScope
 import com.vianh.blogtruyen.R
 import com.vianh.blogtruyen.databinding.HomeFragmentBinding
 import com.vianh.blogtruyen.features.base.BaseFragment
+import com.vianh.blogtruyen.features.base.list.ItemClick
+import com.vianh.blogtruyen.features.base.list.items.ListItem
 import com.vianh.blogtruyen.features.details.MangaDetailsFragment
 import com.vianh.blogtruyen.features.main.MainActivity
 import com.vianh.blogtruyen.utils.*
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class HomeFragment: BaseFragment<HomeFragmentBinding>(), MangaItemVH.MangaClick {
+class HomeFragment: BaseFragment<HomeFragmentBinding>(), ItemClick<MangaItem> {
     override fun createBinding(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -43,13 +42,12 @@ class HomeFragment: BaseFragment<HomeFragmentBinding>(), MangaItemVH.MangaClick 
         requireBinding.swipeRefreshLayout.isRefreshing = reload ?: false
     }
 
-    private fun onContentChange(mangaItems: List<MangaItem>) {
+    private fun onContentChange(mangaItems: List<ListItem>) {
         listAdapter?.submitList(mangaItems)
     }
 
     private fun setup() {
-        val homeActivity = activity as? MainActivity ?: return
-        homeActivity.setupToolbar(requireBinding.toolbar)
+        setupToolbar(requireBinding.toolbar)
 
         with(requireBinding.feedRecycler) {
             setHasFixedSize(true)
@@ -58,6 +56,11 @@ class HomeFragment: BaseFragment<HomeFragmentBinding>(), MangaItemVH.MangaClick 
             addOnScrollListener(ScrollLoadMore(2) {
                 viewModel.loadPage()
             })
+
+            val spanSizeLookup = DefaultSpanSizeLookup(this)
+            spanSizeLookup.addViewType(ListItem.SINGLE_ITEM)
+            spanSizeLookup.attachToParent()
+
         }
 
         requireBinding.swipeRefreshLayout.setOnRefreshListener {
@@ -85,21 +88,24 @@ class HomeFragment: BaseFragment<HomeFragmentBinding>(), MangaItemVH.MangaClick 
         }
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == R.id.refresh) {
-            lifecycleScope.launch {
+    override fun onMenuItemClick(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.refresh -> {
                 requireBinding.feedRecycler.scrollToPosition(0)
                 viewModel.loadPage(1)
+                true
             }
-            return true
+            else -> super.onMenuItemClick(item)
         }
-
-        return super.onOptionsItemSelected(item)
     }
 
-    override fun onMangaItemClick(mangaItem: MangaItem) {
+    override fun onClick(view: View, item: MangaItem) {
         val activity = activity as MainActivity
-        activity.changeFragment(MangaDetailsFragment.newInstance(mangaItem.manga), true)
+        activity.changeFragment(MangaDetailsFragment.newInstance(item.manga), true)
+    }
+
+    override fun onLongClick(view: View, item: MangaItem): Boolean {
+        return false
     }
 
     override fun onDestroyView() {

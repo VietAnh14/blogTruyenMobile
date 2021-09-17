@@ -1,17 +1,20 @@
-package com.vianh.blogtruyen.features.details.info
+package com.vianh.blogtruyen.features.details.info.adapter
 
 import android.annotation.SuppressLint
+import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.vianh.blogtruyen.R
+import com.vianh.blogtruyen.data.model.Chapter
 import com.vianh.blogtruyen.databinding.ChapterItemBinding
 import com.vianh.blogtruyen.features.download.DownloadState
-import com.vianh.blogtruyen.features.details.info.adapter.ChapterItem
 import com.vianh.blogtruyen.utils.getColorFromAttr
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import timber.log.Timber
+import android.util.TypedValue
+import com.vianh.blogtruyen.utils.typeValue
 
 class ChapterVH(
     val binding: ChapterItemBinding,
@@ -27,14 +30,27 @@ class ChapterVH(
             data?.let { clickListener.onChapterClick(it) }
         }
 
+        itemView.setOnLongClickListener {
+            data?.let { chapter ->
+                clickListener.onChapterLongClick(chapter, it, bindingAdapterPosition)
+            }
+            true
+        }
+
         binding.stateButton.setOnClickListener {
             onStateClick(clickListener)
         }
     }
 
-    @SuppressLint("ResourceType")
-    fun onBind(item: ChapterItem) {
+    fun onBind(item: ChapterItem, selectedChapters: Set<Chapter>) {
         data = item
+
+        if (selectedChapters.contains(item.chapter)) {
+            itemView.setBackgroundColor(itemView.context.typeValue(R.attr.colorControlHighlight).data)
+        } else {
+            itemView.setBackgroundResource(itemView.context.typeValue(R.attr.selectableItemBackground).resourceId)
+        }
+
         binding.chapterName.text = item.chapter.name
         val textColor = if (item.chapter.read) {
             itemView.context.getColorFromAttr(android.R.attr.colorControlNormal)
@@ -44,7 +60,7 @@ class ChapterVH(
         binding.chapterName.setTextColor(textColor)
 
         downloadJob = item.downloadState.onEach {
-            when(it) {
+            when (it) {
                 is DownloadState.NotDownloaded -> {
                     binding.stateButton.setImageResource(R.drawable.ic_file_download)
                 }
@@ -86,6 +102,7 @@ class ChapterVH(
 
     interface ChapterClick {
         fun onChapterClick(chapter: ChapterItem)
+        fun onChapterLongClick(chapter: ChapterItem, view: View, position: Int)
         fun onStateButtonClick(item: ChapterItem)
     }
 }

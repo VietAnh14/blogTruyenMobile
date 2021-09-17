@@ -1,9 +1,7 @@
 package com.vianh.blogtruyen.features.feed
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
@@ -11,8 +9,12 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.vianh.blogtruyen.R
 import com.vianh.blogtruyen.databinding.FeedFragmentBinding
 import com.vianh.blogtruyen.features.base.BaseFragment
+import com.vianh.blogtruyen.features.base.list.items.ListItem
 import com.vianh.blogtruyen.features.details.MangaDetailsFragment
+import com.vianh.blogtruyen.features.feed.list.NewFeedAdapter
+import com.vianh.blogtruyen.features.feed.list.NewFeedItem
 import com.vianh.blogtruyen.features.list.HomeFragment
+import com.vianh.blogtruyen.features.search.SearchFragment
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import java.util.concurrent.TimeUnit
 
@@ -45,7 +47,13 @@ class NewFeedFragment : BaseFragment<FeedFragmentBinding>(), SwipeRefreshLayout.
         with(requireBinding) {
             swipeRefreshLayout.setOnRefreshListener(this@NewFeedFragment)
 
-            pinStoriesRecycler.layoutManager = createLayoutManager()
+            pinStoriesRecycler.layoutManager = object: LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false) {
+                override fun checkLayoutParams(lp: RecyclerView.LayoutParams?): Boolean {
+                    lp?.width = (width * 0.85).toInt()
+                    return super.checkLayoutParams(lp)
+                }
+            }
+
             pinStoriesRecycler.adapter =
                 NewFeedAdapter(this@NewFeedFragment).also { pinAdapter = it }
             PagerSnapHelper().attachToRecyclerView(pinStoriesRecycler)
@@ -76,6 +84,22 @@ class NewFeedFragment : BaseFragment<FeedFragmentBinding>(), SwipeRefreshLayout.
                 layoutManager = createLayoutManager()
                 adapter = NewFeedAdapter(this@NewFeedFragment).also { historyAdapter = it }
             }
+        }
+
+        setupToolbar(requireBinding.toolbar)
+    }
+
+    override fun onMenuItemClick(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.search_bar -> {
+                hostActivity?.changeFragment(SearchFragment.newInstance(), true)
+                true
+            }
+            R.id.refresh -> {
+                viewModel.loadFeed()
+                true
+            }
+            else -> super.onMenuItemClick(item)
         }
     }
 
@@ -124,20 +148,20 @@ class NewFeedFragment : BaseFragment<FeedFragmentBinding>(), SwipeRefreshLayout.
         viewModel.error.observe(viewLifecycleOwner, { showToast(it.message) })
     }
 
-    private fun onContentChange(items: List<NewFeedItem>) {
+    private fun onContentChange(items: List<ListItem>) {
         pinAdapter?.submitList(items)
 
     }
 
-    private fun onHistoryChange(items: List<NewFeedItem>) {
+    private fun onHistoryChange(items: List<ListItem>) {
         historyAdapter?.submitList(items)
     }
 
-    private fun onNewUploadChange(items: List<NewFeedItem>) {
+    private fun onNewUploadChange(items: List<ListItem>) {
         updateAdapter?.submitList(items)
     }
 
-    private fun onNewStoriesChange(items: List<NewFeedItem>) {
+    private fun onNewStoriesChange(items: List<ListItem>) {
         newStoriesAdapter?.submitList(items)
     }
 
@@ -158,6 +182,14 @@ class NewFeedFragment : BaseFragment<FeedFragmentBinding>(), SwipeRefreshLayout.
 
     override fun onItemClick(item: NewFeedItem.MangaItem) {
         hostActivity?.changeFragment(MangaDetailsFragment.newInstance(item.item), true)
+    }
+
+    override fun onRetryClick() {
+        // Not supported
+    }
+
+    override fun onReload() {
+        // Not supported
     }
 
     override fun onDestroyView() {

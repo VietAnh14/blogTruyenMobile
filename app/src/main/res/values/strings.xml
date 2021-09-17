@@ -1,36 +1,38 @@
 <resources>
     <string name="app_name">Blogtruyen</string>
     <string name="lorem_5_sentences" translatable="false">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quam nulla porttitor massa id neque aliquam vestibulum. Posuere lorem ipsum dolor sit amet. Dignissim sodales ut eu sem. Nisl suscipit adipiscing bibendum est ultricies integer.</string>
-    <string name="mock_title">This is a title</string>
-    <string name="loading_image_content">Loading image content</string>
+    <string name="mock_title" translatable="false">This is a title</string>
+    <string name="loading_image_content" translatable="false">Loading image content</string>
+    <string name="media_image" translatable="false">Media image</string>
     <string name="subscribe">Subscribe</string>
-    <string name="media_image">Media image</string>
     <string name="home_menu">Home Page</string>
     <string name="history">History</string>
     <string name="bookmarks">Bookmarks</string>
     <string name="search">Search</string>
     <string name="search_hint">Search manga</string>
     <string name="manga_details">Manga details</string>
-    <string name="summary">Sơ lược</string>
-    <string name="chapter">Danh sách chương:</string>
-    <string name="chapter_header_title">%1$d chương</string>
-    <string name="comment">Bình luận</string>
-    <string name="add_to_favorite">Theo dõi</string>
-    <string name="manga_info">Thông tin</string>
-    <string name="search_by_google">Tìm kiếm trên google</string>
-    <string name="clear_all_history">Xóa toàn bộ lịch sử</string>
+    <string name="summary">Summary</string>
+    <string name="chapter">Chapter list:</string>
+    <string name="chapter_header_title">%1$d chapter</string>
+    <string name="comment">Comments</string>
+    <string name="manga_info">Info</string>
+    <string name="search_by_google">Google search</string>
+    <string name="clear_all_history">Clear all history</string>
     <string name="empty_history">Empty history</string>
     <string name="downloaded">Downloaded</string>
     <string name="sort_title">Sort</string>
-    <string name="show_more">Xem thêm</string>
-    <string name="recent_update">Vừa cập nhật</string>
-    <string name="new_stories">Truyện mới đăng</string>
-    <string name="continue_reading">Đọc tiếp</string>
-    <string name="start_reading">Bắt đầu đọc</string>
+    <string name="show_more">See more</string>
+    <string name="recent_update">Just updated</string>
+    <string name="new_stories">New stories</string>
+    <string name="continue_reading">Continue</string>
+    <string name="start_reading">Start reading</string>
     <string name="refresh">Refresh</string>
     <string name="next_chapter_guide">Release to go to next chapter</string>
-    <string name="end_chapter">End chapter, pull down to go to next chapter</string>
     <string name="pull_down_guild">End chapter, pull down to go to next chapter</string>
-    <string name="no_next_chapter">End chapter, no next chapter available</string>
     <string name="retry">Retry</string>
+    <string name="no_next_chapter">End chapter, no next chapter available</string>
+    <string name="select_all">Select all</string>
+    <string name="download">Download</string>
+    <string name="delete">Delete</string>
+    <string name="deleted_message">Manga \"%1$s\" has been deleted</string>
 </resources>

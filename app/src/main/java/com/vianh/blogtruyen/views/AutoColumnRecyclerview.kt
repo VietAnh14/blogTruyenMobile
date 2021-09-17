@@ -26,7 +26,7 @@ class AutoColumnRecyclerview @JvmOverloads constructor(
         super.onMeasure(widthSpec, heightSpec)
         if (columnWidth > 0) {
             val spanCount = max(1, measuredWidth/columnWidth)
-            (layoutManager as GridLayoutManager).spanCount = spanCount
+            (layoutManager as? GridLayoutManager)?.spanCount = spanCount
         }
     }
 }

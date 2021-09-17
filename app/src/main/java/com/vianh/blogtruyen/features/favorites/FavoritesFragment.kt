@@ -4,17 +4,18 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.vianh.blogtruyen.databinding.BookmarksFragmentBinding
+import com.vianh.blogtruyen.R
 import com.vianh.blogtruyen.databinding.HomeFragmentBinding
 import com.vianh.blogtruyen.features.base.BaseFragment
-import com.vianh.blogtruyen.features.list.MangaListAdapter
-import com.vianh.blogtruyen.features.list.MangaItem
-import com.vianh.blogtruyen.features.list.MangaItemVH
+import com.vianh.blogtruyen.features.base.list.ItemClick
+import com.vianh.blogtruyen.features.base.list.items.ListItem
 import com.vianh.blogtruyen.features.details.MangaDetailsFragment
+import com.vianh.blogtruyen.features.list.MangaItem
+import com.vianh.blogtruyen.features.list.MangaListAdapter
+import com.vianh.blogtruyen.utils.DefaultSpanSizeLookup
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class FavoritesFragment: BaseFragment<HomeFragmentBinding>(), MangaItemVH.MangaClick {
+class FavoritesFragment: BaseFragment<HomeFragmentBinding>(), ItemClick<MangaItem> {
     override fun createBinding(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -36,7 +37,7 @@ class FavoritesFragment: BaseFragment<HomeFragmentBinding>(), MangaItemVH.MangaC
         setHasOptionsMenu(true)
 
         with(requireBinding) {
-            hostActivity?.setupToolbar(toolbar)
+            setupToolbar(toolbar, getString(R.string.bookmarks))
 
             feedRecycler.apply {
                 setHasFixedSize(true)
@@ -44,6 +45,10 @@ class FavoritesFragment: BaseFragment<HomeFragmentBinding>(), MangaItemVH.MangaC
                     listAdapter = it
                 }
             }
+
+            val spanSizeLookup = DefaultSpanSizeLookup(feedRecycler)
+            spanSizeLookup.addViewType(ListItem.SINGLE_ITEM)
+            spanSizeLookup.attachToParent()
 
             swipeRefreshLayout.isEnabled = false
         }
@@ -55,14 +60,18 @@ class FavoritesFragment: BaseFragment<HomeFragmentBinding>(), MangaItemVH.MangaC
         }
     }
 
-    override fun onMangaItemClick(mangaItem: MangaItem) {
-        val detailsFragment = MangaDetailsFragment.newInstance(mangaItem.manga)
-        hostActivity?.changeFragment(detailsFragment, true)
-    }
-
     companion object {
         fun newInstance(): FavoritesFragment {
             return FavoritesFragment()
         }
+    }
+
+    override fun onClick(view: View, item: MangaItem) {
+        val detailsFragment = MangaDetailsFragment.newInstance(item.manga)
+        hostActivity?.changeFragment(detailsFragment, true)
+    }
+
+    override fun onLongClick(view: View, item: MangaItem): Boolean {
+        return false
     }
 }

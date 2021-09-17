@@ -1,16 +1,25 @@
 package com.vianh.blogtruyen.features.base.list
 
 import android.view.View
+import android.view.ViewGroup
+import androidx.annotation.LayoutRes
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import androidx.viewbinding.ViewBinding
+import com.vianh.blogtruyen.features.base.list.items.HasUniqueId
+import com.vianh.blogtruyen.features.base.list.items.ListItem
+import com.vianh.blogtruyen.utils.inflate
 import java.util.*
 
 // T: List data
 // E: Extra config
 @Suppress("UNCHECKED_CAST")
-abstract class AbstractViewHolder<T: ListItem, E>(itemView: View): RecyclerView.ViewHolder(itemView) {
+abstract class AbstractViewHolder<T : ListItem, E>(itemView: View) :
+    RecyclerView.ViewHolder(itemView) {
     var boundData: T? = null
+
+    constructor(@LayoutRes layoutRes: Int, parent: ViewGroup) : this(parent.inflate(layoutRes))
 
     fun requireData(): T = checkNotNull(boundData)
 
@@ -27,6 +36,15 @@ abstract class AbstractViewHolder<T: ListItem, E>(itemView: View): RecyclerView.
     open fun onAttachToWindow() = Unit
 
     open fun onDetachFromWindow() = Unit
+}
+
+@Suppress("UNCHECKED_CAST")
+abstract class AbstractBindingHolder<T : ListItem, E, B : ViewBinding>(
+    @LayoutRes layoutRes: Int,
+    parent: ViewGroup,
+    bindingFactory: (view: View) -> B
+) : AbstractViewHolder<T, E>(layoutRes, parent) {
+    val binding: B = bindingFactory.invoke(itemView)
 }
 
 

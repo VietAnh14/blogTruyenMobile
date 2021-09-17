@@ -50,4 +50,21 @@ class ParserUnitTest {
         println("${content/1024} kB")
         println("${mContent/1024} kB")
     }
+
+    @Test
+    fun testSearchHasFullPageResult() {
+        runBlocking {
+            val searchResults = blogtruyenProvider.searchByName("home", 1)
+            assertEquals(20, searchResults.size)
+        }
+    }
+
+
+    @Test
+    fun testSearchHasEmptyResult() {
+        runBlocking {
+            val searchResults = blogtruyenProvider.searchByName("some random search keywords", 1)
+            assertEquals(0, searchResults.size)
+        }
+    }
 }

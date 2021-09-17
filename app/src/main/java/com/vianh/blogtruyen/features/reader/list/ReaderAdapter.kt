@@ -3,17 +3,16 @@ package com.vianh.blogtruyen.features.reader.list
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.lifecycle.viewModelScope
-import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
-import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
 import com.vianh.blogtruyen.databinding.ErrorReaderItemBinding
 import com.vianh.blogtruyen.databinding.LoadingPageItemBinding
 import com.vianh.blogtruyen.databinding.MangaPageItemBinding
 import com.vianh.blogtruyen.databinding.TransitionPageBinding
-import com.vianh.blogtruyen.features.base.BaseViewHolder
 import com.vianh.blogtruyen.features.base.list.AbstractAdapter
 import com.vianh.blogtruyen.features.base.list.AbstractViewHolder
-import com.vianh.blogtruyen.features.base.list.ListItem
+import com.vianh.blogtruyen.features.base.list.commonVH.ErrorItemVH
+import com.vianh.blogtruyen.features.base.list.items.ListItem
+import com.vianh.blogtruyen.features.base.list.commonVH.LoadingItemVH
 import com.vianh.blogtruyen.features.reader.ReaderViewModel
 import com.vianh.blogtruyen.utils.await
 import kotlinx.coroutines.Job
@@ -22,12 +21,13 @@ import kotlinx.coroutines.launch
 class ReaderAdapter(
     private val requestManager: RequestManager,
     private val viewModel: ReaderViewModel,
-    private val tileSize: Int
-) : AbstractAdapter<ReaderItem, Unit>(Unit) {
+    private val tileSize: Int,
+    private val listener: ErrorItemVH.ErrorReloadClick
+) : AbstractAdapter<ListItem, Unit>(Unit) {
 
     private var preloadJob: Job? = null
 
-    fun setPages(pages: List<ReaderItem>) {
+    fun setPages(pages: List<ListItem>) {
         cancelImagePreloads()
 
         // Preload images
@@ -50,19 +50,15 @@ class ReaderAdapter(
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): AbstractViewHolder<out ReaderItem, Unit> {
+    ): AbstractViewHolder<out ListItem, Unit> {
         val inflater = LayoutInflater.from(parent.context)
         return when (viewType) {
-            ListItem.PAGE_ITEM -> {
+            ReaderItem.PAGE_ITEM -> {
                 val binding = MangaPageItemBinding.inflate(inflater, parent, false)
-                binding.page.setMaxTileSize(tileSize)
-                binding.page.setMinimumScaleType(SubsamplingScaleImageView.SCALE_TYPE_CENTER_CROP)
-                binding.page.setMinimumDpi(90)
-                binding.page.setMinimumTileDpi(180)
-                PageItemVH(binding, requestManager)
+                PageItemVH(binding, requestManager, tileSize)
             }
 
-            ListItem.TRANSITION_ITEM -> TransitionPageVH(
+            ReaderItem.TRANSITION_ITEM -> TransitionPageVH(
                 TransitionPageBinding.inflate(
                     inflater,
                     parent,
@@ -70,18 +66,9 @@ class ReaderAdapter(
                 ), viewModel
             )
 
-            ListItem.LOADING_ITEM -> LoadingItemVH(
-                LoadingPageItemBinding.inflate(
-                    inflater,
-                    parent,
-                    false
-                )
-            )
+            ListItem.LOADING_ITEM -> LoadingItemVH(parent)
 
-            ListItem.ERROR_TYPE -> ErrorVH(
-                ErrorReaderItemBinding.inflate(inflater, parent, false),
-                viewModel
-            )
+            ListItem.ERROR_ITEM -> ErrorItemVH(parent, listener)
 
             else -> throw IllegalArgumentException("Unknown view type $viewType")
         }

@@ -20,7 +20,7 @@ class ChapterHeaderAdapter(private val viewModel: MangaDetailsViewModel) : ListA
         holder.onBind(getItem(position))
     }
 
-    class DiffCallback() : DiffUtil.ItemCallback<HeaderItem>() {
+    class DiffCallback : DiffUtil.ItemCallback<HeaderItem>() {
         override fun areItemsTheSame(oldItem: HeaderItem, newItem: HeaderItem): Boolean {
             return newItem == oldItem
         }

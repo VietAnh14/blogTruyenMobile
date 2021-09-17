@@ -21,6 +21,8 @@ interface FavoriteRepository {
 
     suspend fun clearNewChapters(mangaId: Int)
 
+    fun getTotalNotificationCount(): Flow<Int>
+
     fun observeFavorite(): Flow<List<Favorite>>
 
     fun observeFavoriteState(mangaId: Int): Flow<Favorite?>
@@ -47,6 +49,10 @@ class FavoriteRepo(private val db: MangaDb) : FavoriteRepository {
                 .copy(newChapterCount = 0, currentChapterCount = currentChapterCount)
             db.favoriteDao.update(freshFavorite)
         }
+    }
+
+    override fun getTotalNotificationCount(): Flow<Int> {
+        return db.favoriteDao.getTotalNotification().map { it ?: 0 }
     }
 
     override fun observeFavorite(): Flow<List<Favorite>> {

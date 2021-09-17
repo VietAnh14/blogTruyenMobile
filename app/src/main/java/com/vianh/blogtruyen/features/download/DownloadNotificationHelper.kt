@@ -4,13 +4,12 @@ import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
-import android.graphics.drawable.BitmapDrawable
 import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import androidx.core.content.ContextCompat
 import com.vianh.blogtruyen.R
 import com.vianh.blogtruyen.data.model.Manga
+import com.vianh.blogtruyen.features.details.MangaDetailsFragment
 
 class DownloadNotificationHelper(private val context: Context) {
 
@@ -24,11 +23,10 @@ class DownloadNotificationHelper(private val context: Context) {
 
         return NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ID)
             .setSmallIcon(android.R.drawable.stat_sys_download)
-            .setLargeIcon((ContextCompat.getDrawable(context, R.drawable.lazy_corgi) as BitmapDrawable).bitmap)
             .setTicker(title)
             .setOnlyAlertOnce(true)
-            .setContentTitle(title)
-            .setContentText("Downloading")
+            .setContentTitle("Downloading")
+            .setContentText("Processing")
             .setProgress(100, 0, false)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             // Set the intent that will fire when the user taps the notification
@@ -36,10 +34,13 @@ class DownloadNotificationHelper(private val context: Context) {
             .setAutoCancel(false)
     }
 
-    fun sendDoneNotification(id: Int, title: String) {
+    fun sendDoneNotification(id: Int, manga: Manga) {
         builder.setProgress(0, 0, false)
-        builder.setContentText("Downloaded $title")
-        builder.setSmallIcon(android.R.drawable.stat_sys_download_done)
+            .setContentText("Downloaded ${manga.title}")
+            .setSmallIcon(android.R.drawable.stat_sys_download_done)
+            .setContentIntent(MangaDetailsFragment.getPendingIntent(context, manga, true))
+            .setAutoCancel(true)
+
         notificationManager.notify(id, builder.build())
     }
 
@@ -57,16 +58,16 @@ class DownloadNotificationHelper(private val context: Context) {
 
     companion object {
         const val NOTIFICATION_ID = 100
-        private const val CHANNEL_NAME = "DOWNLOAD CHANNEL"
-        private const val NOTIFICATION_CHANNEL_ID = "DOWNLOAD"
+        const val NOTIFICATION_CHANNEL_ID = "NOTIFICATION CHANNEL"
+        private const val CHANNEL_NAME = "BLOG NOTIFICATION"
 
         fun createNotificationChannel(context: Context) {
             // Create the NotificationChannel, but only on API 26+ because
             // the NotificationChannel class is new and not in the support library
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 val importance = NotificationManager.IMPORTANCE_DEFAULT
-                val channel =
-                    NotificationChannel(NOTIFICATION_CHANNEL_ID, CHANNEL_NAME, importance).apply {
+                val channel = NotificationChannel(NOTIFICATION_CHANNEL_ID, CHANNEL_NAME, importance)
+                    .apply {
                         description = "Blogtruyen download service"
                     }
                 // Register the channel with the system

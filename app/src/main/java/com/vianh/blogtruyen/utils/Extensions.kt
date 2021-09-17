@@ -3,16 +3,23 @@ package com.vianh.blogtruyen.utils
 import android.content.Context
 import android.util.TypedValue
 import android.view.Gravity
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.Interpolator
+import android.view.inputmethod.InputMethodManager
 import androidx.annotation.AttrRes
 import androidx.annotation.ColorInt
+import androidx.annotation.LayoutRes
+import androidx.core.content.ContextCompat
+import androidx.viewbinding.ViewBinding
 import com.bumptech.glide.RequestBuilder
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
+import com.vianh.blogtruyen.R
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.suspendCancellableCoroutine
 import okhttp3.Call
@@ -200,4 +207,27 @@ fun File.createDirs(): File {
 
 inline fun <T, R> Iterable<T>.mapToSet(transform: (T) -> R): Set<R> {
     return mapTo(HashSet<R>(), transform)
+}
+
+fun View.showSoftKeyBoard() {
+    val keyboard: InputMethodManager? = ContextCompat.getSystemService(context, InputMethodManager::class.java)
+    keyboard?.showSoftInput(this, 0)
+}
+
+fun View.hideSoftKeyboard() {
+    val keyboard: InputMethodManager? = ContextCompat.getSystemService(context, InputMethodManager::class.java)
+    keyboard?.hideSoftInputFromWindow(windowToken, 0)
+}
+
+inline fun ViewGroup.inflate(@LayoutRes layoutRes: Int): View {
+    return LayoutInflater.from(context).inflate(layoutRes, this, false)
+}
+
+inline fun <T : ViewBinding> ViewGroup.viewBinding(factory: (inflater: LayoutInflater, parent: ViewGroup, attachToParent: Boolean) -> T) =
+    factory(LayoutInflater.from(context), this, false)
+
+inline fun Context.typeValue(resId: Int): TypedValue {
+    val outValue = TypedValue()
+    this.theme.resolveAttribute(resId, outValue, true)
+    return outValue
 }
