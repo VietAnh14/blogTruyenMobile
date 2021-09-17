@@ -13,6 +13,7 @@ import androidx.annotation.AttrRes
 import androidx.annotation.ColorInt
 import androidx.annotation.LayoutRes
 import androidx.core.content.ContextCompat
+import androidx.viewbinding.ViewBinding
 import com.bumptech.glide.RequestBuilder
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
@@ -221,6 +222,9 @@ fun View.hideSoftKeyboard() {
 inline fun ViewGroup.inflate(@LayoutRes layoutRes: Int): View {
     return LayoutInflater.from(context).inflate(layoutRes, this, false)
 }
+
+inline fun <T : ViewBinding> ViewGroup.viewBinding(factory: (inflater: LayoutInflater, parent: ViewGroup, attachToParent: Boolean) -> T) =
+    factory(LayoutInflater.from(context), this, false)
 
 inline fun Context.typeValue(resId: Int): TypedValue {
     val outValue = TypedValue()

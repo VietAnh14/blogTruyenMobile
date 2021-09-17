@@ -33,7 +33,7 @@ class DownloadService : LifecycleService() {
         super.onStartCommand(intent, flags, startId)
         val downloadIntent: DownloadIntent? = intent?.extras?.getParcelable(DOWNLOAD_INTENT_KEY)
         if (downloadIntent == null) {
-            stopSelf()
+            stopSelf(startId)
             return START_NOT_STICKY
         }
 

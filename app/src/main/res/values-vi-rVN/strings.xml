@@ -31,4 +31,5 @@
     <string name="select_all">Chọn toàn bộ</string>
     <string name="download">Tải xuống</string>
     <string name="delete">Xóa</string>
+    <string name="deleted_message">Đã xóa manga \"%1$s\"</string>
 </resources>

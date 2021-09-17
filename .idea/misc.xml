@@ -57,6 +57,7 @@
         <entry key="app/src/main/res/menu/home_bottom_nav_menu.xml" value="0.23715277777777777" />
         <entry key="app/src/main/res/menu/home_toolbar_menu.xml" value="0.23715277777777777" />
         <entry key="app/src/main/res/menu/manga_details_menu.xml" value="0.23715277777777777" />
+        <entry key="app/src/main/res/menu/manga_popup_menu.xml" value="0.23715277777777777" />
         <entry key="app/src/main/res/menu/search_menu.xml" value="0.23715277777777777" />
       </map>
     </option>

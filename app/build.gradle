@@ -107,4 +107,6 @@ dependencies {
 
     // Logger
     implementation 'com.jakewharton.timber:timber:4.7.1'
+
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.7'
 }

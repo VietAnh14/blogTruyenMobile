@@ -6,6 +6,9 @@ import com.vianh.blogtruyen.data.DataManager
 import com.vianh.blogtruyen.data.model.Chapter
 import com.vianh.blogtruyen.data.model.Manga
 import com.vianh.blogtruyen.features.base.BaseVM
+import com.vianh.blogtruyen.features.base.list.items.ErrorItem
+import com.vianh.blogtruyen.features.base.list.items.ListItem
+import com.vianh.blogtruyen.features.base.list.items.LoadingItem
 import com.vianh.blogtruyen.features.local.LocalSourceRepo
 import com.vianh.blogtruyen.features.reader.list.ReaderItem
 import kotlinx.coroutines.CancellationException
@@ -27,8 +30,8 @@ class ReaderViewModel(
 
     private var loadPageJob: Job? = null
     private val currentChapter: MutableStateFlow<Chapter> = MutableStateFlow(chapter)
-    private val listItems: MutableStateFlow<List<ReaderItem>> =
-        MutableStateFlow(listOf(ReaderItem.LoadingItem))
+    private val listItems: MutableStateFlow<List<ListItem>> =
+        MutableStateFlow(listOf(LoadingItem))
 
     val uiState = combine(currentChapter, listItems) { chapter, items ->
         ReaderModel(manga, chapter, items)
@@ -43,7 +46,7 @@ class ReaderViewModel(
     fun loadPages() {
         loadPageJob?.cancel()
         loadPageJob = launchJob {
-            listItems.value = listOf(ReaderItem.LoadingItem)
+            listItems.value = listOf(LoadingItem)
             val chapter = currentChapter.value
             val pages = if (isOffline) {
                 localSourceRepo.loadPages(manga, chapter)
@@ -92,7 +95,7 @@ class ReaderViewModel(
         return CoroutineExceptionHandler { _, throwable ->
             if (throwable !is CancellationException) {
                 toast.call(throwable.message ?: "Unknown error")
-                listItems.value = listOf(ReaderItem.ErrorItem(throwable))
+                listItems.value = listOf(ErrorItem(throwable))
             }
         }
     }

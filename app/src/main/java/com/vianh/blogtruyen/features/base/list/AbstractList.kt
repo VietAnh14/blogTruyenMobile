@@ -7,6 +7,8 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
+import com.vianh.blogtruyen.features.base.list.items.HasUniqueId
+import com.vianh.blogtruyen.features.base.list.items.ListItem
 import com.vianh.blogtruyen.utils.inflate
 import java.util.*
 

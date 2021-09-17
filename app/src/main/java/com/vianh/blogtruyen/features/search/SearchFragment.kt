@@ -13,7 +13,7 @@ import com.vianh.blogtruyen.databinding.HomeFragmentBinding
 import com.vianh.blogtruyen.features.base.BaseFragment
 import com.vianh.blogtruyen.features.details.MangaDetailsFragment
 import com.vianh.blogtruyen.features.feed.list.NewFeedAdapter
-import com.vianh.blogtruyen.features.feed.NewFeedItem
+import com.vianh.blogtruyen.features.feed.list.NewFeedItem
 import com.vianh.blogtruyen.utils.ScrollLoadMore
 import com.vianh.blogtruyen.utils.hideSoftKeyboard
 import com.vianh.blogtruyen.utils.showSoftKeyBoard

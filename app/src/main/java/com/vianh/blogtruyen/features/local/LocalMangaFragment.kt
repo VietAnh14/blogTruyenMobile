@@ -1,21 +1,23 @@
 package com.vianh.blogtruyen.features.local
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import androidx.appcompat.widget.PopupMenu
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.vianh.blogtruyen.R
 import com.vianh.blogtruyen.databinding.HomeFragmentBinding
 import com.vianh.blogtruyen.features.base.BaseFragment
-import com.vianh.blogtruyen.features.list.MangaListAdapter
-import com.vianh.blogtruyen.features.list.MangaItem
-import com.vianh.blogtruyen.features.list.MangaItemVH
+import com.vianh.blogtruyen.features.base.list.ItemClick
+import com.vianh.blogtruyen.features.base.list.items.ListItem
 import com.vianh.blogtruyen.features.details.MangaDetailsFragment
+import com.vianh.blogtruyen.features.list.MangaItem
+import com.vianh.blogtruyen.features.list.MangaListAdapter
+import com.vianh.blogtruyen.utils.DefaultSpanSizeLookup
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class LocalMangaFragment : BaseFragment<HomeFragmentBinding>(),
-    SwipeRefreshLayout.OnRefreshListener, MangaItemVH.MangaClick {
+    SwipeRefreshLayout.OnRefreshListener, ItemClick<MangaItem> {
     override fun createBinding(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -33,14 +35,22 @@ class LocalMangaFragment : BaseFragment<HomeFragmentBinding>(),
         bindViewModel()
     }
 
+    override fun onDestroyView() {
+        adapter = null
+        super.onDestroyView()
+    }
+
     private fun setUpView() {
         with(requireBinding) {
             setupToolbar(toolbar, resources.getString(R.string.downloaded))
+            swipeRefreshLayout.setOnRefreshListener(this@LocalMangaFragment)
+
+            val spanSizeLookup = DefaultSpanSizeLookup(feedRecycler)
+            spanSizeLookup.addViewType(ListItem.SINGLE_ITEM)
+            spanSizeLookup.attachToParent()
 
             adapter = MangaListAdapter(this@LocalMangaFragment)
             feedRecycler.adapter = adapter
-
-            swipeRefreshLayout.setOnRefreshListener(this@LocalMangaFragment)
         }
     }
 
@@ -53,11 +63,34 @@ class LocalMangaFragment : BaseFragment<HomeFragmentBinding>(),
             adapter?.submitList(it)
         }
 
+        viewModel.deleteCompleteEvent.observe(viewLifecycleOwner) {
+            showToast(getString(R.string.deleted_message, it))
+            viewModel.loadMangaList()
+        }
+
         viewModel.error.observe(viewLifecycleOwner) { showToast(it.message) }
     }
 
-    override fun onMangaItemClick(mangaItem: MangaItem) {
-        hostActivity?.changeFragment(MangaDetailsFragment.newInstance(mangaItem.manga, true), true)
+    override fun onClick(view: View, item: MangaItem) {
+        hostActivity?.changeFragment(MangaDetailsFragment.newInstance(item.manga, true), true)
+    }
+
+    override fun onLongClick(view: View, item: MangaItem): Boolean {
+        val wrapper = ContextThemeWrapper(requireActivity(), R.style.PopupMenu)
+        val popUp = PopupMenu(wrapper, view)
+        popUp.inflate(R.menu.manga_popup_menu)
+        popUp.setOnMenuItemClickListener {
+            when (it.itemId) {
+                R.id.delete -> {
+                    viewModel.deleteLocalManga(item.manga)
+                    true
+                }
+
+                else -> false
+            }
+        }
+        popUp.show()
+        return true
     }
 
     override fun onRefresh() {

@@ -7,6 +7,7 @@ import androidx.core.view.updateLayoutParams
 import androidx.core.view.updatePadding
 import com.bumptech.glide.Glide
 import com.vianh.blogtruyen.databinding.ReaderFragmentBinding
+import com.vianh.blogtruyen.features.base.list.commonVH.ErrorItemVH
 import com.vianh.blogtruyen.features.reader.list.ReaderAdapter
 import com.vianh.blogtruyen.features.reader.list.TransitionPageVH
 import com.vianh.blogtruyen.utils.*
@@ -14,7 +15,7 @@ import com.vianh.blogtruyen.views.PinchRecyclerView
 import me.everything.android.ui.overscroll.OverScrollDecoratorHelper
 
 class ReaderDelegate(private val readerFragment: ReaderFragment, val viewModel: ReaderViewModel) :
-    PinchRecyclerView.ReaderCallBack {
+    PinchRecyclerView.ReaderCallBack, ErrorItemVH.ErrorReloadClick {
 
     private val binding: ReaderFragmentBinding
         get() = readerFragment.requireBinding
@@ -62,7 +63,7 @@ class ReaderDelegate(private val readerFragment: ReaderFragment, val viewModel: 
             }
 
             val requestManager = Glide.with(this)
-            readerAdapter = ReaderAdapter(requestManager, viewModel, tileSize)
+            readerAdapter = ReaderAdapter(requestManager, viewModel, tileSize, this@ReaderDelegate)
             adapter = readerAdapter
         }
     }
@@ -99,5 +100,9 @@ class ReaderDelegate(private val readerFragment: ReaderFragment, val viewModel: 
 
     fun cleanUp() {
         readerAdapter = null
+    }
+
+    override fun onReload() {
+        viewModel.loadPages()
     }
 }

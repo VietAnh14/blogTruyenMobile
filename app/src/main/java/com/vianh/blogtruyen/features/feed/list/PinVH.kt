@@ -6,7 +6,6 @@ import com.bumptech.glide.request.RequestOptions
 import com.vianh.blogtruyen.R
 import com.vianh.blogtruyen.databinding.PinnedItemBinding
 import com.vianh.blogtruyen.features.base.list.AbstractBindingHolder
-import com.vianh.blogtruyen.features.feed.NewFeedItem
 import com.vianh.blogtruyen.utils.loadNetWorkImage
 import jp.wasabeef.glide.transformations.BlurTransformation
 

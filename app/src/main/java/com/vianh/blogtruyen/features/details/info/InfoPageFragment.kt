@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.coroutineScope
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -90,7 +91,7 @@ class InfoPageFragment : BaseFragment<ChapterPageFragmentBinding>(), ChapterVH.C
     }
 
     private fun setup() {
-        chapterAdapter = ChapterAdapter(this, lifecycleScope)
+        chapterAdapter = ChapterAdapter(this, viewLifecycleOwner.lifecycleScope)
         headerAdapter = InfoHeaderAdapter(viewModel)
         chapterHeaderAdapter = ChapterHeaderAdapter(viewModel)
         with(requireBinding.chapterRecycler) {
@@ -156,8 +157,8 @@ class InfoPageFragment : BaseFragment<ChapterPageFragmentBinding>(), ChapterVH.C
 
             R.id.download -> {
                 val chapters = chapterAdapter?.selectedChapters ?: return true
-                cab?.destroy()
                 DownloadService.download(requireContext(), viewModel.currentManga, chapters.toList())
+                cab?.destroy()
                 true
             }
             else -> super.onMenuItemClick(item)
@@ -167,6 +168,7 @@ class InfoPageFragment : BaseFragment<ChapterPageFragmentBinding>(), ChapterVH.C
     override fun onDestroyView() {
         chapterAdapter = null
         headerAdapter = null
+        chapterHeaderAdapter = null
         super.onDestroyView()
     }
 

@@ -7,20 +7,22 @@ import com.vianh.blogtruyen.databinding.HistoryItemBinding
 import com.vianh.blogtruyen.databinding.TimeItemBinding
 import com.vianh.blogtruyen.features.base.list.AbstractAdapter
 import com.vianh.blogtruyen.features.base.list.AbstractViewHolder
+import com.vianh.blogtruyen.features.base.list.commonVH.EmptyFeedVH
+import com.vianh.blogtruyen.features.base.list.items.EmptyItem
+import com.vianh.blogtruyen.features.base.list.items.ListItem
 import com.vianh.blogtruyen.utils.loadNetWorkImage
 
 class HistoryAdapter(private val viewModel: HistoryViewModel) :
-    AbstractAdapter<HistoryListItem, Unit>(Unit) {
+    AbstractAdapter<ListItem, Unit>(Unit) {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): AbstractViewHolder<out HistoryListItem, Unit> {
-
+    ): AbstractViewHolder<out ListItem, Unit> {
         val inflater = LayoutInflater.from(parent.context)
         return when (viewType) {
             HistoryListItem.TIME_ITEM -> HistoryTimeViewHolder.create(inflater, parent)
             HistoryListItem.HISTORY_ITEM -> HistoryItemVH.create(inflater, parent, viewModel)
-            HistoryListItem.EMPTY_ITEM -> EmptyHistoryViewHolder.create(inflater, parent)
+            ListItem.EMPTY_ITEM -> EmptyFeedVH(parent)
             else -> throw IllegalStateException("Unknown view type $viewType")
         }
     }
@@ -65,19 +67,6 @@ class HistoryTimeViewHolder(private val binding: TimeItemBinding): AbstractViewH
     companion object {
         fun create(inflater: LayoutInflater, parent: ViewGroup): HistoryTimeViewHolder {
             return HistoryTimeViewHolder(TimeItemBinding.inflate(inflater, parent, false))
-        }
-    }
-}
-
-class EmptyHistoryViewHolder(private val binding: EmptyItemBinding): AbstractViewHolder<HistoryListItem.EmptyItem, Unit>(binding.root) {
-
-    override fun onBind(data: HistoryListItem.EmptyItem, extra: Unit) {
-
-    }
-
-    companion object {
-        fun create(inflater: LayoutInflater, parent: ViewGroup): EmptyHistoryViewHolder {
-            return EmptyHistoryViewHolder(EmptyItemBinding.inflate(inflater, parent, false))
         }
     }
 }

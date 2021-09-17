@@ -9,8 +9,10 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.vianh.blogtruyen.R
 import com.vianh.blogtruyen.databinding.FeedFragmentBinding
 import com.vianh.blogtruyen.features.base.BaseFragment
+import com.vianh.blogtruyen.features.base.list.items.ListItem
 import com.vianh.blogtruyen.features.details.MangaDetailsFragment
 import com.vianh.blogtruyen.features.feed.list.NewFeedAdapter
+import com.vianh.blogtruyen.features.feed.list.NewFeedItem
 import com.vianh.blogtruyen.features.list.HomeFragment
 import com.vianh.blogtruyen.features.search.SearchFragment
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
@@ -146,20 +148,20 @@ class NewFeedFragment : BaseFragment<FeedFragmentBinding>(), SwipeRefreshLayout.
         viewModel.error.observe(viewLifecycleOwner, { showToast(it.message) })
     }
 
-    private fun onContentChange(items: List<NewFeedItem>) {
+    private fun onContentChange(items: List<ListItem>) {
         pinAdapter?.submitList(items)
 
     }
 
-    private fun onHistoryChange(items: List<NewFeedItem>) {
+    private fun onHistoryChange(items: List<ListItem>) {
         historyAdapter?.submitList(items)
     }
 
-    private fun onNewUploadChange(items: List<NewFeedItem>) {
+    private fun onNewUploadChange(items: List<ListItem>) {
         updateAdapter?.submitList(items)
     }
 
-    private fun onNewStoriesChange(items: List<NewFeedItem>) {
+    private fun onNewStoriesChange(items: List<ListItem>) {
         newStoriesAdapter?.submitList(items)
     }
 

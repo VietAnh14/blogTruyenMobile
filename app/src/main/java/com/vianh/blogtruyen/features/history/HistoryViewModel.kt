@@ -6,6 +6,7 @@ import com.vianh.blogtruyen.data.DataManager
 import com.vianh.blogtruyen.data.model.History
 import com.vianh.blogtruyen.data.model.Manga
 import com.vianh.blogtruyen.features.base.BaseVM
+import com.vianh.blogtruyen.features.base.list.items.EmptyItem
 import com.vianh.blogtruyen.features.history.data.HistoryRepository
 import com.vianh.blogtruyen.utils.SingleLiveEvent
 import com.vianh.blogtruyen.utils.ifEmpty
@@ -24,12 +25,12 @@ class HistoryViewModel(private val historyRepository: HistoryRepository) : BaseV
 
     val content = combine(historyItems, query) { items, query -> filterItems(items, query) }
         .map { mapHistoryToListItem(it) }
-        .ifEmpty { listOf(HistoryListItem.EmptyItem) }
+        .ifEmpty { listOf(EmptyItem(message = "Empty history")) }
         .distinctUntilChanged()
         .catch {
             error.call(it)
             // TODO: EMIT ERROR ITEM
-            emit(listOf(HistoryListItem.EmptyItem))
+            emit(listOf(EmptyItem(message = "Empty history")))
         }.asLiveData(viewModelScope.coroutineContext + Dispatchers.Default)
 
     private fun filterItems(histories: List<History>, query: String): List<History> {

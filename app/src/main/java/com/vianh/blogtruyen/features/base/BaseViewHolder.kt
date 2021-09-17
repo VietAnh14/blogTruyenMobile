@@ -2,7 +2,7 @@ package com.vianh.blogtruyen.features.base
 
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
-import com.vianh.blogtruyen.features.base.list.ListItem
+import com.vianh.blogtruyen.features.base.list.items.ListItem
 
 @Deprecated(message = "Use abstract view holder", level = DeprecationLevel.WARNING)
 abstract class BaseViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

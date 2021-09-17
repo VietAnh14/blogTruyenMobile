@@ -34,4 +34,5 @@
     <string name="select_all">Select all</string>
     <string name="download">Download</string>
     <string name="delete">Delete</string>
+    <string name="deleted_message">Manga \"%1$s\" has been deleted</string>
 </resources>

@@ -4,7 +4,6 @@ import android.view.ViewGroup
 import com.vianh.blogtruyen.R
 import com.vianh.blogtruyen.databinding.MangaGridItemBinding
 import com.vianh.blogtruyen.features.base.list.AbstractBindingHolder
-import com.vianh.blogtruyen.features.feed.NewFeedItem
 import com.vianh.blogtruyen.utils.loadNetWorkImage
 
 class UpdateVH(parent: ViewGroup, itemClick: NewFeedAdapter.ItemClick) :

@@ -2,7 +2,8 @@ package com.vianh.blogtruyen.features.search
 
 import com.vianh.blogtruyen.data.remote.MangaProvider
 import com.vianh.blogtruyen.features.base.BaseVM
-import com.vianh.blogtruyen.features.feed.NewFeedItem
+import com.vianh.blogtruyen.features.base.list.items.*
+import com.vianh.blogtruyen.features.feed.list.NewFeedItem
 import com.vianh.blogtruyen.utils.asLiveDataDistinct
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -10,7 +11,7 @@ import kotlinx.coroutines.flow.combine
 import timber.log.Timber
 
 class SearchViewModel(private val provider: MangaProvider) : BaseVM() {
-    private val listContent = MutableStateFlow<List<NewFeedItem>>(emptyList())
+    private val listContent = MutableStateFlow<List<ListItem>>(emptyList())
     private val pageError = MutableStateFlow<Throwable?>(null)
     private val hasNextPage = MutableStateFlow(false)
 
@@ -18,16 +19,16 @@ class SearchViewModel(private val provider: MangaProvider) : BaseVM() {
         if (error != null) {
             val isFirstPage = newContents.getOrNull(0)?.viewType == NewFeedItem.LOADING_ITEM
             if (isFirstPage) {
-                return@combine listOf(NewFeedItem.ErrorItem(error))
+                return@combine listOf(ErrorItem(error))
             } else
-                return@combine newContents + NewFeedItem.ErrorFooter(error)
+                return@combine newContents + ErrorFooterItem(error)
         }
 
         if (newContents.isEmpty())
-            return@combine listOf(NewFeedItem.EmptyItem())
+            return@combine listOf(EmptyItem())
 
         if (hasNext)
-            return@combine newContents + NewFeedItem.LoadingFooter
+            return@combine newContents + LoadingFooterItem
 
         return@combine newContents
     }.asLiveDataDistinct(Dispatchers.Default)
@@ -43,7 +44,7 @@ class SearchViewModel(private val provider: MangaProvider) : BaseVM() {
         hasNextPage.value = false
         searchJob?.cancel()
         searchJob = launchLoading {
-            listContent.value = listOf(NewFeedItem.LoadingItem)
+            listContent.value = listOf(LoadingItem)
             pageNumber = 1
             search(query, 1)
         }
