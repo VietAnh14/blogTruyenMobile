@@ -1,5 +1,6 @@
 package com.vianh.blogtruyen.views
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
 import android.view.MotionEvent
@@ -9,6 +10,7 @@ class MangaPage @JvmOverloads constructor(context: Context, attributeSet: Attrib
     SubsamplingScaleImageView(context, attributeSet) {
 
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent): Boolean {
 //        return super.onTouchEvent(event)
         return false

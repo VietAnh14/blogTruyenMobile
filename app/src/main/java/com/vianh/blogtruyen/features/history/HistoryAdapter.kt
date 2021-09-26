@@ -8,6 +8,7 @@ import com.vianh.blogtruyen.databinding.TimeItemBinding
 import com.vianh.blogtruyen.features.base.list.AbstractAdapter
 import com.vianh.blogtruyen.features.base.list.AbstractViewHolder
 import com.vianh.blogtruyen.features.base.list.commonVH.EmptyFeedVH
+import com.vianh.blogtruyen.features.base.list.commonVH.LoadingItemVH
 import com.vianh.blogtruyen.features.base.list.items.EmptyItem
 import com.vianh.blogtruyen.features.base.list.items.ListItem
 import com.vianh.blogtruyen.utils.loadNetWorkImage
@@ -23,6 +24,7 @@ class HistoryAdapter(private val viewModel: HistoryViewModel) :
             HistoryListItem.TIME_ITEM -> HistoryTimeViewHolder.create(inflater, parent)
             HistoryListItem.HISTORY_ITEM -> HistoryItemVH.create(inflater, parent, viewModel)
             ListItem.EMPTY_ITEM -> EmptyFeedVH(parent)
+            ListItem.LOADING_ITEM -> LoadingItemVH(parent)
             else -> throw IllegalStateException("Unknown view type $viewType")
         }
     }

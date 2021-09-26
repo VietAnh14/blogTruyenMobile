@@ -1,11 +1,25 @@
 package com.vianh.blogtruyen.features.local
 
+import android.content.ContentValues
 import android.content.Context
+import android.graphics.Bitmap
+import android.os.Build
+import android.os.Environment
+import android.provider.MediaStore
+import android.webkit.URLUtil
+import android.widget.Toast
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.target.Target
 import com.vianh.blogtruyen.data.local.MangaDb
 import com.vianh.blogtruyen.data.local.entity.ChapterEntity
 import com.vianh.blogtruyen.data.model.Chapter
 import com.vianh.blogtruyen.data.model.Manga
+import com.vianh.blogtruyen.utils.await
 import com.vianh.blogtruyen.utils.toSafeFileName
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.File
 
 class LocalSourceRepo(private val context: Context, private val db: MangaDb) {

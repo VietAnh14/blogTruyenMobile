@@ -17,6 +17,7 @@ import com.vianh.blogtruyen.features.favorites.UpdateFavoriteWorker
 import com.vianh.blogtruyen.features.feed.NewFeedFragment
 import com.vianh.blogtruyen.features.history.HistoryFragment
 import com.vianh.blogtruyen.features.local.LocalMangaFragment
+import com.vianh.blogtruyen.utils.showToast
 import com.vianh.blogtruyen.views.ViewHeightAnimator
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
@@ -49,6 +50,8 @@ class MainActivity : BaseActivity<HomeActivityBinding>(), FragmentManager.OnBack
 
     private fun bindViewModel() {
         viewModel.notificationCount.observe(this, this::onNotificationCountChange)
+        viewModel.saveImageCompleteMessage.observe(this, this::showToast)
+        viewModel.error.observe(this, { showToast(it.message ?: "Unknown error") })
     }
 
     private fun onNotificationCountChange(num: Int) {

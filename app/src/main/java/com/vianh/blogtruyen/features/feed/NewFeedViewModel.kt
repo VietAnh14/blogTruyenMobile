@@ -8,6 +8,7 @@ import com.vianh.blogtruyen.features.base.BaseVM
 import com.vianh.blogtruyen.features.base.list.items.EmptyItem
 import com.vianh.blogtruyen.features.feed.list.NewFeedItem
 import com.vianh.blogtruyen.features.history.data.HistoryRepository
+import com.vianh.blogtruyen.features.list.MangaItem
 import com.vianh.blogtruyen.utils.ifEmpty
 import com.vianh.blogtruyen.utils.mapList
 import kotlinx.coroutines.Dispatchers
@@ -20,25 +21,25 @@ class NewFeedViewModel(private val provider: MangaProvider, historyRepository: H
 
     private val pinFlow = MutableStateFlow<List<Manga>>(emptyList())
     val pinItems = pinFlow
-        .mapList { NewFeedItem.MangaItem(it, NewFeedItem.PIN_ITEM) }
+        .mapList { MangaItem(it, NewFeedItem.PIN_ITEM) }
         .ifEmpty { listOf(EmptyItem()) }
         .asLiveData(Dispatchers.Default)
 
     private val updateFlow = MutableStateFlow<List<Manga>>(emptyList())
     val updateItems = updateFlow
-        .mapList { NewFeedItem.MangaItem(it, NewFeedItem.UPDATE_ITEM) }
+        .mapList { MangaItem(it, NewFeedItem.UPDATE_ITEM) }
         .ifEmpty { listOf(EmptyItem()) }
         .asLiveData(Dispatchers.Default)
 
     private val newStoriesFlow = MutableStateFlow<List<Manga>>(emptyList())
     val newStoriesItems = newStoriesFlow
-        .mapList { NewFeedItem.MangaItem(it, NewFeedItem.NEW_STORIES_ITEM) }
+        .mapList { MangaItem(it, NewFeedItem.NEW_STORIES_ITEM) }
         .ifEmpty { listOf(EmptyItem()) }
         .asLiveData(Dispatchers.Default)
 
     val historyItem = historyRepository.observeHistory()
         .map { it.take(10) }
-        .mapList { NewFeedItem.MangaItem(it.manga, NewFeedItem.HISTORY_ITEM) }
+        .mapList { MangaItem(it.manga, NewFeedItem.HISTORY_ITEM) }
         .ifEmpty { listOf(EmptyItem()) }
         .distinctUntilChanged()
         .asLiveData(viewModelScope.coroutineContext + Dispatchers.Main)

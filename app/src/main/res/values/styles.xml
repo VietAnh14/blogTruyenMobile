@@ -16,7 +16,7 @@
         <item name="colorControlNormal">@color/darkGray</item>
         <item name="android:navigationBarColor">@color/colorPrimary</item>
         <item name="actionMenuTextColor">@color/pureWhite</item>
-        <item name="android:popupMenuStyle">@style/PopupMenu</item>
+        <item name="popupTheme">@style/PopupMenu</item>
         <item name="android:textColor">@color/lightGray</item>
         <item name="searchViewStyle">@style/SearchViewTheme</item>
         <item name="android:textColorHint">@color/darkGray</item>

@@ -7,12 +7,12 @@ import com.vianh.blogtruyen.data.model.Manga
 import com.vianh.blogtruyen.features.details.MangaDetailsViewModel
 import com.vianh.blogtruyen.features.details.info.MangaInfoHeaderVH
 
-class InfoHeaderAdapter(private val viewModel: MangaDetailsViewModel): ListAdapter<Manga, MangaInfoHeaderVH>(
+class InfoHeaderAdapter(): ListAdapter<Manga, MangaInfoHeaderVH>(
     DiffCallBack()
 ) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MangaInfoHeaderVH {
-        return MangaInfoHeaderVH.newInstance(parent, viewModel)
+        return MangaInfoHeaderVH.newInstance(parent)
     }
 
     override fun onBindViewHolder(holder: MangaInfoHeaderVH, position: Int) {

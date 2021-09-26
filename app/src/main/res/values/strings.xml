@@ -28,11 +28,12 @@
     <string name="start_reading">Start reading</string>
     <string name="refresh">Refresh</string>
     <string name="next_chapter_guide">Release to go to next chapter</string>
-    <string name="pull_down_guild">End chapter, pull down to go to next chapter</string>
+    <string name="pull_down_guild">End chapter, scroll down to go to next chapter</string>
     <string name="retry">Retry</string>
     <string name="no_next_chapter">End chapter, no next chapter available</string>
     <string name="select_all">Select all</string>
     <string name="download">Download</string>
     <string name="delete">Delete</string>
     <string name="deleted_message">Manga \"%1$s\" has been deleted</string>
+    <string name="save_cover">Save cover</string>
 </resources>

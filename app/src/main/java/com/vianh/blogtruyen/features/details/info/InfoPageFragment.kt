@@ -92,7 +92,7 @@ class InfoPageFragment : BaseFragment<ChapterPageFragmentBinding>(), ChapterVH.C
 
     private fun setup() {
         chapterAdapter = ChapterAdapter(this, viewLifecycleOwner.lifecycleScope)
-        headerAdapter = InfoHeaderAdapter(viewModel)
+        headerAdapter = InfoHeaderAdapter()
         chapterHeaderAdapter = ChapterHeaderAdapter(viewModel)
         with(requireBinding.chapterRecycler) {
             itemAnimator = null
