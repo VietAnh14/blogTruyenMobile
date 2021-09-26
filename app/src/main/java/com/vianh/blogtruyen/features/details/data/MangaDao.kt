@@ -12,6 +12,7 @@ abstract class MangaDao: BaseDao<MangaEntity>() {
     @Query("SELECT * FROM manga WHERE mangaId = :id")
     abstract suspend fun getMangaById(id: Int): MangaEntity?
 
+    @Transaction
     @Query("SELECT * FROM manga WHERE mangaId = :id")
     abstract suspend fun getFullMangaById(id: Int): FullManga?
 

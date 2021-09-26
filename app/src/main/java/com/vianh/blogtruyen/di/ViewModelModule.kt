@@ -9,8 +9,8 @@ import org.koin.dsl.module
 
 val viewModelModule
     get() = module {
-        viewModel { MainViewModel(get()) }
-        viewModel { HomeViewModel(get()) }
+        viewModel { MainViewModel(get(), get()) }
+        viewModel { HomeViewModel(get(), get()) }
         viewModel { parameters -> ReaderViewModel(get(), get(), parameters[0], parameters[1], parameters[2]) }
         viewModel { NewFeedViewModel(get(), get()) }
     }

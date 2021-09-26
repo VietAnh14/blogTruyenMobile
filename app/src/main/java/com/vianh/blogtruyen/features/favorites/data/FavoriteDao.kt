@@ -15,9 +15,11 @@ abstract class FavoriteDao: BaseDao<FavoriteEntity>() {
     @Query("Delete from favorites where sourceMangaId = :mangaId")
     abstract suspend fun delete(mangaId: Int)
 
-    @Query("Select * from favorites")
+    @Transaction
+    @Query("Select * from favorites order by createdTime desc")
     abstract fun observeAll(): Flow<List<FavoriteWithManga>>
 
+    @Transaction
     @Query("Select * from favorites where sourceMangaId = :mangaId")
     abstract fun observeByMangaId(mangaId: Int): Flow<FavoriteWithManga?>
 

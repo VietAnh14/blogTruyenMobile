@@ -1,26 +1,12 @@
 package com.vianh.blogtruyen.utils
 
-import android.content.Context
-import android.util.TypedValue
-import android.view.Gravity
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.view.animation.AccelerateInterpolator
-import android.view.animation.Interpolator
-import android.view.inputmethod.InputMethodManager
-import androidx.annotation.AttrRes
-import androidx.annotation.ColorInt
-import androidx.annotation.LayoutRes
-import androidx.core.content.ContextCompat
-import androidx.viewbinding.ViewBinding
 import com.bumptech.glide.RequestBuilder
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
-import com.vianh.blogtruyen.R
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.awaitCancellation
 import kotlinx.coroutines.suspendCancellableCoroutine
 import okhttp3.Call
 import okhttp3.Callback
@@ -96,24 +82,6 @@ inline fun <T> cancelableCatching(block: () -> T): Result<T> {
     }
 }
 
-fun View.toggleState(direction: Int) {
-    if (visibility == View.GONE) {
-        visibility = View.VISIBLE
-        animate().setDuration(200).translationY(0f)
-    } else {
-        when (direction) {
-            Gravity.TOP -> animate().setDuration(200).translationY(-height.toFloat())
-                .withEndAction {
-                    visibility = View.GONE
-                }
-            Gravity.BOTTOM -> animate().setDuration(200).translationY(height.toFloat())
-                .withEndAction {
-                    visibility = View.GONE
-                }
-        }
-    }
-}
-
 suspend fun <T> RequestBuilder<T>.await(uri: String): T? {
     return suspendCoroutine {
         load(uri)
@@ -143,58 +111,6 @@ suspend fun <T> RequestBuilder<T>.await(uri: String): T? {
     }
 }
 
-fun View.gone() {
-    if (visibility != View.GONE) {
-        visibility = View.GONE
-    }
-}
-
-fun View.visible() {
-    if (visibility != View.VISIBLE) {
-        visibility = View.VISIBLE
-    }
-}
-
-fun View.invisible() {
-    if (visibility != View.INVISIBLE) {
-        visibility = View.INVISIBLE
-    }
-}
-
-fun View.slideDown(duration: Long = 400, interpolator: Interpolator = AccelerateInterpolator()) {
-    animate()
-        .translationY(height.toFloat())
-        .setInterpolator(interpolator)
-        .setDuration(duration)
-        .start()
-}
-
-fun View.slideUp(duration: Long = 400, interpolator: Interpolator = AccelerateInterpolator()) {
-    animate()
-        .translationY(height * -1f)
-        .setInterpolator(interpolator)
-        .setDuration(duration)
-        .start()
-}
-
-fun View.resetPos(duration: Long = 400, interpolator: Interpolator = AccelerateInterpolator()) {
-    animate()
-        .translationY(0f)
-        .setInterpolator(interpolator)
-        .setDuration(duration)
-        .start()
-}
-
-@ColorInt
-fun Context.getColorFromAttr(
-    @AttrRes attrColor: Int,
-    typedValue: TypedValue = TypedValue(),
-    resolveRefs: Boolean = true
-): Int {
-    theme.resolveAttribute(attrColor, typedValue, resolveRefs)
-    return typedValue.data
-}
-
 fun String.toSafeFileName(): String {
     return this.replace(Regex.fromLiteral("[^a-zA-Z0-9\\.\\-]"), "_")
 }
@@ -207,27 +123,4 @@ fun File.createDirs(): File {
 
 inline fun <T, R> Iterable<T>.mapToSet(transform: (T) -> R): Set<R> {
     return mapTo(HashSet<R>(), transform)
-}
-
-fun View.showSoftKeyBoard() {
-    val keyboard: InputMethodManager? = ContextCompat.getSystemService(context, InputMethodManager::class.java)
-    keyboard?.showSoftInput(this, 0)
-}
-
-fun View.hideSoftKeyboard() {
-    val keyboard: InputMethodManager? = ContextCompat.getSystemService(context, InputMethodManager::class.java)
-    keyboard?.hideSoftInputFromWindow(windowToken, 0)
-}
-
-inline fun ViewGroup.inflate(@LayoutRes layoutRes: Int): View {
-    return LayoutInflater.from(context).inflate(layoutRes, this, false)
-}
-
-inline fun <T : ViewBinding> ViewGroup.viewBinding(factory: (inflater: LayoutInflater, parent: ViewGroup, attachToParent: Boolean) -> T) =
-    factory(LayoutInflater.from(context), this, false)
-
-inline fun Context.typeValue(resId: Int): TypedValue {
-    val outValue = TypedValue()
-    this.theme.resolveAttribute(resId, outValue, true)
-    return outValue
 }

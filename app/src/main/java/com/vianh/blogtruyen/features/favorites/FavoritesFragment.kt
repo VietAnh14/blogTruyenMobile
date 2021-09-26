@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.SearchView
 import com.vianh.blogtruyen.R
 import com.vianh.blogtruyen.databinding.HomeFragmentBinding
 import com.vianh.blogtruyen.features.base.BaseFragment
@@ -15,7 +16,7 @@ import com.vianh.blogtruyen.features.list.MangaListAdapter
 import com.vianh.blogtruyen.utils.DefaultSpanSizeLookup
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class FavoritesFragment: BaseFragment<HomeFragmentBinding>(), ItemClick<MangaItem> {
+class FavoritesFragment: BaseFragment<HomeFragmentBinding>(), ItemClick<MangaItem>, SearchView.OnQueryTextListener {
     override fun createBinding(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -25,7 +26,7 @@ class FavoritesFragment: BaseFragment<HomeFragmentBinding>(), ItemClick<MangaIte
     }
 
     private val viewModel: FavoriteViewModel by viewModel()
-    private lateinit var listAdapter: MangaListAdapter
+    private var listAdapter: MangaListAdapter? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -33,11 +34,18 @@ class FavoritesFragment: BaseFragment<HomeFragmentBinding>(), ItemClick<MangaIte
         bindViewModel()
     }
 
+    override fun onDestroyView() {
+        listAdapter = null
+        super.onDestroyView()
+    }
+
     private fun setup() {
         setHasOptionsMenu(true)
 
         with(requireBinding) {
-            setupToolbar(toolbar, getString(R.string.bookmarks))
+            setupToolbar(toolbar, getString(R.string.bookmarks), R.menu.favorite_toolbar_menu)
+            val searchView = toolbar.menu.findItem(R.id.search_bar).actionView as SearchView
+            searchView.setOnQueryTextListener(this@FavoritesFragment)
 
             feedRecycler.apply {
                 setHasFixedSize(true)
@@ -47,7 +55,7 @@ class FavoritesFragment: BaseFragment<HomeFragmentBinding>(), ItemClick<MangaIte
             }
 
             val spanSizeLookup = DefaultSpanSizeLookup(feedRecycler)
-            spanSizeLookup.addViewType(ListItem.SINGLE_ITEM)
+            spanSizeLookup.addViewType(MangaItem.MANGA_GRID_ITEM)
             spanSizeLookup.attachToParent()
 
             swipeRefreshLayout.isEnabled = false
@@ -56,7 +64,7 @@ class FavoritesFragment: BaseFragment<HomeFragmentBinding>(), ItemClick<MangaIte
 
     private fun bindViewModel() {
         viewModel.content.observe(viewLifecycleOwner) {
-            listAdapter.submitList(it)
+            listAdapter?.submitList(it)
         }
     }
 
@@ -73,5 +81,14 @@ class FavoritesFragment: BaseFragment<HomeFragmentBinding>(), ItemClick<MangaIte
 
     override fun onLongClick(view: View, item: MangaItem): Boolean {
         return false
+    }
+
+    override fun onQueryTextSubmit(query: String?): Boolean {
+        return false
+    }
+
+    override fun onQueryTextChange(newText: String?): Boolean {
+        viewModel.filterFavorite(newText)
+        return true
     }
 }

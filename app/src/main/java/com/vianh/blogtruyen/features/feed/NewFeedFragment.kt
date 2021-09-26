@@ -14,12 +14,13 @@ import com.vianh.blogtruyen.features.details.MangaDetailsFragment
 import com.vianh.blogtruyen.features.feed.list.NewFeedAdapter
 import com.vianh.blogtruyen.features.feed.list.NewFeedItem
 import com.vianh.blogtruyen.features.list.HomeFragment
+import com.vianh.blogtruyen.features.list.MangaItem
 import com.vianh.blogtruyen.features.search.SearchFragment
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import java.util.concurrent.TimeUnit
 
 class NewFeedFragment : BaseFragment<FeedFragmentBinding>(), SwipeRefreshLayout.OnRefreshListener,
-    NewFeedAdapter.ItemClick {
+    NewFeedAdapter.Callbacks {
     override fun createBinding(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -86,7 +87,7 @@ class NewFeedFragment : BaseFragment<FeedFragmentBinding>(), SwipeRefreshLayout.
             }
         }
 
-        setupToolbar(requireBinding.toolbar)
+        setupToolbar(requireBinding.toolbar, menuId = R.menu.new_feed_menu)
     }
 
     override fun onMenuItemClick(item: MenuItem): Boolean {
@@ -180,16 +181,21 @@ class NewFeedFragment : BaseFragment<FeedFragmentBinding>(), SwipeRefreshLayout.
         }
     }
 
-    override fun onItemClick(item: NewFeedItem.MangaItem) {
-        hostActivity?.changeFragment(MangaDetailsFragment.newInstance(item.item), true)
-    }
-
     override fun onRetryClick() {
         // Not supported
     }
 
     override fun onReload() {
         // Not supported
+    }
+
+    override fun onClick(view: View, item: MangaItem) {
+        hostActivity?.changeFragment(MangaDetailsFragment.newInstance(item.manga), true)
+    }
+
+    override fun onLongClick(view: View, item: MangaItem): Boolean {
+        // Not supported
+        return false
     }
 
     override fun onDestroyView() {

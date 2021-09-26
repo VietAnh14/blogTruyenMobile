@@ -7,6 +7,8 @@ import com.vianh.blogtruyen.data.model.History
 import com.vianh.blogtruyen.data.model.Manga
 import com.vianh.blogtruyen.features.base.BaseVM
 import com.vianh.blogtruyen.features.base.list.items.EmptyItem
+import com.vianh.blogtruyen.features.base.list.items.ListItem
+import com.vianh.blogtruyen.features.base.list.items.LoadingItem
 import com.vianh.blogtruyen.features.history.data.HistoryRepository
 import com.vianh.blogtruyen.utils.SingleLiveEvent
 import com.vianh.blogtruyen.utils.ifEmpty
@@ -18,20 +20,21 @@ import java.util.*
 class HistoryViewModel(private val historyRepository: HistoryRepository) : BaseVM() {
 
     private val historyItems = historyRepository.observeHistory()
-
     private val query = MutableStateFlow("")
 
     val toInfoCommand = SingleLiveEvent<Manga>()
 
-    val content = combine(historyItems, query) { items, query -> filterItems(items, query) }
+    val content = combine(
+        historyItems,
+        // Debounce delay combine somehow, so we emit empty string on start
+        query.debounce(500).distinctUntilChanged()
+        .onStart { emit("") }
+    ) { items, query -> filterItems(items, query) }
         .map { mapHistoryToListItem(it) }
         .ifEmpty { listOf(EmptyItem(message = "Empty history")) }
+        .onStart { emit(listOf(LoadingItem)) }
         .distinctUntilChanged()
-        .catch {
-            error.call(it)
-            // TODO: EMIT ERROR ITEM
-            emit(listOf(EmptyItem(message = "Empty history")))
-        }.asLiveData(viewModelScope.coroutineContext + Dispatchers.Default)
+        .asLiveData(viewModelScope.coroutineContext + Dispatchers.Default)
 
     private fun filterItems(histories: List<History>, query: String): List<History> {
         return if (query.isBlank())

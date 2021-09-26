@@ -5,11 +5,11 @@ import com.vianh.blogtruyen.features.base.list.items.HasUniqueId
 import com.vianh.blogtruyen.features.base.list.items.ListItem
 
 sealed class NewFeedItem: ListItem {
-    data class MangaItem(val item: Manga, override val viewType: Int): NewFeedItem(),
-        HasUniqueId<Int> {
-        override val id: Int
-            get() = item.id
-    }
+//    data class MangaItem(val item: Manga, override val viewType: Int): NewFeedItem(),
+//        HasUniqueId<Int> {
+//        override val id: Int
+//            get() = item.id
+//    }
 
     companion object {
         val PIN_ITEM = ListItem.getNextViewType()

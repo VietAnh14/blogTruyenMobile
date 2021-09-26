@@ -4,6 +4,7 @@ import com.vianh.blogtruyen.data.remote.MangaProvider
 import com.vianh.blogtruyen.features.base.BaseVM
 import com.vianh.blogtruyen.features.base.list.items.*
 import com.vianh.blogtruyen.features.feed.list.NewFeedItem
+import com.vianh.blogtruyen.features.list.MangaItem
 import com.vianh.blogtruyen.utils.asLiveDataDistinct
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -66,7 +67,7 @@ class SearchViewModel(private val provider: MangaProvider) : BaseVM() {
             return
 
         val searchResult = provider.searchByName(query, index).map {
-            NewFeedItem.MangaItem(it, NewFeedItem.DETAILS_ITEM)
+            MangaItem(it, NewFeedItem.DETAILS_ITEM)
         }
 
         hasNextPage.value = searchResult.isNotEmpty()

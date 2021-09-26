@@ -7,13 +7,9 @@ import com.google.android.material.chip.Chip
 import com.vianh.blogtruyen.data.model.Manga
 import com.vianh.blogtruyen.databinding.ChipItemBinding
 import com.vianh.blogtruyen.databinding.MangaInfoItemBinding
-import com.vianh.blogtruyen.features.details.MangaDetailsViewModel
 import com.vianh.blogtruyen.utils.loadNetWorkImage
 
-class MangaInfoHeaderVH(
-    private val binding: MangaInfoItemBinding,
-    private val viewModel: MangaDetailsViewModel
-) : RecyclerView.ViewHolder(binding.root) {
+class MangaInfoHeaderVH(private val binding: MangaInfoItemBinding) : RecyclerView.ViewHolder(binding.root) {
     init {
 
     }
@@ -40,10 +36,10 @@ class MangaInfoHeaderVH(
     }
 
     companion object {
-        fun newInstance(parent: ViewGroup, viewModel: MangaDetailsViewModel): MangaInfoHeaderVH {
+        fun newInstance(parent: ViewGroup): MangaInfoHeaderVH {
             val binding = MangaInfoItemBinding
                 .inflate(LayoutInflater.from(parent.context), parent, false)
-            return MangaInfoHeaderVH(binding, viewModel)
+            return MangaInfoHeaderVH(binding)
         }
     }
 }

@@ -12,6 +12,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
+import com.vianh.blogtruyen.R
 import com.vianh.blogtruyen.features.main.MainActivity
 
 abstract class BaseFragment<B : ViewBinding> : Fragment(), OnApplyWindowInsetsListener,
@@ -79,6 +80,7 @@ abstract class BaseFragment<B : ViewBinding> : Fragment(), OnApplyWindowInsetsLi
             )
         }
 
+        toolbar.popupTheme = R.style.PopupMenu
         toolbar.setOnMenuItemClickListener(this)
         toolbar.setNavigationOnClickListener {
             activity?.onBackPressed()

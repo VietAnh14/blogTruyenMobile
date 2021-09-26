@@ -82,7 +82,7 @@ class UpdateFavoriteWorker(context: Context, workerParameters: WorkerParameters)
         }
 
         if (newUpdateCount > 0) {
-            return "$newUpdateCount mangas got new updates"
+            return "$newUpdateCount manga got new updates"
         }
         return null
     }

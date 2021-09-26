@@ -1,19 +1,16 @@
 package com.vianh.blogtruyen.utils
 
+import android.content.ContentResolver
+import android.content.ContentValues
 import android.content.Context
+import android.graphics.Bitmap
 import android.graphics.Color
-import android.graphics.drawable.Drawable
 import android.net.Uri
+import android.os.Build
+import android.os.Environment
+import android.provider.MediaStore
 import android.view.View
 import android.view.Window
-import android.widget.ImageView
-import com.bumptech.glide.GenericTransitionOptions
-import com.bumptech.glide.Glide
-import com.bumptech.glide.RequestBuilder
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
-import com.bumptech.glide.request.transition.DrawableCrossFadeFactory
-import com.vianh.blogtruyen.BuildConfig
-import com.vianh.blogtruyen.R
 import com.vianh.blogtruyen.data.remote.BlogtruyenProvider
 import okhttp3.Interceptor
 import okhttp3.Response
@@ -32,7 +29,7 @@ fun getDeviceWidth(context: Context): Int {
     return context.resources.displayMetrics.widthPixels
 }
 
-class BlogTruyenInterceptor: Interceptor {
+class BlogTruyenInterceptor : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request()
         if (request.header("Referer") != null) {
@@ -120,9 +117,41 @@ fun getMimeType(uri: Uri, context: Context): String? {
     return context.contentResolver.getType(uri)?.lowercase(Locale.ENGLISH)
 }
 
-inline fun ImageView.loadNetWorkImage(url: String) {
-    Glide.with(context)
-        .load(url)
-        .transition(GenericTransitionOptions.with(android.R.anim.fade_in))
-        .into(this)
+fun saveImageToGalley(name: String, image: Bitmap, resolver: ContentResolver): Uri? {
+    val imageCollection = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+        MediaStore.Images.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY)
+    } else {
+        MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+    }
+
+    val coverDetails = ContentValues().apply {
+        put(MediaStore.MediaColumns.DISPLAY_NAME, name.toSafeFileName())
+        put(MediaStore.MediaColumns.MIME_TYPE, "image/png")
+        put(MediaStore.MediaColumns.DATE_ADDED, System.currentTimeMillis())
+        put(MediaStore.MediaColumns.DATE_MODIFIED, System.currentTimeMillis())
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_PICTURES)
+            put(MediaStore.Images.Media.IS_PENDING, 1)
+        }
+    }
+
+    var uri: Uri? = null
+    try {
+        uri = resolver.insert(imageCollection, coverDetails) ?: return null
+        val ops = resolver.openOutputStream(uri)
+        image.compress(Bitmap.CompressFormat.PNG, 100, ops)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            coverDetails.clear()
+            coverDetails.put(MediaStore.Images.Media.IS_PENDING, 0)
+            resolver.update(uri, coverDetails, null, null)
+        }
+    } catch (e: Exception) {
+        Timber.e(e)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            uri?.let { resolver.delete(it, null, null) }
+        }
+    }
+
+    return uri
 }

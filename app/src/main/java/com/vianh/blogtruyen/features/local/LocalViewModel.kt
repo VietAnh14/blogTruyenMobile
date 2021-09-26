@@ -17,7 +17,7 @@ class LocalViewModel(private val localRepo: LocalSourceRepo): BaseVM() {
     val deleteCompleteEvent = SingleLiveEvent<String>()
     private val content = MutableStateFlow<List<Manga>>(listOf())
     val mangaContent = content
-        .mapList { MangaItem(it) }
+        .mapList { MangaItem(it, MangaItem.MANGA_GRID_ITEM) }
         .ifEmpty { listOf(EmptyItem(message = "Empty downloaded manga")) }
         .asLiveData(viewModelScope.coroutineContext + Dispatchers.Default)
 

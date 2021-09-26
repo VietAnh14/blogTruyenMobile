@@ -1,6 +1,7 @@
 package com.vianh.blogtruyen
 
 import android.app.Application
+import com.vianh.blogtruyen.data.prefs.prefsModule
 import com.vianh.blogtruyen.di.appModule
 import com.vianh.blogtruyen.di.viewModelModule
 import com.vianh.blogtruyen.features.download.DownloadNotificationHelper
@@ -24,6 +25,7 @@ class BlogApp: Application() {
         startKoin {
             androidContext(this@BlogApp)
             modules(
+                prefsModule,
                 appModule,
                 viewModelModule,
                 historyModule,

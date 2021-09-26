@@ -14,6 +14,12 @@ import kotlin.system.measureTimeMillis
  * See [testing documentation](http://d.android.com/tools/testing).
  */
 class ExampleUnitTest {
+
+    val exHandler = CoroutineExceptionHandler { coroutineContext, throwable ->
+        println("Coroutine handler catch an exception ${throwable.message}")
+    }
+    val scope = CoroutineScope(Dispatchers.IO)
+
     @Test
     fun addition_isCorrect() {
         assertEquals(4, 2 + 2)
@@ -21,11 +27,13 @@ class ExampleUnitTest {
 
     suspend fun doSomethingUsefulOne(): Int {
         delay(1000L) // pretend we are doing something useful here
+        throw IllegalArgumentException("Oops got an exception here!!!")
         return 13
     }
 
     suspend fun doSomethingUsefulTwo(): Int {
-        delay(1000L) // pretend we are doing something useful here, too
+        delay(2000L) // pretend we are doing something useful here, too
+        println("Done 2")
         return 29
     }
 
@@ -46,13 +54,37 @@ class ExampleUnitTest {
     }
 
     // The result type of somethingUsefulOneAsync is Deferred<Int>
-    fun somethingUsefulOneAsync() = GlobalScope.async {
+    fun somethingUsefulOneAsync() = scope.async {
         doSomethingUsefulOne()
     }
 
     // The result type of somethingUsefulTwoAsync is Deferred<Int>
-    fun somethingUsefulTwoAsync() = GlobalScope.async {
+    fun somethingUsefulTwoAsync() = scope.async {
         doSomethingUsefulTwo()
+    }
+
+    // Async in root scope throw exception normally
+    // Async in launch throw exception event when we catch them
+    // Using coroutineScope and it throw exception normally cause coroutine scope cancel all child
+    // and rethrow any exceptions
+    // Or we could use withContext block and it fail as expected
+    @Test
+    fun testException() {
+        val job = scope.launch(exHandler) {
+            println("Run test")
+            try {
+                supervisorScope {
+                    launch { doSomethingUsefulTwo() }
+                    launch { doSomethingUsefulOne() }
+                    println("I'm still alive")
+                }
+            } catch (e: Exception) {
+                println("I'm dead by now ${e.message}")
+            }
+        }
+        runBlocking {
+            job.join()
+        }
     }
 
     @Test

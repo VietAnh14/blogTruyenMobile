@@ -14,12 +14,13 @@ import com.vianh.blogtruyen.features.base.BaseFragment
 import com.vianh.blogtruyen.features.details.MangaDetailsFragment
 import com.vianh.blogtruyen.features.feed.list.NewFeedAdapter
 import com.vianh.blogtruyen.features.feed.list.NewFeedItem
+import com.vianh.blogtruyen.features.list.MangaItem
 import com.vianh.blogtruyen.utils.ScrollLoadMore
 import com.vianh.blogtruyen.utils.hideSoftKeyboard
 import com.vianh.blogtruyen.utils.showSoftKeyBoard
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class SearchFragment: BaseFragment<HomeFragmentBinding>(), SearchView.OnQueryTextListener, NewFeedAdapter.ItemClick {
+class SearchFragment: BaseFragment<HomeFragmentBinding>(), SearchView.OnQueryTextListener, NewFeedAdapter.Callbacks {
     override fun createBinding(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -99,16 +100,20 @@ class SearchFragment: BaseFragment<HomeFragmentBinding>(), SearchView.OnQueryTex
         return false
     }
 
-    override fun onItemClick(item: NewFeedItem.MangaItem) {
-        hostActivity?.changeFragment(MangaDetailsFragment.newInstance(item.item, false), true)
-    }
-
     override fun onRetryClick() {
         viewModel.loadMore(findSearchView().query?.toString())
     }
 
     override fun onReload() {
         viewModel.search(findSearchView().query?.toString())
+    }
+
+    override fun onClick(view: View, item: MangaItem) {
+        hostActivity?.changeFragment(MangaDetailsFragment.newInstance(item.manga, false), true)
+    }
+
+    override fun onLongClick(view: View, item: MangaItem): Boolean {
+        return false
     }
 
     override fun onDestroyView() {

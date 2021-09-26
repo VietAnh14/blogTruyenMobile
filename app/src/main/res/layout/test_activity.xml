@@ -1,38 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
-    <com.google.android.material.appbar.AppBarLayout
-        app:liftOnScroll="true"
-        android:fitsSystemWindows="true"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/topAppBar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            app:layout_scrollFlags="scroll|enterAlways|snap"
-            app:title="App name"
-            app:menu="@menu/search_menu"
-            style="@style/Widget.MaterialComponents.Toolbar.Primary" />
-
-    </com.google.android.material.appbar.AppBarLayout>
+    android:layout_height="match_parent">
 
     <!-- Note: A RecyclerView can also be used -->
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:paddingTop="100dp"
+        android:clipToPadding="false"
+        android:layout_marginTop="10dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
         <androidx.appcompat.widget.LinearLayoutCompat
-            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="800dp">
-            <include layout="@layout/manga_info_item" />
-            <include layout="@layout/manga_info_item" />
-            <include layout="@layout/manga_info_item" />
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <include layout="@layout/manga_info_item"/>
+            <include layout="@layout/manga_info_item"/>
+            <include layout="@layout/manga_info_item"/>
+            <include layout="@layout/manga_info_item"/>
+            <include layout="@layout/manga_info_item"/>
+            <include layout="@layout/manga_info_item"/>
+            <include layout="@layout/manga_info_item"/>
+            <include layout="@layout/manga_info_item"/>
+            <include layout="@layout/manga_info_item"/>
+            <include layout="@layout/manga_info_item"/>
         </androidx.appcompat.widget.LinearLayoutCompat>
     </androidx.core.widget.NestedScrollView>
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appbar"
+        android:fitsSystemWindows="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:liftOnScroll="true">
+
+        <com.google.android.material.appbar.CollapsingToolbarLayout
+            android:fitsSystemWindows="true"
+            android:id="@+id/collapsing_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_scrollFlags="scroll|enterAlwaysCollapsed"
+            app:titleEnabled="false">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/coverImage"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:scaleType="centerCrop"
+                app:srcCompat="@drawable/lazy_corgi" />
+
+            <View
+                android:id="@+id/scrim"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/info_header_gradient"
+                android:rotation="180" />
+
+            <TextView
+                android:id="@+id/header"
+                android:text="@string/lorem_5_sentences"
+                android:minHeight="0dp"
+                android:layout_gravity="top"
+                android:layout_marginTop="300dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/topAppBar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="@android:color/transparent"
+                app:layoutDescription="@xml/test_activity_scene"
+                app:menu="@menu/search_menu"
+                app:title="App name" />
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
+    </com.google.android.material.appbar.AppBarLayout>
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
