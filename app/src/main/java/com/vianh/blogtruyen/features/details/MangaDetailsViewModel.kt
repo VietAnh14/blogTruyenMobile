@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
+import com.vianh.blogtruyen.BuildConfig
 import com.vianh.blogtruyen.R
 import com.vianh.blogtruyen.data.model.Chapter
 import com.vianh.blogtruyen.data.model.Comment
@@ -188,4 +189,12 @@ class MangaDetailsViewModel(
     fun selectPage(pos: Int) {
         onNewPageSelected.setValue(pos)
     }
+
+    fun getMangaUrl(): String {
+        return BuildConfig.HOST + manga.value?.link.orEmpty()
+    }
+
+
+    // Keep scroll state
+    var lastScroll = -1f
 }

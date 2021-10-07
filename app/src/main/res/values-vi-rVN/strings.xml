@@ -6,7 +6,7 @@
     <string name="chapter_header_title">%1$d chương</string>
     <string name="comment">Bình luận</string>
     <string name="manga_info">Thông tin</string>
-    <string name="search_by_google">Tìm kiếm trên google</string>
+    <string name="open_with_webview">Mở trong web</string>
     <string name="clear_all_history">Xóa toàn bộ lịch sử</string>
     <string name="show_more">Xem thêm</string>
     <string name="recent_update">Vừa cập nhật</string>

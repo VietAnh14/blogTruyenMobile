@@ -80,6 +80,7 @@ dependencies {
 
     // Network
     implementation "com.squareup.okhttp3:okhttp:4.9.1"
+    implementation "androidx.browser:browser:1.3.0"
 
     // Html parser
     implementation 'org.jsoup:jsoup:1.14.1'

@@ -60,7 +60,7 @@
         android:drawableTop="@drawable/ic_global"
         android:focusable="true"
         android:padding="5dp"
-        android:text="@string/search_by_google"
+        android:text="@string/open_with_webview"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/action_follow"
         app:layout_constraintHorizontal_bias="0.5"

@@ -16,7 +16,7 @@
     <string name="chapter_header_title">%1$d chapter</string>
     <string name="comment">Comments</string>
     <string name="manga_info">Info</string>
-    <string name="search_by_google">Google search</string>
+    <string name="open_with_webview">Open page</string>
     <string name="clear_all_history">Clear all history</string>
     <string name="empty_history">Empty history</string>
     <string name="downloaded">Downloaded</string>

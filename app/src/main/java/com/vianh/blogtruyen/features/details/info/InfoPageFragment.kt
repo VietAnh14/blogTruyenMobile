@@ -1,5 +1,6 @@
 package com.vianh.blogtruyen.features.details.info
 
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.MenuItem
@@ -24,6 +25,10 @@ import com.vianh.blogtruyen.features.details.info.adapter.*
 import com.vianh.blogtruyen.features.reader.ReaderFragment
 import org.koin.androidx.viewmodel.ext.android.getViewModel
 import timber.log.Timber
+import androidx.browser.customtabs.CustomTabsIntent
+import androidx.browser.customtabs.CustomTabColorSchemeParams
+import androidx.core.content.ContextCompat
+
 
 class InfoPageFragment : BaseFragment<ChapterPageFragmentBinding>(), ChapterVH.ChapterClick,
     SwipeRefreshLayout.OnRefreshListener {
@@ -108,6 +113,22 @@ class InfoPageFragment : BaseFragment<ChapterPageFragmentBinding>(), ChapterVH.C
 
             actionFollow.setOnClickListener {
                 viewModel.toggleFavorite()
+            }
+
+            actionWebview.setOnClickListener {
+                val builder = CustomTabsIntent.Builder()
+                val toolbarColor = ContextCompat.getColor(requireContext(), R.color.colorPrimary)
+                val secondaryColor = ContextCompat.getColor(requireContext(), R.color.colorAccent)
+
+                val defaultColors = CustomTabColorSchemeParams.Builder()
+                    .setSecondaryToolbarColor(secondaryColor)
+                    .setToolbarColor(toolbarColor)
+                    .build()
+
+                val customTabsIntent = builder
+                    .setDefaultColorSchemeParams(defaultColors)
+                    .build()
+                customTabsIntent.launchUrl(requireContext(), Uri.parse(viewModel.getMangaUrl()))
             }
         }
 

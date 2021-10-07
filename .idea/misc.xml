@@ -10,6 +10,7 @@
         <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.24791666666666667" />
         <entry key="app/src/main/res/drawable/btn_state_list.xml" value="0.24791666666666667" />
         <entry key="app/src/main/res/drawable/divider_bg.xml" value="0.24791666666666667" />
+        <entry key="app/src/main/res/drawable/follow_btn_state.xml" value="0.24791666666666667" />
         <entry key="app/src/main/res/drawable/ic_broken_image.xml" value="0.24791666666666667" />
         <entry key="app/src/main/res/drawable/ic_clear_all.xml" value="0.24791666666666667" />
         <entry key="app/src/main/res/drawable/ic_delete.xml" value="0.24791666666666667" />
@@ -25,8 +26,10 @@
         <entry key="app/src/main/res/drawable/round_corners_bg.xml" value="0.24791666666666667" />
         <entry key="app/src/main/res/layout/bookmarks_fragment.xml" value="0.25" />
         <entry key="app/src/main/res/layout/category_view.xml" value="0.23715277777777777" />
+        <entry key="app/src/main/res/layout/chapter_header_item.xml" value="0.23715277777777777" />
         <entry key="app/src/main/res/layout/chapter_item.xml" value="0.25" />
-        <entry key="app/src/main/res/layout/chapter_page_fragment.xml" value="0.22" />
+        <entry key="app/src/main/res/layout/chapter_page_fragment.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/chip_item.xml" value="0.23715277777777777" />
         <entry key="app/src/main/res/layout/comment_item.xml" value="0.23715277777777777" />
         <entry key="app/src/main/res/layout/comment_page_fragment.xml" value="0.23715277777777777" />
         <entry key="app/src/main/res/layout/details_manga_list_item.xml" value="0.25" />

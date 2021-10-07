@@ -15,10 +15,13 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
+import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.core.view.ViewCompat
 import androidx.viewpager2.widget.ViewPager2
 import com.afollestad.materialcab.attached.AttachedCab
 import com.afollestad.materialcab.createCab
 import com.bumptech.glide.Glide
+import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.vianh.blogtruyen.R
@@ -29,6 +32,7 @@ import com.vianh.blogtruyen.features.main.MainActivity
 import com.vianh.blogtruyen.features.main.MainViewModel
 import com.vianh.blogtruyen.utils.PendingIntentHelper
 import com.vianh.blogtruyen.utils.await
+import com.vianh.blogtruyen.utils.loadNetWorkImage
 import com.vianh.blogtruyen.utils.toSafeFileName
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -38,6 +42,13 @@ import okio.sink
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
+import timber.log.Timber
+import android.animation.ValueAnimator
+import android.graphics.Color
+import androidx.core.view.doOnLayout
+import androidx.core.view.marginTop
+import androidx.core.view.updateLayoutParams
+
 
 class MangaDetailsFragment : BaseFragment<MangaDetailsFragmentBinding>() {
     override fun createBinding(
@@ -64,6 +75,9 @@ class MangaDetailsFragment : BaseFragment<MangaDetailsFragmentBinding>() {
     private fun onContentChange(manga: Manga) {
         with(requireBinding) {
             toolbar.title = manga.title
+            headerCover.loadNetWorkImage(manga.imageUrl)
+            smallCover.loadNetWorkImage(manga.imageUrl)
+            mangaTitle.text = manga.title
         }
     }
 
@@ -85,8 +99,30 @@ class MangaDetailsFragment : BaseFragment<MangaDetailsFragmentBinding>() {
                     viewModel.selectPage(position)
                 }
             })
+
+            toolbarContainer.doOnLayout {
+                headerContainer.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+                    topMargin = -it.height
+                }
+            }
+
+            // Todo: Restore scroll offset
+            when(viewModel.lastScroll) {
+                0f -> appBarLayout.setExpanded(true)
+                1f -> appBarLayout.setExpanded(false)
+            }
+
+            appBarLayout.addOnOffsetChangedListener(object: AppBarLayout.OnOffsetChangedListener {
+                override fun onOffsetChanged(appBarLayout: AppBarLayout, verticalOffset: Int) {
+                    val progress = -verticalOffset.toFloat()/appBarLayout.totalScrollRange
+                    toolbarBg.alpha = progress
+                    viewModel.lastScroll = progress
+                }
+            })
         }
     }
+
+
 
     override fun onMenuItemClick(item: MenuItem): Boolean {
         return when (item.itemId) {
@@ -117,6 +153,7 @@ class MangaDetailsFragment : BaseFragment<MangaDetailsFragmentBinding>() {
     companion object {
         const val MANGA_BUNDLE_KEY = "MANGA_KEY"
         const val OFFLINE_MODE_KEY = "OFFLINE"
+        const val APPBAR_SCROLL_KEY = "app_bar_scroll"
 
         fun newInstance(manga: Manga, isOffline: Boolean = false): MangaDetailsFragment {
             val bundle = Bundle(2).apply {

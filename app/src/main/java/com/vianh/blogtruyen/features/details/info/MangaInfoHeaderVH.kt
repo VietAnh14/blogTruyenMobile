@@ -16,9 +16,6 @@ class MangaInfoHeaderVH(private val binding: MangaInfoItemBinding) : RecyclerVie
 
     fun onBind(manga: Manga) {
         with(binding) {
-            headerCover.loadNetWorkImage(manga.imageUrl)
-            smallCover.loadNetWorkImage(manga.imageUrl)
-            mangaTitle.text = manga.title
             summary.text = manga.description
             categoryGroup.removeAllViews()
 

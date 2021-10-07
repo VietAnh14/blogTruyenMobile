@@ -6,6 +6,7 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.Interpolator
 import android.view.inputmethod.InputMethodManager
@@ -65,7 +66,7 @@ fun View.toggleState(direction: Int) {
     }
 }
 
-fun View.slideDown(duration: Long = 400, interpolator: Interpolator = AccelerateInterpolator()) {
+fun View.slideDown(duration: Long = 400, interpolator: Interpolator = AccelerateDecelerateInterpolator()) {
     animate()
         .translationY(height.toFloat())
         .setInterpolator(interpolator)
@@ -73,7 +74,7 @@ fun View.slideDown(duration: Long = 400, interpolator: Interpolator = Accelerate
         .start()
 }
 
-fun View.slideUp(duration: Long = 400, interpolator: Interpolator = AccelerateInterpolator()) {
+fun View.slideUp(duration: Long = 400, interpolator: Interpolator = AccelerateDecelerateInterpolator()) {
     animate()
         .translationY(height * -1f)
         .setInterpolator(interpolator)

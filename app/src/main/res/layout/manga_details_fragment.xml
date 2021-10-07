@@ -1,67 +1,141 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:fitsSystemWindows="true">
+
+    <FrameLayout
+        android:layout_gravity="start|top"
+        android:elevation="10dp"
+        android:id="@+id/toolbar_container"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize">
+        <View
+            android:id="@+id/toolbar_bg"
+            android:alpha="0"
+            android:background="?attr/colorPrimary"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            app:title="Manga name"
+            android:background="@android:color/transparent"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <FrameLayout
+            android:id="@+id/cab_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </FrameLayout>
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout"
-        android:layout_width="0dp"
+        android:paddingTop="?attr/actionBarSize"
+        android:clipToPadding="false"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
-        <FrameLayout
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/header_container"
+            tools:layout_marginTop="-56dp"
+            android:scaleType="centerCrop"
+            android:clipToPadding="false"
+            app:layout_scrollFlags="scroll"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <androidx.appcompat.widget.Toolbar
-                android:id="@+id/toolbar"
-                app:title="Manga name"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize" />
+            android:layout_height="300dp">
 
-            <FrameLayout
-                android:id="@+id/cab_container"
+            <ImageView
+                android:id="@+id/header_cover"
                 android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize" />
-        </FrameLayout>
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:src="@drawable/lazy_corgi"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+            <View
+                android:id="@+id/bg"
+                app:layout_collapseMode="parallax"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/info_header_gradient"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/small_cover"
+                android:layout_width="120dp"
+                android:layout_height="180dp"
+                android:layout_marginBottom="20dp"
+                android:layout_marginStart="10dp"
+                android:background="@android:color/white"
+                android:cropToPadding="true"
+                android:scaleType="centerCrop"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:shapeAppearanceOverlay="@style/RoundCornerShape"
+                app:srcCompat="@drawable/one_punch" />
+
+            <TextView
+                android:id="@+id/manga_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginBottom="20dp"
+                android:text="Some manga name"
+                android:textColor="@color/pureWhite"
+                android:textSize="25sp"
+                app:layout_constraintBottom_toBottomOf="@+id/small_cover"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/small_cover" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tab_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_anchor="@id/appBarLayout"
+            app:layout_anchorGravity="bottom"
+            android:background="?attr/colorPrimary"
+            app:tabIndicatorAnimationMode="elastic"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/appBarLayout"
+            app:tabIndicatorColor="?attr/colorAccent"
+            app:tabIndicatorFullWidth="false"
+            app:tabSelectedTextColor="?attr/colorAccent"
+            app:tabTextAppearance="@style/TextAppearance.AppCompat.Body1"
+            app:tabTextColor="?attr/colorControlNormal">
+
+            <com.google.android.material.tabs.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/manga_info" />
+
+            <com.google.android.material.tabs.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/comment" />
+        </com.google.android.material.tabs.TabLayout>
     </com.google.android.material.appbar.AppBarLayout>
-
-    <com.google.android.material.tabs.TabLayout
-        android:id="@+id/tab_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
-        app:tabIndicatorAnimationMode="elastic"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/appBarLayout"
-        app:tabIndicatorColor="?attr/colorAccent"
-        app:tabIndicatorFullWidth="false"
-        app:tabSelectedTextColor="?attr/colorAccent"
-        app:tabTextAppearance="@style/TextAppearance.AppCompat.Body1"
-        app:tabTextColor="?attr/colorControlNormal">
-
-        <com.google.android.material.tabs.TabItem
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/manga_info" />
-
-        <com.google.android.material.tabs.TabItem
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/comment" />
-    </com.google.android.material.tabs.TabLayout>
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/pager"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:nestedScrollingEnabled="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tab_layout" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
