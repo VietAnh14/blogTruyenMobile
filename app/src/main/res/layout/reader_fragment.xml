@@ -6,8 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.vianh.blogtruyen.views.PinchRecyclerView
-        android:id="@+id/reader_recycler"
+    <FrameLayout
+        android:id="@+id/reader_container"
         android:fitsSystemWindows="false"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

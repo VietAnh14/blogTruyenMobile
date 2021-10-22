@@ -29,7 +29,7 @@ class ReaderViewModel(
 ) : BaseVM() {
 
     private var loadPageJob: Job? = null
-    private val currentChapter: MutableStateFlow<Chapter> = MutableStateFlow(chapter)
+    val currentChapter: MutableStateFlow<Chapter> = MutableStateFlow(chapter)
     private val listItems: MutableStateFlow<List<ListItem>> =
         MutableStateFlow(listOf(LoadingItem))
 
@@ -53,6 +53,7 @@ class ReaderViewModel(
             } else {
                 dataManager.mangaProvider.fetchChapterPage(chapter.url)
             }
+            currentChapter.value = chapter.copy(pages = pages)
 
             val pageItems: MutableList<ReaderItem> = pages
                 .map { ReaderItem.PageItem(it) }

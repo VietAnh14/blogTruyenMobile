@@ -4,7 +4,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updateLayoutParams
+import androidx.core.view.updatePadding
+import androidx.fragment.app.FragmentTransaction
+import androidx.fragment.app.commit
+import com.vianh.blogtruyen.R
 import com.vianh.blogtruyen.data.model.Chapter
 import com.vianh.blogtruyen.data.model.Manga
 import com.vianh.blogtruyen.databinding.ReaderFragmentBinding
@@ -14,7 +20,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 import timber.log.Timber
 
-class ReaderFragment : BaseFragment<ReaderFragmentBinding>() {
+class ReaderFragment : BaseFragment<ReaderFragmentBinding>(), Reader.ReaderCallback {
     override fun createBinding(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -28,6 +34,8 @@ class ReaderFragment : BaseFragment<ReaderFragmentBinding>() {
             Timber.d("Max textureSize $it")
         }
     }
+
+    private var reader: Reader = VerticalReader.newInstance()
 
     private val viewModel by viewModel<ReaderViewModel> {
         parametersOf(
@@ -53,8 +61,37 @@ class ReaderFragment : BaseFragment<ReaderFragmentBinding>() {
     }
 
     private fun setup() {
+        changeReader(VerticalReader.newInstance())
         setupToolbar(requireBinding.toolbar)
-        readerDelegate.setUpReader(tileSize)
+        with(requireBinding) {
+            btnNext.setOnClickListener {
+                viewModel.toNextChapter()
+            }
+
+            btnPrevious.setOnClickListener {
+                viewModel.toPreviousChapter()
+            }
+
+            ViewCompat.setOnApplyWindowInsetsListener(toolbar) { v, insets ->
+                v.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+                    topMargin = insets.systemWindowInsetTop
+                }
+                insets
+            }
+
+            ViewCompat.setOnApplyWindowInsetsListener(chapterController) { v, insets ->
+                v.updatePadding(bottom = insets.getInsets(WindowInsetsCompat.Type.systemBars()).bottom)
+                insets
+            }
+        }
+    }
+
+    private fun changeReader(reader: Reader) {
+        this.reader = reader
+        childFragmentManager.commit {
+            replace(R.id.reader_container, reader)
+            setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+        }
     }
 
     override fun onWindowInsetsChange(root: View?, insets: WindowInsetsCompat): WindowInsetsCompat {
@@ -62,7 +99,7 @@ class ReaderFragment : BaseFragment<ReaderFragmentBinding>() {
     }
 
     private fun onContentChange(content: ReaderModel) {
-        readerDelegate.setContent(content)
+        reader.onContentChange(content)
     }
 
     override fun onDestroyView() {
@@ -89,5 +126,18 @@ class ReaderFragment : BaseFragment<ReaderFragmentBinding>() {
                 arguments = bundle
             }
         }
+    }
+
+    override fun onPageChange(pos: Int) {
+        val pageNum = viewModel.currentChapter.value.pages.size
+        requireBinding.pageText.text = "${pos + 1}/${pageNum}"
+    }
+
+    override fun toNextChapter() {
+        viewModel.toNextChapter()
+    }
+
+    override fun toPreChapter() {
+        viewModel.toPreviousChapter()
     }
 }

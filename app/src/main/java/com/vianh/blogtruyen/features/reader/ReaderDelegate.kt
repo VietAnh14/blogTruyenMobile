@@ -46,37 +46,37 @@ class ReaderDelegate(private val readerFragment: ReaderFragment, val viewModel: 
             }
         }
 
-        with(binding.readerRecycler) {
-            setHasFixedSize(true)
-            callBack = this@ReaderDelegate
-            layoutManager = PreCacheLayoutManager(context)
-            val overScrollDecor = OverScrollDecoratorHelper
-                .setUpOverScroll(this, OverScrollDecoratorHelper.ORIENTATION_VERTICAL)
-
-            overScrollDecor.setOverScrollUpdateListener { _, state, offset ->
-                if (offset <= 0) {
-                    val pos = adapter?.itemCount ?: return@setOverScrollUpdateListener
-                    val transitionVH =
-                        findViewHolderForAdapterPosition(pos - 1) as? TransitionPageVH
-                    transitionVH?.onOverScroll((-1 * offset).toInt(), state)
-                }
-            }
-
-            val requestManager = Glide.with(this)
-            readerAdapter = ReaderAdapter(requestManager, viewModel, tileSize, this@ReaderDelegate)
-            adapter = readerAdapter
-        }
+//        with(binding.readerRecycler) {
+//            setHasFixedSize(true)
+//            callBack = this@ReaderDelegate
+//            layoutManager = PreCacheLayoutManager(context)
+//            val overScrollDecor = OverScrollDecoratorHelper
+//                .setUpOverScroll(this, OverScrollDecoratorHelper.ORIENTATION_VERTICAL)
+//
+//            overScrollDecor.setOverScrollUpdateListener { _, state, offset ->
+//                if (offset <= 0) {
+//                    val pos = adapter?.itemCount ?: return@setOverScrollUpdateListener
+//                    val transitionVH =
+//                        findViewHolderForAdapterPosition(pos - 1) as? TransitionPageVH
+//                    transitionVH?.onOverScroll((-1 * offset).toInt(), state)
+//                }
+//            }
+//
+//            val requestManager = Glide.with(this)
+//            readerAdapter = ReaderAdapter(requestManager, viewModel, tileSize, this@ReaderDelegate)
+//            adapter = readerAdapter
+//        }
     }
 
-    fun setContent(content: ReaderModel) {
-        with(binding) {
-            toolbar.title = content.manga.title
-            toolbar.subtitle = content.chapter.name
-
-            readerAdapter?.setPages(content.items)
-            readerRecycler.scrollToPosition(0)
-        }
-    }
+//    fun setContent(content: ReaderModel) {
+//        with(binding) {
+//            toolbar.title = content.manga.title
+//            toolbar.subtitle = content.chapter.name
+//
+//            readerAdapter?.setPages(content.items)
+//            readerRecycler.scrollToPosition(0)
+//        }
+//    }
 
     private var isControllerShowing = true
 

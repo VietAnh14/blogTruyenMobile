@@ -123,6 +123,6 @@ inline fun Context.typeValue(resId: Int): TypedValue {
     return outValue
 }
 
-fun Context.showToast(message: String) {
+fun Context.showToast(message: String, duration: Int = Toast.LENGTH_SHORT) {
     Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
 }
