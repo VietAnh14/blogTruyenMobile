@@ -2,6 +2,7 @@ package com.vianh.blogtruyen.features.reader
 
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.ViewCompat
@@ -16,6 +17,9 @@ import com.vianh.blogtruyen.data.model.Manga
 import com.vianh.blogtruyen.databinding.ReaderFragmentBinding
 import com.vianh.blogtruyen.features.base.BaseFragment
 import com.vianh.blogtruyen.utils.getMaxTextureSize
+import com.vianh.blogtruyen.utils.resetPos
+import com.vianh.blogtruyen.utils.slideDown
+import com.vianh.blogtruyen.utils.slideUp
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 import timber.log.Timber
@@ -112,6 +116,35 @@ class ReaderFragment : BaseFragment<ReaderFragmentBinding>(), Reader.ReaderCallb
         super.onDestroy()
     }
 
+    override fun onPageChange(pos: Int) {
+        val pageNum = viewModel.currentChapter.value.pages.size
+        requireBinding.pageText.text = "${pos + 1}/${pageNum}"
+    }
+
+    override fun toNextChapter() {
+        viewModel.toNextChapter()
+    }
+
+    override fun toPreChapter() {
+        viewModel.toPreviousChapter()
+    }
+
+    override fun setControllerVisibility(isVisible: Boolean) {
+        setReaderControlVisibility(isVisible)
+    }
+
+    private fun setReaderControlVisibility(isVisible: Boolean = false) {
+        if (isVisible) {
+            requireBinding.appbar.resetPos()
+            requireBinding.chapterController.resetPos()
+            hostActivity?.showSystemUI()
+        } else {
+            requireBinding.appbar.slideUp()
+            requireBinding.chapterController.slideDown()
+            hostActivity?.hideSystemUI()
+        }
+    }
+
     companion object {
         private const val CHAPTER_KEY = "CHAPTER_BUNDLE_KEY"
         private const val MANGA_KEY = "MANGA_BUNDLE_KEY"
@@ -126,18 +159,5 @@ class ReaderFragment : BaseFragment<ReaderFragmentBinding>(), Reader.ReaderCallb
                 arguments = bundle
             }
         }
-    }
-
-    override fun onPageChange(pos: Int) {
-        val pageNum = viewModel.currentChapter.value.pages.size
-        requireBinding.pageText.text = "${pos + 1}/${pageNum}"
-    }
-
-    override fun toNextChapter() {
-        viewModel.toNextChapter()
-    }
-
-    override fun toPreChapter() {
-        viewModel.toPreviousChapter()
     }
 }

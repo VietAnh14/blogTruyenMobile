@@ -16,5 +16,6 @@ abstract class Reader(@LayoutRes layoutRes: Int): Fragment(layoutRes) {
         fun onPageChange(pos: Int)
         fun toNextChapter()
         fun toPreChapter()
+        fun setControllerVisibility(isVisible: Boolean)
     }
 }

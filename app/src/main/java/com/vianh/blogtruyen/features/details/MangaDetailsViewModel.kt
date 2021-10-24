@@ -42,7 +42,16 @@ class MangaDetailsViewModel(
         get() = mangaFlow.value
 
     private val mangaFlow: MutableStateFlow<Manga> = MutableStateFlow(manga)
-    private val mainChapters = MutableStateFlow(listOf<Chapter>())
+    private val localChapters = mangaFlow.map { it.id }.flatMapLatest { repo.observeChapter(it) }
+    private val remoteChapter = MutableStateFlow<List<Chapter>>(emptyList())
+    private val mainChapters = combine(localChapters, remoteChapter) { local, remote ->
+        val readIds = local.filter { it.read }.map { it.id }.toSet()
+        remote.map {
+            it.read = readIds.contains(it.id)
+            it
+        }
+    }
+
     private val descendingSort = MutableStateFlow(true)
 
     private val downloadingState = DownloadService
@@ -129,7 +138,7 @@ class MangaDetailsViewModel(
     private suspend fun loadDetails() {
         // Keep current chapter
         mangaFlow.value = repo
-            .fetchMangaDetails(mangaFlow.value, !isOffline)
+            .fetchMangaDetails(currentManga, !isOffline)
             .copy(chapters = currentManga.chapters)
     }
 
@@ -137,10 +146,10 @@ class MangaDetailsViewModel(
         val fetchChapters = if (isOffline)
             localSourceRepo.getChapters(currentManga.id)
         else
-            repo.loadChapter(currentManga.id)
+            repo.loadChapters(currentManga.id)
 
         mangaFlow.update { it.copy(chapters = fetchChapters) }
-        mainChapters.value = fetchChapters
+        remoteChapter.value = fetchChapters
 
         favoriteRepo.clearNewChapters(currentManga.id)
     }
@@ -178,7 +187,7 @@ class MangaDetailsViewModel(
     }
 
     fun continueReading() {
-        val chapters = mainChapters.value
+        val chapters = remoteChapter.value
         val lastReadChapter = chapters
             .filter { it.read }
             .maxByOrNull { it.number } ?: chapters.first { it.number == 1 }

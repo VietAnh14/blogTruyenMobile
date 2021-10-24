@@ -7,19 +7,24 @@ import com.vianh.blogtruyen.data.model.Chapter
 import com.vianh.blogtruyen.data.model.Comment
 import com.vianh.blogtruyen.data.model.Manga
 import com.vianh.blogtruyen.data.remote.MangaProvider
+import com.vianh.blogtruyen.utils.mapList
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.transform
 
 interface MangaRepo {
     suspend fun upsertManga(manga: Manga, updateCategories: Boolean = true)
 
-    suspend fun findAllReadChapter(mangaId: Int): List<ChapterEntity>
-
     suspend fun fetchMangaDetails(manga: Manga, remote: Boolean = true): Manga
 
-    suspend fun loadChapter(mangaId: Int, remote: Boolean = true): List<Chapter>
+    suspend fun loadChapters(mangaId: Int, remote: Boolean = true): List<Chapter>
 
     suspend fun loadComments(mangaId: Int, offset: Int): Map<Comment, List<Comment>>
 
     suspend fun markChapterAsRead(chapter: Chapter, mangaId: Int)
+
+    fun observeChapter(mangaId: Int): Flow<List<Chapter>>
 }
 
 class MangaRepository(
@@ -41,10 +46,6 @@ class MangaRepository(
         }
     }
 
-    override suspend fun findAllReadChapter(mangaId: Int): List<ChapterEntity> {
-        return db.chapterDao.findReadChapterByMangaId(mangaId)
-    }
-
     // TODO: USE ID
     override suspend fun fetchMangaDetails(manga: Manga, remote: Boolean): Manga {
         return if (remote) {
@@ -57,17 +58,22 @@ class MangaRepository(
         }
     }
 
-    override suspend fun loadChapter(mangaId: Int, remote: Boolean): List<Chapter> {
-        val readIds = db.chapterDao.findReadChapterByMangaId(mangaId)
-            .map { it.id }
-            .toSet()
+    override suspend fun loadChapters(mangaId: Int, remote: Boolean): List<Chapter> {
+        if (remote) {
+            val readIds = db.chapterDao.observeReadChapterByMangaId(mangaId)
+                .mapList { it.id }
+                .first()
+                .toSet()
 
-        return provider
-            .fetchChapterList(mangaId)
-            .map {
-                it.read = readIds.contains(it.id)
-                it
-            }
+            return provider
+                .fetchChapterList(mangaId)
+                .map {
+                    it.read = readIds.contains(it.id)
+                    it
+                }
+        }
+
+        return observeChapter(mangaId).first()
     }
 
     override suspend fun loadComments(mangaId: Int, offset: Int): Map<Comment, List<Comment>> {
@@ -86,5 +92,9 @@ class MangaRepository(
                 )
             )
         }
+    }
+
+    override fun observeChapter(mangaId: Int): Flow<List<Chapter>> {
+        return db.chapterDao.observeChaptersByMangaId(mangaId).mapList { it.toChapter() }
     }
 }

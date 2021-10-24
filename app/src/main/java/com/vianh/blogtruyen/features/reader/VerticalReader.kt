@@ -22,6 +22,8 @@ class VerticalReader: Reader(R.layout.vertical_reader_layout), PinchRecyclerView
         }
     }
 
+    var isReaderControllerVisible: Boolean = true
+
     private var readerAdapter: ReaderAdapter? = null
     private var pinchRecyclerView: PinchRecyclerView? = null
 
@@ -71,6 +73,8 @@ class VerticalReader: Reader(R.layout.vertical_reader_layout), PinchRecyclerView
     }
 
     override fun onSingleTap(): Boolean {
+        callback.setControllerVisibility(!isReaderControllerVisible)
+        isReaderControllerVisible = !isReaderControllerVisible
         return true
     }
 
