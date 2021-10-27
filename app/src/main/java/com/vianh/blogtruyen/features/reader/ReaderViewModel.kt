@@ -1,5 +1,6 @@
 package com.vianh.blogtruyen.features.reader
 
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.vianh.blogtruyen.data.DataManager
@@ -29,18 +30,24 @@ class ReaderViewModel(
 ) : BaseVM() {
 
     private var loadPageJob: Job? = null
-    val currentChapter: MutableStateFlow<Chapter> = MutableStateFlow(chapter)
-    private val listItems: MutableStateFlow<List<ListItem>> =
-        MutableStateFlow(listOf(LoadingItem))
+    private val listItems: MutableStateFlow<List<ListItem>> = MutableStateFlow(listOf(LoadingItem))
+    private val currentChapter: MutableStateFlow<Chapter> = MutableStateFlow(chapter)
+    val currentPage = MutableStateFlow(0)
 
     val uiState = combine(currentChapter, listItems) { chapter, items ->
         ReaderModel(manga, chapter, items)
     }.asLiveData(viewModelScope.coroutineContext + Dispatchers.Default)
 
+    val pageString = combine(currentPage, currentChapter) { page, chapter ->
+        "${page + 1}/${chapter.pages.size}"
+    }.asLiveData(Dispatchers.Default)
+
+    val controllerVisibility = MutableLiveData(true)
+
     init {
-        currentChapter.map {
-            loadPages()
-        }.launchIn(viewModelScope)
+        currentChapter
+            .map { loadPages() }
+            .launchIn(viewModelScope)
     }
 
     fun loadPages() {
@@ -90,6 +97,10 @@ class ReaderViewModel(
         } else {
             toast.call("No next chapter")
         }
+    }
+
+    fun toggleControllerVisibility() {
+        controllerVisibility.value = !controllerVisibility.value!!
     }
 
     override fun createExceptionHandler(): CoroutineExceptionHandler {

@@ -2,7 +2,6 @@ package com.vianh.blogtruyen.features.reader
 
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.ViewCompat
@@ -11,6 +10,7 @@ import androidx.core.view.updateLayoutParams
 import androidx.core.view.updatePadding
 import androidx.fragment.app.FragmentTransaction
 import androidx.fragment.app.commit
+import androidx.lifecycle.lifecycleScope
 import com.vianh.blogtruyen.R
 import com.vianh.blogtruyen.data.model.Chapter
 import com.vianh.blogtruyen.data.model.Manga
@@ -20,11 +20,13 @@ import com.vianh.blogtruyen.utils.getMaxTextureSize
 import com.vianh.blogtruyen.utils.resetPos
 import com.vianh.blogtruyen.utils.slideDown
 import com.vianh.blogtruyen.utils.slideUp
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 import timber.log.Timber
 
-class ReaderFragment : BaseFragment<ReaderFragmentBinding>(), Reader.ReaderCallback {
+class ReaderFragment : BaseFragment<ReaderFragmentBinding>(), Reader.ReaderContract {
     override fun createBinding(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -33,15 +35,7 @@ class ReaderFragment : BaseFragment<ReaderFragmentBinding>(), Reader.ReaderCallb
         return ReaderFragmentBinding.inflate(inflater, container, false)
     }
 
-    private val tileSize by lazy {
-        getMaxTextureSize().also {
-            Timber.d("Max textureSize $it")
-        }
-    }
-
-    private var reader: Reader = VerticalReader.newInstance()
-
-    private val viewModel by viewModel<ReaderViewModel> {
+    override val readerViewModel by viewModel<ReaderViewModel> {
         parametersOf(
             arguments?.getParcelable(CHAPTER_KEY),
             arguments?.getParcelable(MANGA_KEY),
@@ -49,19 +43,20 @@ class ReaderFragment : BaseFragment<ReaderFragmentBinding>(), Reader.ReaderCallb
         )
     }
 
-    private val readerDelegate: ReaderDelegate by lazy {
-        ReaderDelegate(this, viewModel)
-    }
+    private val currentReader
+        get() = childFragmentManager.findFragmentById(R.id.reader_container)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setup()
-        observe()
+        bindViewModel()
     }
 
-    private fun observe() {
-        viewModel.uiState.observe(viewLifecycleOwner) { onContentChange(it) }
-        viewModel.toast.observe(viewLifecycleOwner) { showToast(it) }
+    private fun bindViewModel() {
+        readerViewModel.uiState.observe(viewLifecycleOwner, ::onContentChange)
+        readerViewModel.toast.observe(viewLifecycleOwner, this::showToast)
+        readerViewModel.controllerVisibility.observe(viewLifecycleOwner, ::setReaderControlVisibility)
+        readerViewModel.pageString.observe(viewLifecycleOwner) { requireBinding.pageText.text = it }
     }
 
     private fun setup() {
@@ -69,11 +64,11 @@ class ReaderFragment : BaseFragment<ReaderFragmentBinding>(), Reader.ReaderCallb
         setupToolbar(requireBinding.toolbar)
         with(requireBinding) {
             btnNext.setOnClickListener {
-                viewModel.toNextChapter()
+                readerViewModel.toNextChapter()
             }
 
             btnPrevious.setOnClickListener {
-                viewModel.toPreviousChapter()
+                readerViewModel.toPreviousChapter()
             }
 
             ViewCompat.setOnApplyWindowInsetsListener(toolbar) { v, insets ->
@@ -91,7 +86,11 @@ class ReaderFragment : BaseFragment<ReaderFragmentBinding>(), Reader.ReaderCallb
     }
 
     private fun changeReader(reader: Reader) {
-        this.reader = reader
+        // Avoid leak when replace 2 fragment with same type
+        if (currentReader?.javaClass == reader.javaClass) {
+            return
+        }
+
         childFragmentManager.commit {
             replace(R.id.reader_container, reader)
             setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
@@ -103,34 +102,19 @@ class ReaderFragment : BaseFragment<ReaderFragmentBinding>(), Reader.ReaderCallb
     }
 
     private fun onContentChange(content: ReaderModel) {
-        reader.onContentChange(content)
+        with(requireBinding) {
+            toolbar.title = content.manga.title
+            toolbar.subtitle = content.chapter.name
+        }
     }
 
     override fun onDestroyView() {
-        readerDelegate.cleanUp()
         super.onDestroyView()
     }
 
     override fun onDestroy() {
         hostActivity?.showSystemUI()
         super.onDestroy()
-    }
-
-    override fun onPageChange(pos: Int) {
-        val pageNum = viewModel.currentChapter.value.pages.size
-        requireBinding.pageText.text = "${pos + 1}/${pageNum}"
-    }
-
-    override fun toNextChapter() {
-        viewModel.toNextChapter()
-    }
-
-    override fun toPreChapter() {
-        viewModel.toPreviousChapter()
-    }
-
-    override fun setControllerVisibility(isVisible: Boolean) {
-        setReaderControlVisibility(isVisible)
     }
 
     private fun setReaderControlVisibility(isVisible: Boolean = false) {

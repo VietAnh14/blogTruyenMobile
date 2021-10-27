@@ -32,15 +32,16 @@ class MangaDetailsViewModel(
     private val localSourceRepo: LocalSourceRepo,
 ) : BaseVM() {
 
+    // Keep scroll state
+    var lastScroll = -1f
+
     val toReaderEvent = SingleLiveEvent<Chapter>()
     val onNewPageSelected = SingleLiveEvent<Int>()
 
-    private var commentPage = 1
-    private var hasNextCommentPage = true
-    private var commentJob: Job? = null
     val currentManga
         get() = mangaFlow.value
 
+    private val descendingSort = MutableStateFlow(true)
     private val mangaFlow: MutableStateFlow<Manga> = MutableStateFlow(manga)
     private val localChapters = mangaFlow.map { it.id }.flatMapLatest { repo.observeChapter(it) }
     private val remoteChapter = MutableStateFlow<List<Chapter>>(emptyList())
@@ -50,28 +51,19 @@ class MangaDetailsViewModel(
             it.read = readIds.contains(it.id)
             it
         }
-    }
-
-    private val descendingSort = MutableStateFlow(true)
+    }.stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
 
     private val downloadingState = DownloadService
         .downloadQueue
         .mapList { pair -> pair.first }
-        .transformLatest { downloadItems ->
-            val mangaChapter = downloadItems.filter { it.manga.id == manga.id }
-            emit(mangaChapter)
-        }
+        .map { items -> items.filter { it.manga.id == manga.id } }
         .distinctUntilChanged()
         .map { downloadItem -> downloadItem.associateBy { it.chapter.id } }
 
-    val headerItem = combine(
-        mainChapters.map { it.size }.distinctUntilChanged(),
+    val chapters = combine(
+        mainChapters,
         descendingSort
-    ) { size, isDescending ->
-        HeaderItem(size, isDescending)
-    }.asLiveDataDistinct(Dispatchers.Default)
-
-    val chapters = combine(mainChapters, descendingSort) { newChapters, descending ->
+    ) { newChapters, descending ->
         // Already sorted by des when load
         if (descending) {
             newChapters
@@ -104,11 +96,14 @@ class MangaDetailsViewModel(
         }
     }.asLiveDataDistinct(Dispatchers.Default)
 
+    val headerItem = combine(mainChapters, descendingSort) { chapters, isDescending ->
+        HeaderItem(chapters.size, isDescending)
+    }.asLiveDataDistinct(Dispatchers.Default)
+
     val isFavorite: LiveData<Boolean> = favoriteRepo
         .observeFavoriteState(manga.id)
         .map { it != null }
-        .distinctUntilChanged()
-        .asLiveData(viewModelScope.coroutineContext)
+        .asLiveDataDistinct(viewModelScope.coroutineContext)
 
     val readButtonState = mainChapters.map { chapters ->
         val enable = chapters.isNotEmpty()
@@ -118,9 +113,7 @@ class MangaDetailsViewModel(
         Pair(enable, textId)
     }.asLiveDataDistinct(Dispatchers.Default, Pair(false, R.string.start_reading))
 
-
     val manga = mangaFlow.asLiveData(viewModelScope.coroutineContext)
-    val comments: MutableLiveData<List<Comment>> = MutableLiveData(listOf())
 
     init {
         loadMangaInfo()
@@ -150,27 +143,7 @@ class MangaDetailsViewModel(
 
         mangaFlow.update { it.copy(chapters = fetchChapters) }
         remoteChapter.value = fetchChapters
-
         favoriteRepo.clearNewChapters(currentManga.id)
-    }
-
-    fun loadComments(offset: Int = commentPage) {
-        if (commentJob?.isCompleted == false || !hasNextCommentPage || isOffline) {
-            return
-        }
-
-        commentJob = launchJob {
-            val commentMap = repo.loadComments(mangaFlow.value.id, offset)
-            hasNextCommentPage = commentMap.isNotEmpty()
-            val flattenComments = ArrayList(comments.value!!)
-            for (comment in commentMap) {
-                flattenComments.add(comment.key)
-                flattenComments.addAll(comment.value)
-            }
-
-            comments.value = flattenComments
-            ++commentPage
-        }
     }
 
     fun toggleFavorite() {
@@ -204,6 +177,31 @@ class MangaDetailsViewModel(
     }
 
 
-    // Keep scroll state
-    var lastScroll = -1f
+    // Start comments
+    val comments: MutableLiveData<List<Comment>> = MutableLiveData(listOf())
+
+    private var commentPage = 1
+    private var hasNextCommentPage = true
+    private var commentJob: Job? = null
+
+    fun loadComments(offset: Int = commentPage) {
+        if (commentJob?.isCompleted == false || !hasNextCommentPage || isOffline) {
+            return
+        }
+
+        commentJob = launchJob {
+            val commentMap = repo.loadComments(mangaFlow.value.id, offset)
+            hasNextCommentPage = commentMap.isNotEmpty()
+            val flattenComments = ArrayList(comments.value!!)
+            for (comment in commentMap) {
+                flattenComments.add(comment.key)
+                flattenComments.addAll(comment.value)
+            }
+
+            comments.value = flattenComments
+            ++commentPage
+        }
+    }
+
+    // End comment
 }

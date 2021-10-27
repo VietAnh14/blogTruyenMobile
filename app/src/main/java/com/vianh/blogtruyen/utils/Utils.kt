@@ -73,6 +73,7 @@ fun showSystemUI(window: Window) {
             or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN)
 }
 
+val maxTileSize by lazy { getMaxTextureSize() }
 fun getMaxTextureSize(): Int {
 
     // Safe minimum default size
