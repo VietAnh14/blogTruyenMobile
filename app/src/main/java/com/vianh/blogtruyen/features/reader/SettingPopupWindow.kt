@@ -25,12 +25,10 @@ class SettingPopupWindow(context: Context, private val appSetting: AppSettings, 
         with(binding) {
             setUpCheck(btnHorizon)
             setUpCheck(btnVertical)
-            screenOnCb.setOnCheckedChangeListener { _, isChecked ->
-                callback.onKeepScreenOnChange(isChecked)
-            }
 
             screenOnCb.isChecked = appSetting.getKeepScreenOn()
             screenOnCb.setOnCheckedChangeListener { _, isChecked ->
+                appSetting.setKeepScreenOn(isChecked)
                 callback.onKeepScreenOnChange(isChecked)
             }
         }
