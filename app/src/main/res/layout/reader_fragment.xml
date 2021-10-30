@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <FrameLayout
+    <com.vianh.blogtruyen.features.reader.ReaderContainer
         android:id="@+id/reader_container"
         android:fitsSystemWindows="false"
         android:layout_width="match_parent"
@@ -24,6 +24,7 @@
             android:elevation="0dp"
             app:title="@string/manga_info"
             app:subtitle="@string/manga_details"
+            app:menu="@menu/reader_menu"
             app:subtitleTextColor="?attr/colorControlNormal"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize" />
@@ -52,6 +53,7 @@
             android:id="@+id/btn_next"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:padding="6dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/ic_skip_next"
             app:tint="?attr/colorOnPrimary"
@@ -65,6 +67,7 @@
             android:id="@+id/btn_previous"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:padding="6dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/ic_skip_previous"
             app:tint="?attr/colorOnPrimary"

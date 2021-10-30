@@ -1,11 +1,9 @@
-package com.vianh.blogtruyen.features.reader.list
+package com.vianh.blogtruyen.features.reader.type.vertical
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.lifecycle.viewModelScope
 import com.bumptech.glide.RequestManager
-import com.vianh.blogtruyen.databinding.ErrorReaderItemBinding
-import com.vianh.blogtruyen.databinding.LoadingPageItemBinding
 import com.vianh.blogtruyen.databinding.MangaPageItemBinding
 import com.vianh.blogtruyen.databinding.TransitionPageBinding
 import com.vianh.blogtruyen.features.base.list.AbstractAdapter
@@ -14,6 +12,7 @@ import com.vianh.blogtruyen.features.base.list.commonVH.ErrorItemVH
 import com.vianh.blogtruyen.features.base.list.items.ListItem
 import com.vianh.blogtruyen.features.base.list.commonVH.LoadingItemVH
 import com.vianh.blogtruyen.features.reader.ReaderViewModel
+import com.vianh.blogtruyen.features.reader.list.ReaderItem
 import com.vianh.blogtruyen.utils.await
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch

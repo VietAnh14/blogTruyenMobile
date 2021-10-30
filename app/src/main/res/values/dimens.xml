@@ -10,4 +10,5 @@
     <dimen name="manga_feed_item_margin">10dp</dimen>
 
     <dimen name="feed_history_width">150dp</dimen>
+    <dimen name="vertical_reader_space">8dp</dimen>
 </resources>

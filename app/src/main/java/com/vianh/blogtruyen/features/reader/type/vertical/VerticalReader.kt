@@ -1,20 +1,20 @@
-package com.vianh.blogtruyen.features.reader
+package com.vianh.blogtruyen.features.reader.type.vertical
 
 import android.os.Bundle
 import android.view.View
 import com.bumptech.glide.Glide
 import com.vianh.blogtruyen.R
 import com.vianh.blogtruyen.features.base.list.commonVH.ErrorItemVH
-import com.vianh.blogtruyen.features.reader.list.ReaderAdapter
-import com.vianh.blogtruyen.features.reader.list.TransitionPageVH
+import com.vianh.blogtruyen.features.reader.Reader
+import com.vianh.blogtruyen.features.reader.ReaderModel
 import com.vianh.blogtruyen.utils.ItemPosScrollListener
 import com.vianh.blogtruyen.utils.PreCacheLayoutManager
+import com.vianh.blogtruyen.utils.SpaceDecorator
 import com.vianh.blogtruyen.utils.maxTileSize
 import com.vianh.blogtruyen.views.PinchRecyclerView
 import me.everything.android.ui.overscroll.OverScrollDecoratorHelper
-import timber.log.Timber
 
-class VerticalReader: Reader(R.layout.vertical_reader_layout), PinchRecyclerView.ReaderCallBack, ErrorItemVH.ErrorReloadClick {
+class VerticalReader: Reader(R.layout.vertical_reader_layout), ErrorItemVH.ErrorReloadClick {
 
     private var readerAdapter: ReaderAdapter? = null
     private var pinchRecyclerView: PinchRecyclerView? = null
@@ -26,7 +26,6 @@ class VerticalReader: Reader(R.layout.vertical_reader_layout), PinchRecyclerView
     }
 
     override fun onDestroyView() {
-        Timber.e("Destroyed ${hashCode()}")
         readerAdapter = null
         pinchRecyclerView = null
         super.onDestroyView()
@@ -39,8 +38,9 @@ class VerticalReader: Reader(R.layout.vertical_reader_layout), PinchRecyclerView
             val requestManager = Glide.with(this)
             readerAdapter = ReaderAdapter(requestManager, readerViewModel, maxTileSize, this@VerticalReader)
             adapter = readerAdapter
-            callBack = this@VerticalReader
             layoutManager = PreCacheLayoutManager(requireContext())
+
+            addItemDecoration(SpaceDecorator(requireContext().resources.getDimensionPixelSize(R.dimen.vertical_reader_space)))
 
             val overScrollDecor = OverScrollDecoratorHelper
                 .setUpOverScroll(this, OverScrollDecoratorHelper.ORIENTATION_VERTICAL)
@@ -77,11 +77,6 @@ class VerticalReader: Reader(R.layout.vertical_reader_layout), PinchRecyclerView
         } else {
             pinchRecyclerView?.scrollToPosition(pos)
         }
-    }
-
-    override fun onSingleTap(): Boolean {
-        readerViewModel.toggleControllerVisibility()
-        return true
     }
 
     override fun onReload() {

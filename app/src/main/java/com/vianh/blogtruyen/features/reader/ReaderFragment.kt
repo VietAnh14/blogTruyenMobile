@@ -1,32 +1,30 @@
 package com.vianh.blogtruyen.features.reader
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updateLayoutParams
 import androidx.core.view.updatePadding
 import androidx.fragment.app.FragmentTransaction
 import androidx.fragment.app.commit
-import androidx.lifecycle.lifecycleScope
 import com.vianh.blogtruyen.R
 import com.vianh.blogtruyen.data.model.Chapter
 import com.vianh.blogtruyen.data.model.Manga
+import com.vianh.blogtruyen.data.prefs.AppSettings
+import com.vianh.blogtruyen.data.prefs.ReaderMode
 import com.vianh.blogtruyen.databinding.ReaderFragmentBinding
 import com.vianh.blogtruyen.features.base.BaseFragment
-import com.vianh.blogtruyen.utils.getMaxTextureSize
+import com.vianh.blogtruyen.features.reader.type.pager.PagerReader
+import com.vianh.blogtruyen.features.reader.type.vertical.VerticalReader
 import com.vianh.blogtruyen.utils.resetPos
 import com.vianh.blogtruyen.utils.slideDown
 import com.vianh.blogtruyen.utils.slideUp
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
-import timber.log.Timber
 
-class ReaderFragment : BaseFragment<ReaderFragmentBinding>(), Reader.ReaderContract {
+class ReaderFragment : BaseFragment<ReaderFragmentBinding>(), Reader.ReaderContract, SettingPopupWindow.Callback, ReaderContainer.Callback {
     override fun createBinding(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -34,6 +32,8 @@ class ReaderFragment : BaseFragment<ReaderFragmentBinding>(), Reader.ReaderContr
     ): ReaderFragmentBinding {
         return ReaderFragmentBinding.inflate(inflater, container, false)
     }
+
+    private val appSettings by inject<AppSettings>()
 
     override val readerViewModel by viewModel<ReaderViewModel> {
         parametersOf(
@@ -82,6 +82,18 @@ class ReaderFragment : BaseFragment<ReaderFragmentBinding>(), Reader.ReaderContr
                 v.updatePadding(bottom = insets.getInsets(WindowInsetsCompat.Type.systemBars()).bottom)
                 insets
             }
+
+            readerContainer.callback = this@ReaderFragment
+        }
+
+        changeReader(getReader(appSettings.getReaderMode()))
+        onKeepScreenOnChange(appSettings.getKeepScreenOn())
+    }
+
+    private fun getReader(mode: ReaderMode): Reader {
+        return when(mode) {
+            ReaderMode.HORIZON -> PagerReader.newInstance()
+            ReaderMode.VERTICAL -> VerticalReader.newInstance()
         }
     }
 
@@ -108,6 +120,22 @@ class ReaderFragment : BaseFragment<ReaderFragmentBinding>(), Reader.ReaderContr
         }
     }
 
+    private fun showSettingMenu(anchor: View) {
+        SettingPopupWindow.show(anchor, appSettings, this)
+    }
+
+    override fun onMenuItemClick(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.setting_item -> {
+                val anchor = requireView().findViewById<View>(R.id.setting_item) ?: return false
+                showSettingMenu(anchor)
+                true
+            }
+
+            else -> super.onMenuItemClick(item)
+        }
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
     }
@@ -127,6 +155,19 @@ class ReaderFragment : BaseFragment<ReaderFragmentBinding>(), Reader.ReaderContr
             requireBinding.chapterController.slideDown()
             hostActivity?.hideSystemUI()
         }
+    }
+
+    override fun onReaderModeSelected(mode: ReaderMode) {
+        changeReader(getReader(mode))
+    }
+
+    override fun onKeepScreenOnChange(keepScreenOn: Boolean) {
+        requireBinding.readerContainer.keepScreenOn = keepScreenOn
+    }
+
+    override fun onSingleTap(e: MotionEvent?): Boolean {
+        readerViewModel.toggleControllerVisibility()
+        return true
     }
 
     companion object {

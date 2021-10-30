@@ -8,6 +8,8 @@ class AppSettings(context: Context) {
     companion object {
         const val PREFS_NAME = "app_settings"
         const val LIST_MODE_KEY = "list_mode"
+        const val READER_MODE_KEY = "reader_mode"
+        const val KEEP_SCREEN_ON = "screen_on"
     }
 
     private val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
@@ -26,5 +28,22 @@ class AppSettings(context: Context) {
             Timber.e(e)
             ListMode.GRID
         }
+    }
+
+    fun getReaderMode(): ReaderMode {
+        val modeString = prefs.getString(READER_MODE_KEY, null) ?: ReaderMode.VERTICAL.name
+        return ReaderMode.valueOf(modeString)
+    }
+
+    fun setReaderMode(value: ReaderMode) {
+        prefs.edit { putString(READER_MODE_KEY, value.name) }
+    }
+
+    fun getKeepScreenOn(): Boolean {
+        return prefs.getBoolean(KEEP_SCREEN_ON, false)
+    }
+
+    fun setKeepScreenOn(value: Boolean) {
+        prefs.edit { putBoolean(KEEP_SCREEN_ON, value) }
     }
 }

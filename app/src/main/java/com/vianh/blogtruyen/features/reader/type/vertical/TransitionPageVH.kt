@@ -1,9 +1,10 @@
-package com.vianh.blogtruyen.features.reader.list
+package com.vianh.blogtruyen.features.reader.type.vertical
 
 import com.vianh.blogtruyen.R
 import com.vianh.blogtruyen.databinding.TransitionPageBinding
 import com.vianh.blogtruyen.features.base.list.AbstractViewHolder
 import com.vianh.blogtruyen.features.reader.ReaderViewModel
+import com.vianh.blogtruyen.features.reader.list.ReaderItem
 import com.vianh.blogtruyen.utils.gone
 import com.vianh.blogtruyen.utils.visible
 import me.everything.android.ui.overscroll.IOverScrollState

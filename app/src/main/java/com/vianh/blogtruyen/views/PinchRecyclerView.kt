@@ -23,8 +23,6 @@ class PinchRecyclerView @JvmOverloads constructor(
     private val mScaleDetector: ScaleGestureDetector
     private val gestureDetector: GestureDetector
 
-    var callBack: ReaderCallBack? = null
-
     private var minOffsetX = 0.0f
     private var minOffsetY = 0.0f
 
@@ -102,9 +100,6 @@ class PinchRecyclerView @JvmOverloads constructor(
     }
 
     private inner class GestureListener: GestureDetector.SimpleOnGestureListener() {
-        override fun onSingleTapConfirmed(e: MotionEvent?): Boolean {
-            return callBack?.onSingleTap() ?: false || super.onSingleTapConfirmed(e)
-        }
 
         override fun onDoubleTap(e: MotionEvent?): Boolean {
             return super.onDoubleTap(e)
@@ -146,9 +141,5 @@ class PinchRecyclerView @JvmOverloads constructor(
         transformsMatrix.postTranslate(dx, dy)
         transformsMatrix.invert(invertMatrix)
         postInvalidate()
-    }
-
-    interface ReaderCallBack {
-        fun onSingleTap(): Boolean
     }
 }

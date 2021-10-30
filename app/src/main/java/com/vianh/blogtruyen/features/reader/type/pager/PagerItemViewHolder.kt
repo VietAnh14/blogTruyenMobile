@@ -1,32 +1,30 @@
-package com.vianh.blogtruyen.features.reader.list
+package com.vianh.blogtruyen.features.reader.type.pager
 
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.view.View
-import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
+import android.view.ViewGroup
 import android.webkit.URLUtil
-import androidx.core.view.updateLayoutParams
 import com.bumptech.glide.RequestManager
 import com.bumptech.glide.request.transition.Transition
 import com.davemorrissey.labs.subscaleview.ImageSource
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
 import com.vianh.blogtruyen.R
-import com.vianh.blogtruyen.databinding.MangaPageItemBinding
-import com.vianh.blogtruyen.features.base.list.AbstractViewHolder
-import com.vianh.blogtruyen.utils.SubsamplingScaleImageViewTarget
-import com.vianh.blogtruyen.utils.gone
-import com.vianh.blogtruyen.utils.invisible
-import com.vianh.blogtruyen.utils.visible
+import com.vianh.blogtruyen.databinding.PagerReaderItemBinding
+import com.vianh.blogtruyen.features.base.list.AbstractBindingHolder
+import com.vianh.blogtruyen.features.reader.list.PageLoadCallBack
+import com.vianh.blogtruyen.features.reader.list.ReaderItem
+import com.vianh.blogtruyen.utils.*
 import timber.log.Timber
 import java.io.File
 
-class PageItemVH(
-    val binding: MangaPageItemBinding,
-    private val glideRequestManager: RequestManager,
-    tileSize: Int
-) : AbstractViewHolder<ReaderItem.PageItem, Unit>(binding.root), PageLoadCallBack<File>, View.OnClickListener {
+class PagerItemViewHolder(parent: ViewGroup, val requestManager: RequestManager) :
+    AbstractBindingHolder<ReaderItem.PageItem, Unit, PagerReaderItemBinding>(
+        R.layout.pager_reader_item,
+        parent,
+        PagerReaderItemBinding::bind
+    ), View.OnClickListener, PageLoadCallBack<File> {
 
-    private val minHeight = itemView.context.resources.getDimensionPixelSize(R.dimen.page_item_min_height)
     private val imgTarget = SubsamplingScaleImageViewTarget(binding.page, this)
 
     private val scaleImageListener =
@@ -34,9 +32,6 @@ class PageItemVH(
             override fun onImageLoaded() {
                 binding.progressCircular.hide()
                 binding.page.visible()
-                binding.root.updateLayoutParams {
-                    height = WRAP_CONTENT
-                }
             }
 
             override fun onImageLoadError(e: Exception?) {
@@ -47,10 +42,8 @@ class PageItemVH(
 
     init {
         with(binding.page) {
-            setMaxTileSize(tileSize)
-            setMinimumScaleType(SubsamplingScaleImageView.SCALE_TYPE_CENTER_CROP)
-            setMinimumDpi(90)
-            setMinimumTileDpi(180)
+            setMaxTileSize(maxTileSize)
+            setMinimumScaleType(SubsamplingScaleImageView.SCALE_TYPE_CENTER_INSIDE)
         }
     }
 
@@ -61,7 +54,7 @@ class PageItemVH(
         binding.page.setOnImageEventListener(scaleImageListener)
 
         if (URLUtil.isNetworkUrl(data.uri)) {
-            glideRequestManager
+            requestManager
                 .download(data.uri)
                 .skipMemoryCache(true)
                 .dontAnimate()
@@ -75,8 +68,7 @@ class PageItemVH(
     override fun onRecycle() {
         binding.page.recycle()
         binding.page.invisible()
-        binding.root.updateLayoutParams { height = minHeight }
-        glideRequestManager.clear(imgTarget)
+        requestManager.clear(imgTarget)
         super.onRecycle()
     }
 
@@ -104,7 +96,7 @@ class PageItemVH(
             errText.visible()
             errText.text = message
             retryButton.visible()
-            retryButton.setOnClickListener(this@PageItemVH)
+            retryButton.setOnClickListener(this@PagerItemViewHolder)
         }
     }
 }
