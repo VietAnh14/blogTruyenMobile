@@ -1,5 +1,6 @@
 package com.vianh.blogtruyen.features.feed.list
 
+import android.view.View
 import android.view.ViewGroup
 import com.vianh.blogtruyen.R
 import com.vianh.blogtruyen.data.model.Manga
@@ -10,7 +11,7 @@ import com.vianh.blogtruyen.features.list.MangaItem
 import com.vianh.blogtruyen.utils.loadNetWorkImage
 
 class DetailsVH(parent: ViewGroup, itemClick: ItemClick<MangaItem>):
-    AbstractBindingHolder<MangaItem, Unit, DetailsMangaListItemBinding>(R.layout.details_manga_list_item, parent, { DetailsMangaListItemBinding.bind(it) }) {
+    AbstractBindingHolder<MangaItem, Unit, DetailsMangaListItemBinding>(R.layout.details_manga_list_item, parent) {
 
     init {
         itemView.setOnClickListener {
@@ -25,5 +26,9 @@ class DetailsVH(parent: ViewGroup, itemClick: ItemClick<MangaItem>):
             title.text = manga.title
             summary.text = manga.description
         }
+    }
+
+    override fun bindToView(view: View): DetailsMangaListItemBinding {
+        return DetailsMangaListItemBinding.bind(view)
     }
 }

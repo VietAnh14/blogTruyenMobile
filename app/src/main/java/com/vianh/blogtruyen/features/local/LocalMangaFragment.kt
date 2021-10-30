@@ -46,7 +46,7 @@ class LocalMangaFragment : BaseFragment<HomeFragmentBinding>(),
             swipeRefreshLayout.setOnRefreshListener(this@LocalMangaFragment)
 
             val spanSizeLookup = DefaultSpanSizeLookup(feedRecycler)
-            spanSizeLookup.addViewType(ListItem.SINGLE_ITEM)
+            spanSizeLookup.addViewType(MangaItem.MANGA_GRID_ITEM)
             spanSizeLookup.attachToParent()
 
             adapter = MangaListAdapter(this@LocalMangaFragment)

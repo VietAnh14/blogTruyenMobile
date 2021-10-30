@@ -24,10 +24,6 @@ class AppDbHelper(private val db: MangaDb) : DbHelper {
         }
     }
 
-    override suspend fun findAllReadChapter(mangaId: Int): List<ChapterEntity> {
-        return db.chapterDao.findReadChapterByMangaId(mangaId)
-    }
-
     override suspend fun markChapterAsRead(chapter: Chapter, mangaId: Int) {
         db.withTransaction {
             chapter.read = true

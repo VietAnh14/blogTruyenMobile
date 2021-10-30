@@ -6,35 +6,31 @@ import android.os.Looper
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.view.*
 import com.google.android.material.appbar.AppBarLayout
+import com.vianh.blogtruyen.data.prefs.AppSettings
+import com.vianh.blogtruyen.data.prefs.ReaderMode
 import com.vianh.blogtruyen.databinding.TestActivityBinding
 import com.vianh.blogtruyen.features.base.BaseActivity
+import com.vianh.blogtruyen.features.reader.SettingPopupWindow
+import timber.log.Timber
 
-class TestActivity: BaseActivity<TestActivityBinding>(), OnApplyWindowInsetsListener {
+class TestActivity: BaseActivity<TestActivityBinding>(), OnApplyWindowInsetsListener, SettingPopupWindow.Callback{
     override fun createBinding(): TestActivityBinding {
         return TestActivityBinding.inflate(layoutInflater)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setSupportActionBar(binding.topAppBar)
-        ViewCompat.setOnApplyWindowInsetsListener(binding.topAppBar, this)
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root, this)
         setUp()
     }
 
     fun setUp() {
-//        Handler(Looper.getMainLooper()).postDelayed({
-//            binding.appbar.addOnOffsetChangedListener(object: AppBarLayout.OnOffsetChangedListener {
-//                override fun onOffsetChanged(appBarLayout: AppBarLayout, verticalOffset: Int) {
-//                    val progress = 1 + verticalOffset/appBarLayout.totalScrollRange.toFloat()
-//                    if (progress in 0f..1f) {
-//                        Log.d("TAG", "onOffsetChanged: $progress")
-//                        binding.header.updateLayoutParams<ViewGroup.MarginLayoutParams> { topMargin = (progress*500).toInt() }
-//                    }
-//                }
-//            })
-//        }, 1000)
+        binding.btn.setOnClickListener {
+            SettingPopupWindow.show(it, AppSettings(this), this)
+        }
     }
 
     override fun onApplyWindowInsets(v: View?, insets: WindowInsetsCompat?): WindowInsetsCompat {
@@ -44,5 +40,13 @@ class TestActivity: BaseActivity<TestActivityBinding>(), OnApplyWindowInsetsList
         val systemInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
         v?.updatePadding(top = systemInsets.top)
         return WindowInsetsCompat.CONSUMED
+    }
+
+    override fun onReaderModeSelected(mode: ReaderMode) {
+
+    }
+
+    override fun onKeepScreenOnChange(keepScreenOn: Boolean) {
+
     }
 }

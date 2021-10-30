@@ -1,10 +1,7 @@
 package com.vianh.blogtruyen.features.list
 
-import android.content.DialogInterface
 import android.os.Bundle
 import android.view.*
-import androidx.lifecycle.asLiveData
-import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.vianh.blogtruyen.R
 import com.vianh.blogtruyen.data.prefs.ListMode
