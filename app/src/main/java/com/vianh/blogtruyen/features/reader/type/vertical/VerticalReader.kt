@@ -13,6 +13,7 @@ import com.vianh.blogtruyen.utils.SpaceDecorator
 import com.vianh.blogtruyen.utils.maxTileSize
 import com.vianh.blogtruyen.views.PinchRecyclerView
 import me.everything.android.ui.overscroll.OverScrollDecoratorHelper
+import timber.log.Timber
 
 class VerticalReader: Reader(R.layout.vertical_reader_layout), ErrorItemVH.ErrorReloadClick {
 
@@ -26,6 +27,7 @@ class VerticalReader: Reader(R.layout.vertical_reader_layout), ErrorItemVH.Error
     }
 
     override fun onDestroyView() {
+        Timber.e("Destroy vertical reader")
         readerAdapter = null
         pinchRecyclerView = null
         super.onDestroyView()
@@ -57,13 +59,13 @@ class VerticalReader: Reader(R.layout.vertical_reader_layout), ErrorItemVH.Error
                 readerViewModel.currentPage.value = it
             })
 
-            scrollToPosition(readerViewModel.currentPage.value)
         }
     }
 
     private fun bindViewModel() {
         readerViewModel.uiState.observe(viewLifecycleOwner) {
             onChapterContentChange(it)
+            pinchRecyclerView?.scrollToPosition(readerViewModel.currentPage.value)
         }
     }
 

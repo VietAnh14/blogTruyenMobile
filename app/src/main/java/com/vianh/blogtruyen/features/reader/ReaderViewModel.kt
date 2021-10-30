@@ -72,7 +72,7 @@ class ReaderViewModel(
                 ReaderItem.TransitionItem.END_CURRENT
             }
 
-            pageItems.add(ReaderItem.TransitionItem(transitionItemType))
+            pageItems.add(ReaderItem.TransitionItem(transitionItemType, currentChapter.value))
 
             listItems.value = pageItems
             dataManager.dbHelper.markChapterAsRead(chapter, manga.id)

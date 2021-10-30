@@ -2,8 +2,6 @@ package com.vianh.blogtruyen.features.reader.type.pager
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.view.GestureDetector
-import android.view.MotionEvent
 import android.view.View
 import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
@@ -28,10 +26,12 @@ class PagerReader: Reader(R.layout.pager_reader_layout) {
     private fun setup() {
         adapter = ReaderPagerAdapter(Glide.with(requireContext()) ,readerViewModel)
         pager?.adapter = adapter
-        toPage(readerViewModel.currentPage.value, false)
         pager?.registerOnPageChangeCallback(object: ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 readerViewModel.currentPage.value = position
+                if (position == adapter?.itemCount?.minus(1)) {
+                    readerViewModel.controllerVisibility.value = true
+                }
             }
         })
     }
@@ -39,10 +39,12 @@ class PagerReader: Reader(R.layout.pager_reader_layout) {
     private fun bindViewModel() {
         readerViewModel.uiState.observe(viewLifecycleOwner) {
             adapter?.submitList(it.items)
+            toPage(readerViewModel.currentPage.value, false)
         }
     }
 
     override fun onDestroyView() {
+        Timber.e("Destroy pager reader")
         adapter = null
         pager = null
         super.onDestroyView()

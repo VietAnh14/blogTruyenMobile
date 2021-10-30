@@ -1,5 +1,6 @@
 package com.vianh.blogtruyen.features.feed.list
 
+import android.view.View
 import android.view.ViewGroup
 import com.vianh.blogtruyen.R
 import com.vianh.blogtruyen.databinding.NewUploadItemBinding
@@ -9,7 +10,7 @@ import com.vianh.blogtruyen.features.list.MangaItem
 import com.vianh.blogtruyen.utils.loadNetWorkImage
 
 class NewStoriesVH(parent: ViewGroup, itemClick: ItemClick<MangaItem>) :
-    AbstractBindingHolder<MangaItem, Unit, NewUploadItemBinding>(R.layout.new_upload_item, parent, { NewUploadItemBinding.bind(it)}) {
+    AbstractBindingHolder<MangaItem, Unit, NewUploadItemBinding>(R.layout.new_upload_item, parent) {
 
     init {
         itemView.setOnClickListener {
@@ -23,5 +24,9 @@ class NewStoriesVH(parent: ViewGroup, itemClick: ItemClick<MangaItem>) :
             cover.loadNetWorkImage(manga.imageUrl)
             title.text = manga.title
         }
+    }
+
+    override fun bindToView(view: View): NewUploadItemBinding {
+        return NewUploadItemBinding.bind(view)
     }
 }

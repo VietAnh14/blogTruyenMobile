@@ -21,8 +21,7 @@ import java.io.File
 class PagerItemViewHolder(parent: ViewGroup, val requestManager: RequestManager) :
     AbstractBindingHolder<ReaderItem.PageItem, Unit, PagerReaderItemBinding>(
         R.layout.pager_reader_item,
-        parent,
-        PagerReaderItemBinding::bind
+        parent
     ), View.OnClickListener, PageLoadCallBack<File> {
 
     private val imgTarget = SubsamplingScaleImageViewTarget(binding.page, this)
@@ -98,5 +97,9 @@ class PagerItemViewHolder(parent: ViewGroup, val requestManager: RequestManager)
             retryButton.visible()
             retryButton.setOnClickListener(this@PagerItemViewHolder)
         }
+    }
+
+    override fun bindToView(view: View): PagerReaderItemBinding {
+        return PagerReaderItemBinding.bind(view)
     }
 }

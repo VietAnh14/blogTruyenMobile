@@ -1,5 +1,6 @@
 package com.vianh.blogtruyen.features.base.list
 
+import android.content.Context
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.LayoutRes
@@ -18,6 +19,8 @@ import java.util.*
 abstract class AbstractViewHolder<T : ListItem, E>(itemView: View) :
     RecyclerView.ViewHolder(itemView) {
     var boundData: T? = null
+    val context: Context
+        get() = itemView.context
 
     constructor(@LayoutRes layoutRes: Int, parent: ViewGroup) : this(parent.inflate(layoutRes))
 
@@ -38,13 +41,14 @@ abstract class AbstractViewHolder<T : ListItem, E>(itemView: View) :
     open fun onDetachFromWindow() = Unit
 }
 
-@Suppress("UNCHECKED_CAST")
+@Suppress("UNCHECKED_CAST", "LeakingThis")
 abstract class AbstractBindingHolder<T : ListItem, E, B : ViewBinding>(
     @LayoutRes layoutRes: Int,
-    parent: ViewGroup,
-    bindingFactory: (view: View) -> B
+    parent: ViewGroup
 ) : AbstractViewHolder<T, E>(layoutRes, parent) {
-    val binding: B = bindingFactory.invoke(itemView)
+    val binding: B = bindToView(itemView)
+
+    protected abstract fun bindToView(view: View): B
 }
 
 

@@ -41,7 +41,7 @@
         <entry key="app/src/main/res/layout/details_manga_list_item.xml" value="0.25" />
         <entry key="app/src/main/res/layout/empty_item.xml" value="0.23715277777777777" />
         <entry key="app/src/main/res/layout/empty_manga_item.xml" value="0.23715277777777777" />
-        <entry key="app/src/main/res/layout/error_reader_item.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/error_reader_item.xml" value="0.33" />
         <entry key="app/src/main/res/layout/feed_fragment.xml" value="0.23715277777777777" />
         <entry key="app/src/main/res/layout/feed_item.xml" value="0.25" />
         <entry key="app/src/main/res/layout/footer_item_error.xml" value="0.23715277777777777" />
@@ -59,12 +59,13 @@
         <entry key="app/src/main/res/layout/new_upload_item.xml" value="0.23470790378006873" />
         <entry key="app/src/main/res/layout/pager_reader_item.xml" value="0.23715277777777777" />
         <entry key="app/src/main/res/layout/pager_reader_layout.xml" value="0.23715277777777777" />
+        <entry key="app/src/main/res/layout/pager_transition_item.xml" value="0.23715277777777777" />
         <entry key="app/src/main/res/layout/pinned_item.xml" value="0.23715277777777777" />
         <entry key="app/src/main/res/layout/reader_fragment.xml" value="0.23470790378006873" />
         <entry key="app/src/main/res/layout/reader_setting_popup_layout.xml" value="0.25" />
         <entry key="app/src/main/res/layout/test_activity.xml" value="0.33" />
         <entry key="app/src/main/res/layout/time_item.xml" value="0.23715277777777777" />
-        <entry key="app/src/main/res/layout/transition_page.xml" value="0.1625" />
+        <entry key="app/src/main/res/layout/transition_page.xml" value="0.25" />
         <entry key="app/src/main/res/layout/vertical_reader_layout.xml" value="0.23715277777777777" />
         <entry key="app/src/main/res/menu/chapter_selection_menu.xml" value="0.23715277777777777" />
         <entry key="app/src/main/res/menu/details_manga_menu.xml" value="0.23715277777777777" />

@@ -23,6 +23,7 @@ import com.vianh.blogtruyen.utils.slideUp
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
+import timber.log.Timber
 
 class ReaderFragment : BaseFragment<ReaderFragmentBinding>(), Reader.ReaderContract, SettingPopupWindow.Callback, ReaderContainer.Callback {
     override fun createBinding(
@@ -60,7 +61,6 @@ class ReaderFragment : BaseFragment<ReaderFragmentBinding>(), Reader.ReaderContr
     }
 
     private fun setup() {
-        changeReader(VerticalReader.newInstance())
         setupToolbar(requireBinding.toolbar)
         with(requireBinding) {
             btnNext.setOnClickListener {
