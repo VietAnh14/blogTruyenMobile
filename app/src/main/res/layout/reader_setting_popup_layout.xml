@@ -16,7 +16,7 @@
         android:drawablePadding="10dp"
         android:gravity="center|start"
         android:padding="8dp"
-        android:text="Vertical"
+        android:text="@string/vertical"
         android:textAllCaps="false"
         android:textSize="14sp"
         app:drawableEndCompat="@drawable/ic_list_view"
@@ -35,12 +35,28 @@
         android:drawablePadding="8dp"
         android:gravity="center|start"
         android:padding="10dp"
-        android:text="Horizontal"
+        android:text="@string/horizontal"
         android:textAllCaps="false"
         android:textSize="14sp"
         app:drawableEndCompat="@drawable/ic_hoziron_view"
         app:drawableTint="?attr/colorOnPrimary"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_continuous_vertical" />
+
+    <androidx.appcompat.widget.AppCompatCheckedTextView
+        android:id="@+id/btn_continuous_vertical"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/checked_btn_state"
+        android:drawablePadding="8dp"
+        android:gravity="center|start"
+        android:padding="10dp"
+        android:text="@string/continuous_vertical"
+        android:textAllCaps="false"
+        android:textSize="14sp"
+        app:drawableEndCompat="@drawable/ic_continuous_vertical"
+        app:drawableTint="?attr/colorOnPrimary"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btn_vertical" />
 
@@ -61,7 +77,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:text="Reader mode"
+        android:text="@string/reader_mode"
         android:textSize="14sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -80,16 +96,18 @@
 
     <com.google.android.material.checkbox.MaterialCheckBox
         android:id="@+id/screen_on_cb"
-        android:background="?attr/selectableItemBackground"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="2dp"
-        app:buttonTint="?attr/colorOnPrimary"
-        android:paddingEnd="10dp"
-        android:text="Keep screen on"
+        android:background="?attr/selectableItemBackground"
         android:layoutDirection="rtl"
+        android:paddingEnd="10dp"
+        android:layout_marginStart="4dp"
+        android:text="@string/keep_screen_on"
         android:textColor="?attr/colorOnPrimary"
         android:textSize="14sp"
+        app:buttonTint="?attr/colorOnPrimary"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/divider2" />
 

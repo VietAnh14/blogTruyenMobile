@@ -10,7 +10,7 @@ import com.vianh.blogtruyen.features.reader.Reader
 import timber.log.Timber
 
 @SuppressLint("ClickableViewAccessibility")
-class PagerReader: Reader(R.layout.pager_reader_layout) {
+class PagerReader: Reader(R.layout.pager_reader_layout), ReaderPagerAdapter.Callback {
 
     private var pager: ViewPager2? = null
     private var adapter: ReaderPagerAdapter? = null
@@ -24,7 +24,8 @@ class PagerReader: Reader(R.layout.pager_reader_layout) {
     }
 
     private fun setup() {
-        adapter = ReaderPagerAdapter(Glide.with(requireContext()) ,readerViewModel)
+        adapter = ReaderPagerAdapter(Glide.with(requireContext()), readerViewModel, this)
+        pager?.offscreenPageLimit = 3
         pager?.adapter = adapter
         pager?.registerOnPageChangeCallback(object: ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
@@ -44,7 +45,6 @@ class PagerReader: Reader(R.layout.pager_reader_layout) {
     }
 
     override fun onDestroyView() {
-        Timber.e("Destroy pager reader")
         adapter = null
         pager = null
         super.onDestroyView()
@@ -58,5 +58,9 @@ class PagerReader: Reader(R.layout.pager_reader_layout) {
         fun newInstance(): PagerReader {
             return PagerReader()
         }
+    }
+
+    override fun onReload() {
+        readerViewModel.loadPages()
     }
 }

@@ -3,6 +3,7 @@ package com.vianh.blogtruyen.features.reader.type.vertical
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.view.View
+import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.webkit.URLUtil
 import androidx.core.view.updateLayoutParams
@@ -12,6 +13,7 @@ import com.davemorrissey.labs.subscaleview.ImageSource
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
 import com.vianh.blogtruyen.R
 import com.vianh.blogtruyen.databinding.MangaPageItemBinding
+import com.vianh.blogtruyen.features.base.list.AbstractBindingHolder
 import com.vianh.blogtruyen.features.base.list.AbstractViewHolder
 import com.vianh.blogtruyen.features.reader.list.PageLoadCallBack
 import com.vianh.blogtruyen.features.reader.list.ReaderItem
@@ -23,10 +25,10 @@ import timber.log.Timber
 import java.io.File
 
 class PageItemVH(
-    val binding: MangaPageItemBinding,
+    parent: ViewGroup,
     private val glideRequestManager: RequestManager,
     tileSize: Int
-) : AbstractViewHolder<ReaderItem.PageItem, Unit>(binding.root), PageLoadCallBack<File>, View.OnClickListener {
+) : AbstractBindingHolder<ReaderItem.PageItem, Unit, MangaPageItemBinding>(R.layout.manga_page_item, parent), PageLoadCallBack<File>, View.OnClickListener {
 
     private val minHeight = itemView.context.resources.getDimensionPixelSize(R.dimen.page_item_min_height)
     private val imgTarget = SubsamplingScaleImageViewTarget(binding.page, this)
@@ -108,5 +110,9 @@ class PageItemVH(
             retryButton.visible()
             retryButton.setOnClickListener(this@PageItemVH)
         }
+    }
+
+    override fun bindToView(view: View): MangaPageItemBinding {
+        return MangaPageItemBinding.bind(view)
     }
 }

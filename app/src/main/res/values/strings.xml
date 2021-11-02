@@ -37,4 +37,9 @@
     <string name="delete">Delete</string>
     <string name="deleted_message">Manga \"%1$s\" has been deleted</string>
     <string name="save_cover">Save cover</string>
+    <string name="vertical">Vertical</string>
+    <string name="continuous_vertical">Continuous vertical</string>
+    <string name="horizontal">Horizontal</string>
+    <string name="reader_mode">Reader mode</string>
+    <string name="keep_screen_on">Keep screen on</string>
 </resources>

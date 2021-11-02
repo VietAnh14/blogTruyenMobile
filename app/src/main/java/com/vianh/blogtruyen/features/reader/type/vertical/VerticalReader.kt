@@ -34,15 +34,18 @@ class VerticalReader: Reader(R.layout.vertical_reader_layout), ErrorItemVH.Error
     }
 
     private fun setup(view: View, savedInstanceState: Bundle?) {
+        val addSpace = arguments?.getBoolean(ADD_SPACE_KEY) ?: true
         pinchRecyclerView = view.findViewById<PinchRecyclerView>(R.id.reader_recycler)
         with(checkNotNull(pinchRecyclerView)) {
             setHasFixedSize(true)
+            if (addSpace) {
+                addItemDecoration(SpaceDecorator(requireContext().resources.getDimensionPixelSize(R.dimen.vertical_reader_space)))
+            }
+
             val requestManager = Glide.with(this)
             readerAdapter = ReaderAdapter(requestManager, readerViewModel, maxTileSize, this@VerticalReader)
             adapter = readerAdapter
             layoutManager = PreCacheLayoutManager(requireContext())
-
-            addItemDecoration(SpaceDecorator(requireContext().resources.getDimensionPixelSize(R.dimen.vertical_reader_space)))
 
             val overScrollDecor = OverScrollDecoratorHelper
                 .setUpOverScroll(this, OverScrollDecoratorHelper.ORIENTATION_VERTICAL)
@@ -86,8 +89,12 @@ class VerticalReader: Reader(R.layout.vertical_reader_layout), ErrorItemVH.Error
     }
 
     companion object {
-        fun newInstance(): VerticalReader {
-            return VerticalReader()
+        const val ADD_SPACE_KEY = "ADD_SPACE"
+        fun newInstance(addSpace: Boolean = true): VerticalReader {
+            val bundle = Bundle(1).apply {
+                putBoolean(ADD_SPACE_KEY, addSpace)
+            }
+            return VerticalReader().also { it.arguments = bundle }
         }
     }
 }

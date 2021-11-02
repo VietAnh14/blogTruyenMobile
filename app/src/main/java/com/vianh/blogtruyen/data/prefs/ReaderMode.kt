@@ -1,5 +1,5 @@
 package com.vianh.blogtruyen.data.prefs
 
 enum class ReaderMode {
-    HORIZON, VERTICAL
+    HORIZON, VERTICAL, CONTINUOUS_VERTICAL
 }

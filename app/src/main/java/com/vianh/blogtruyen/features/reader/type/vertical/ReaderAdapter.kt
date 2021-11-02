@@ -50,23 +50,10 @@ class ReaderAdapter(
         parent: ViewGroup,
         viewType: Int
     ): AbstractViewHolder<out ListItem, Unit> {
-        val inflater = LayoutInflater.from(parent.context)
         return when (viewType) {
-            ReaderItem.PAGE_ITEM -> {
-                val binding = MangaPageItemBinding.inflate(inflater, parent, false)
-                PageItemVH(binding, requestManager, tileSize)
-            }
-
-            ReaderItem.TRANSITION_ITEM -> TransitionPageVH(
-                TransitionPageBinding.inflate(
-                    inflater,
-                    parent,
-                    false
-                ), viewModel
-            )
-
+            ReaderItem.PAGE_ITEM -> PageItemVH(parent, requestManager, tileSize)
+            ReaderItem.TRANSITION_ITEM -> TransitionPageVH(parent, viewModel)
             ListItem.LOADING_ITEM -> LoadingItemVH(parent)
-
             ListItem.ERROR_ITEM -> ErrorItemVH(parent, listener)
 
             else -> throw IllegalArgumentException("Unknown view type $viewType")

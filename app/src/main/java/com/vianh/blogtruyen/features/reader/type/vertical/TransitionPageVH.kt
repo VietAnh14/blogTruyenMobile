@@ -1,7 +1,10 @@
 package com.vianh.blogtruyen.features.reader.type.vertical
 
+import android.view.View
+import android.view.ViewGroup
 import com.vianh.blogtruyen.R
 import com.vianh.blogtruyen.databinding.TransitionPageBinding
+import com.vianh.blogtruyen.features.base.list.AbstractBindingHolder
 import com.vianh.blogtruyen.features.base.list.AbstractViewHolder
 import com.vianh.blogtruyen.features.reader.ReaderViewModel
 import com.vianh.blogtruyen.features.reader.list.ReaderItem
@@ -10,8 +13,9 @@ import com.vianh.blogtruyen.utils.visible
 import me.everything.android.ui.overscroll.IOverScrollState
 import kotlin.math.min
 
-class TransitionPageVH(val binding: TransitionPageBinding, val viewModel: ReaderViewModel) :
-    AbstractViewHolder<ReaderItem.TransitionItem, Unit>(binding.root) {
+class TransitionPageVH(val parent: ViewGroup, val viewModel: ReaderViewModel) :
+    AbstractBindingHolder<ReaderItem.TransitionItem, Unit, TransitionPageBinding>(R.layout.transition_page, parent) {
+
     private var canProcess = false
 
     override fun onBind(data: ReaderItem.TransitionItem, extra: Unit) {
@@ -40,7 +44,7 @@ class TransitionPageVH(val binding: TransitionPageBinding, val viewModel: Reader
                 description.setText(R.string.next_chapter_guide)
             } else {
                 canProcess = false
-                description.setText(R.string.pull_down_guild)
+                description.text = context.getString(R.string.pull_down_guild, boundData?.chapter?.number.toString())
             }
         }
     }
@@ -60,5 +64,9 @@ class TransitionPageVH(val binding: TransitionPageBinding, val viewModel: Reader
             nextIcon.gone()
             progressCircular.hide()
         }
+    }
+
+    override fun bindToView(view: View): TransitionPageBinding {
+        return TransitionPageBinding.bind(view)
     }
 }

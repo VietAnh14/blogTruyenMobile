@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckedTextView
 import android.widget.PopupWindow
+import androidx.core.view.children
 import com.vianh.blogtruyen.R
 import com.vianh.blogtruyen.data.prefs.AppSettings
 import com.vianh.blogtruyen.data.prefs.ReaderMode
@@ -36,6 +37,7 @@ class SettingPopupWindow(context: Context, private val appSetting: AppSettings, 
 
         setUpCheck(binding.btnHorizon)
         setUpCheck(binding.btnVertical)
+        setUpCheck(binding.btnContinuousVertical)
     }
 
     private fun checkReaderMode(mode: ReaderMode) {
@@ -43,6 +45,7 @@ class SettingPopupWindow(context: Context, private val appSetting: AppSettings, 
         when(mode) {
             ReaderMode.VERTICAL -> binding.btnVertical.isChecked = true
             ReaderMode.HORIZON -> binding.btnHorizon.isChecked = true
+            ReaderMode.CONTINUOUS_VERTICAL -> binding.btnContinuousVertical.isChecked = true
         }
     }
 
@@ -61,13 +64,15 @@ class SettingPopupWindow(context: Context, private val appSetting: AppSettings, 
     private fun getReaderModeFromId(id: Int): ReaderMode {
         return when(id) {
             R.id.btn_horizon -> ReaderMode.HORIZON
-            else -> ReaderMode.VERTICAL
+            R.id.btn_vertical -> ReaderMode.VERTICAL
+            else -> ReaderMode.CONTINUOUS_VERTICAL
         }
     }
 
     private fun clearCheck() {
-        binding.btnHorizon.isSelected = false
-        binding.btnVertical.isSelected = false
+        binding.root.children.forEach {
+            it.isSelected = false
+        }
     }
 
     companion object {

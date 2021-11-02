@@ -3,6 +3,7 @@ package com.vianh.blogtruyen.features.history.data
 import com.vianh.blogtruyen.data.local.MangaDb
 import com.vianh.blogtruyen.data.local.entity.HistoryEntity
 import com.vianh.blogtruyen.data.model.History
+import com.vianh.blogtruyen.utils.mapList
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
@@ -22,9 +23,7 @@ class HistoryRepo(private val db: MangaDb): HistoryRepository {
     override fun observeHistory(): Flow<List<History>> {
         return db.historyDao
             .observeFullHistory()
-            .map {
-                it.map { fullHistory -> fullHistory.toHistory() }
-            }
+            .mapList { it.toHistory() }
             .flowOn(Dispatchers.IO)
     }
 

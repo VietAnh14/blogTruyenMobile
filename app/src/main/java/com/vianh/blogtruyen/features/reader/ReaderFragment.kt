@@ -94,12 +94,13 @@ class ReaderFragment : BaseFragment<ReaderFragmentBinding>(), Reader.ReaderContr
         return when(mode) {
             ReaderMode.HORIZON -> PagerReader.newInstance()
             ReaderMode.VERTICAL -> VerticalReader.newInstance()
+            ReaderMode.CONTINUOUS_VERTICAL -> VerticalReader.newInstance(false)
         }
     }
 
-    private fun changeReader(reader: Reader) {
+    private fun changeReader(reader: Reader, force: Boolean = false) {
         // Avoid leak when replace 2 fragment with same type
-        if (currentReader?.javaClass == reader.javaClass) {
+        if (currentReader?.javaClass == reader.javaClass && !force) {
             return
         }
 
@@ -158,7 +159,8 @@ class ReaderFragment : BaseFragment<ReaderFragmentBinding>(), Reader.ReaderContr
     }
 
     override fun onReaderModeSelected(mode: ReaderMode) {
-        changeReader(getReader(mode))
+        val force = mode == ReaderMode.VERTICAL || mode == ReaderMode.CONTINUOUS_VERTICAL
+        changeReader(getReader(mode), force)
     }
 
     override fun onKeepScreenOnChange(keepScreenOn: Boolean) {
