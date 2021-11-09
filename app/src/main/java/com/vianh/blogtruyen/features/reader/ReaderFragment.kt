@@ -1,7 +1,9 @@
 package com.vianh.blogtruyen.features.reader
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.*
+import androidx.core.app.ActivityCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updateLayoutParams

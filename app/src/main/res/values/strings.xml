@@ -40,6 +40,7 @@
     <string name="vertical">Vertical</string>
     <string name="continuous_vertical">Continuous vertical</string>
     <string name="horizontal">Horizontal</string>
-    <string name="reader_mode">Reader mode</string>
+    <string name="reader_mode" translatable="false">Reader mode</string>
     <string name="keep_screen_on">Keep screen on</string>
+    <string name="settings">Settings</string>
 </resources>

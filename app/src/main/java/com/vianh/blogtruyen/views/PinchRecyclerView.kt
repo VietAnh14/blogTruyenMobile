@@ -9,6 +9,7 @@ import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.ScaleGestureDetector
 import android.view.ScaleGestureDetector.SimpleOnScaleGestureListener
+import android.widget.OverScroller
 import androidx.recyclerview.widget.RecyclerView
 import timber.log.Timber
 
@@ -28,8 +29,6 @@ class PinchRecyclerView @JvmOverloads constructor(
 
     private var width = 0f
     private var height = 0f
-
-    private var preScale = 0f
 
     private val transformsMatrix = Matrix()
     private val invertMatrix = Matrix()
@@ -79,15 +78,12 @@ class PinchRecyclerView @JvmOverloads constructor(
     private inner class ScaleListener : SimpleOnScaleGestureListener() {
 
         override fun onScale(detector: ScaleGestureDetector): Boolean {
+            updateMatrixValues()
 
-            val newScale = (preScale * detector.scaleFactor).coerceIn(1f, 3f)
+            val currentScale = mValues[Matrix.MSCALE_X]
+            val newScale = (currentScale * detector.scaleFactor).coerceIn(1f, 3f)
             minOffsetX = width - width * newScale
             minOffsetY = height - height * newScale
-            preScale = newScale
-
-
-            updateMatrixValues()
-            val currentScale = mValues[Matrix.MSCALE_X]
 
             // newScale = currentScale * scale < MAX_SCALE => scale < MAX_SCALE / currentScale (same for min)
             val minScale = 1f/currentScale
@@ -111,10 +107,50 @@ class PinchRecyclerView @JvmOverloads constructor(
             distanceX: Float,
             distanceY: Float
         ): Boolean {
+            overScroller.forceFinished(true)
             transformsMatrix.postTranslate(-distanceX, -distanceY)
             constrainsBoundAndInvalidate()
             return true
         }
+
+        override fun onFling(
+            e1: MotionEvent?,
+            e2: MotionEvent?,
+            velocityX: Float,
+            velocityY: Float
+        ): Boolean {
+            Timber.e("Vx: $velocityX, Vy: $velocityY")
+            startFling(velocityX.toInt().div(2), velocityY.toInt().div(2))
+            return super.onFling(e1, e2, velocityX, velocityY)
+        }
+    }
+
+    val overScroller = OverScroller(context)
+    fun startFling(velocityX: Int, velocityY: Int) {
+        updateMatrixValues()
+        if (mValues[Matrix.MSCALE_X] == 1f) return
+
+        val startX = mValues[Matrix.MTRANS_X].toInt()
+        val startY = mValues[Matrix.MTRANS_Y].toInt()
+        overScroller.forceFinished(true)
+        Timber.e("Startx: $startX, StartY: $startY, velX: $velocityX, velY $velocityY, minX: $minOffsetX, minY: $minOffsetY")
+        overScroller.fling(startX, startY, velocityX, velocityY, minOffsetX.toInt(), 0, minOffsetY.toInt(), 0)
+        postOnAnimation(object: Runnable {
+            override fun run() {
+                if (overScroller.computeScrollOffset()) {
+                    updateMatrixValues()
+                    val newX: Int = overScroller.currX
+                    val newY: Int = overScroller.currY
+                    val curX = mValues[Matrix.MTRANS_X].toInt()
+                    val curY = mValues[Matrix.MTRANS_Y].toInt()
+                    val transX: Int = newX - curX
+                    val transY: Int = newY - curY
+                    transformsMatrix.postTranslate(transX.toFloat(), transY.toFloat())
+                    constrainsBoundAndInvalidate()
+                    postOnAnimation(this)
+                }
+            }
+        })
     }
 
     fun constrainsBoundAndInvalidate() {

@@ -34,4 +34,9 @@
     <string name="deleted_message">Đã xóa manga \"%1$s\"</string>
     <string name="save_cover">Lưu ảnh bìa</string>
     <string name="end_chapter_pager">Hết chương %1$s</string>
+    <string name="vertical">Dọc</string>
+    <string name="continuous_vertical">Dọc liên tục</string>
+    <string name="horizontal">Ngang</string>
+    <string name="keep_screen_on">Giữ màn hình luôn bật</string>
+    <string name="settings">Cài đặt</string>
 </resources>
