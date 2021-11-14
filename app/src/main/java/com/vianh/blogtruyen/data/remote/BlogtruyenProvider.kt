@@ -31,7 +31,7 @@ class BlogtruyenProvider(private val client: OkHttpClient) : MangaProvider {
 
     override suspend fun fetchNewManga(pageNumber: Int): List<Manga> {
         return withContext(Dispatchers.IO) {
-            val url = BuildConfig.HOST + "/thumb-$pageNumber"
+            val url = BuildConfig.HOST + "/page-$pageNumber"
             val request = Request.Builder().url(url).build()
             val response = client.newCall(request).getBodyString()
             parseManga(response)
@@ -342,20 +342,26 @@ class BlogtruyenProvider(private val client: OkHttpClient) : MangaProvider {
     }
 
     private fun parseManga(html: String): MutableList<Manga> {
-        val items = Jsoup.parse(html).getElementsByClass("ps-relative")
+        val items = Jsoup.parse(html)
+            .getElementsByClass("list-manga")
+            .firstOrNull()
+            ?.getElementsByClass("item")
+            .orEmpty()
+
         val listManga = mutableListOf<Manga>()
         for (item in items) {
-            val title = item.child(1).child(0)
-            val image = item.child(0).child(0).attr("src")
-            val link = title.attr("href")
-            val id = link.split('/')[1].toInt()
+            val title = item.getElementsByClass("title").firstOrNull()?.text().orEmpty()
+            val image = item.getElementsByTag("img").firstOrNull()?.attr("src")
+            val link = item.getElementsByTag("a").firstOrNull()?.attr("href").orEmpty()
+            val id = idFromRelativeLink(link)
+            val des = item.getElementsByClass("introduce-home").firstOrNull()?.text()
             val manga = Manga(
-                imageUrl = image,
+                imageUrl = image.orEmpty(),
                 link = link,
-                uploadTitle = title.text(),
-                title = title.text(),
+                uploadTitle = title,
+                title = title,
                 id = id,
-                description = "Updating"
+                description = if (des.isNullOrEmpty()) "Updating" else des
             )
             listManga.add(manga)
         }

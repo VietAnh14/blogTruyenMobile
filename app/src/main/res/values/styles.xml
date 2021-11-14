@@ -13,7 +13,7 @@
 
         <item name="titleTextColor">@android:color/white</item>
         <item name="android:textColorPrimary">@color/lightGray</item>
-        <item name="colorControlNormal">@color/darkGray</item>
+        <item name="colorControlNormal">@color/pureWhite</item>
 <!--        <item name="android:navigationBarColor">@color/colorPrimary</item>-->
         <item name="actionMenuTextColor">@color/pureWhite</item>
         <item name="popupTheme">@style/PopupMenu</item>
