@@ -15,6 +15,7 @@ android {
         targetSdkVersion 31
         versionCode 7
         versionName "0.07"
+        setArchivesBaseName("blogTruyen_$versionName")
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
