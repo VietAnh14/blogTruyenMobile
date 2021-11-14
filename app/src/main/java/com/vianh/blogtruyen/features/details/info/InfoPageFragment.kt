@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import androidx.lifecycle.coroutineScope
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ConcatAdapter
@@ -28,6 +29,10 @@ import timber.log.Timber
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.browser.customtabs.CustomTabColorSchemeParams
 import androidx.core.content.ContextCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.children
+import androidx.core.view.updateLayoutParams
+import androidx.core.view.updatePadding
 
 
 class InfoPageFragment : BaseFragment<ChapterPageFragmentBinding>(), ChapterVH.ChapterClick,
@@ -69,6 +74,10 @@ class InfoPageFragment : BaseFragment<ChapterPageFragmentBinding>(), ChapterVH.C
 
     private fun onNewPageSelected(position: Int) {
         cab?.destroy()
+    }
+
+    override fun onWindowInsetsChange(root: View?, insets: WindowInsetsCompat): WindowInsetsCompat {
+        return WindowInsetsCompat.CONSUMED
     }
 
     private fun onButtonStateChange(buttonState: Pair<Boolean, Int>) {

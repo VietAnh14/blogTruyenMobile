@@ -1,9 +1,7 @@
 package com.vianh.blogtruyen
 
-import android.graphics.Color
 import android.os.Bundle
 import android.text.Spanned
-import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
 import android.view.View
 import androidx.core.text.bold
@@ -14,8 +12,6 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
 import com.github.zawadz88.materialpopupmenu.popupMenu
-import com.github.zawadz88.materialpopupmenu.popupMenuBuilder
-import com.vianh.blogtruyen.data.prefs.AppSettings
 import com.vianh.blogtruyen.data.prefs.ReaderMode
 import com.vianh.blogtruyen.databinding.TestActivityBinding
 import com.vianh.blogtruyen.features.base.BaseActivity
@@ -34,16 +30,16 @@ class TestActivity: BaseActivity<TestActivityBinding>(), OnApplyWindowInsetsList
     }
 
     fun setUp() {
-        binding.btn.setOnClickListener {
-//            SettingPopupWindow.show(it, AppSettings(this), this)
-            showPopupMenu(it)
-        }
-
-        with(binding.spannableText) {
-            text = getSpannableContent()
-            movementMethod = LinkMovementMethod.getInstance()
-            highlightColor = Color.TRANSPARENT
-        }
+//        binding.btn.setOnClickListener {
+////            SettingPopupWindow.show(it, AppSettings(this), this)
+//            showPopupMenu(it)
+//        }
+//
+//        with(binding.spannableText) {
+//            text = getSpannableContent()
+//            movementMethod = LinkMovementMethod.getInstance()
+//            highlightColor = Color.TRANSPARENT
+//        }
     }
 
     private fun showPopupMenu(view: View) {

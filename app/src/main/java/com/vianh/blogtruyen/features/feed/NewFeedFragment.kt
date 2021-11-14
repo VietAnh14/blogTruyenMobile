@@ -16,6 +16,7 @@ import com.vianh.blogtruyen.features.feed.list.NewFeedItem
 import com.vianh.blogtruyen.features.list.HomeFragment
 import com.vianh.blogtruyen.features.list.MangaItem
 import com.vianh.blogtruyen.features.search.SearchFragment
+import com.vianh.blogtruyen.utils.CarouselLayoutManager
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import java.util.concurrent.TimeUnit
 
@@ -48,12 +49,7 @@ class NewFeedFragment : BaseFragment<FeedFragmentBinding>(), SwipeRefreshLayout.
         with(requireBinding) {
             swipeRefreshLayout.setOnRefreshListener(this@NewFeedFragment)
 
-            pinStoriesRecycler.layoutManager = object: LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false) {
-                override fun checkLayoutParams(lp: RecyclerView.LayoutParams?): Boolean {
-                    lp?.width = (width * 0.85).toInt()
-                    return super.checkLayoutParams(lp)
-                }
-            }
+            pinStoriesRecycler.layoutManager = CarouselLayoutManager(requireContext())
 
             pinStoriesRecycler.adapter =
                 NewFeedAdapter(this@NewFeedFragment).also { pinAdapter = it }

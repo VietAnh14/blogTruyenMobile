@@ -1,5 +1,7 @@
 package com.vianh.blogtruyen.views
 
+import android.animation.ObjectAnimator
+import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Canvas
@@ -9,6 +11,7 @@ import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.ScaleGestureDetector
 import android.view.ScaleGestureDetector.SimpleOnScaleGestureListener
+import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.OverScroller
 import androidx.recyclerview.widget.RecyclerView
 import timber.log.Timber
@@ -20,6 +23,12 @@ class PinchRecyclerView @JvmOverloads constructor(
     attrs: AttributeSet?,
     defStyleAttr: Int = 0
 ) : RecyclerView(context, attrs, defStyleAttr) {
+
+    companion object {
+        const val MAX_SCALE = 3f
+        const val MIN_SCALE = 1f
+    }
+
 
     private val mScaleDetector: ScaleGestureDetector
     private val gestureDetector: GestureDetector
@@ -81,16 +90,17 @@ class PinchRecyclerView @JvmOverloads constructor(
             updateMatrixValues()
 
             val currentScale = mValues[Matrix.MSCALE_X]
-            val newScale = (currentScale * detector.scaleFactor).coerceIn(1f, 3f)
-            minOffsetX = width - width * newScale
-            minOffsetY = height - height * newScale
-
-            // newScale = currentScale * scale < MAX_SCALE => scale < MAX_SCALE / currentScale (same for min)
-            val minScale = 1f/currentScale
-            val maxScale = 3f/currentScale
-            val factor = detector.scaleFactor.coerceIn(minScale, maxScale)
-            transformsMatrix.postScale(factor, factor, detector.focusX, detector.focusY)
-            constrainsBoundAndInvalidate()
+            val newScale = (currentScale * detector.scaleFactor).coerceIn(MIN_SCALE, MAX_SCALE)
+//            minOffsetX = width - width * newScale
+//            minOffsetY = height - height * newScale
+//
+//            // newScale = currentScale * scale < MAX_SCALE => scale < MAX_SCALE / currentScale (same for min)
+//            val minScale = 1f/currentScale
+//            val maxScale = 3f/currentScale
+//            val factor = detector.scaleFactor.coerceIn(minScale, maxScale)
+//            transformsMatrix.postScale(factor, factor, detector.focusX, detector.focusY)
+//            constrainsBoundAndInvalidate()
+            scale(newScale, detector.focusX, detector.focusY)
             return true
         }
     }
@@ -98,7 +108,13 @@ class PinchRecyclerView @JvmOverloads constructor(
     private inner class GestureListener: GestureDetector.SimpleOnGestureListener() {
 
         override fun onDoubleTap(e: MotionEvent?): Boolean {
-            return super.onDoubleTap(e)
+            e ?: return false
+
+            updateMatrixValues()
+            val currentScale = mValues[Matrix.MSCALE_X]
+            val newScale = if (currentScale > MIN_SCALE) MIN_SCALE else MAX_SCALE
+            startScaleAnimation(currentScale, newScale, e.x, e.y)
+            return true
         }
 
         override fun onScroll(
@@ -120,20 +136,46 @@ class PinchRecyclerView @JvmOverloads constructor(
             velocityY: Float
         ): Boolean {
             Timber.e("Vx: $velocityX, Vy: $velocityY")
-            startFling(velocityX.toInt().div(2), velocityY.toInt().div(2))
+            startFling(velocityX.toInt(), velocityY.toInt())
             return super.onFling(e1, e2, velocityX, velocityY)
         }
+    }
+
+    fun startScaleAnimation(from: Float, to: Float, focusX: Float, focusY: Float, duration: Long = 300) {
+        val scaleAnimator = ValueAnimator
+            .ofFloat(from, to)
+            .setDuration(duration)
+        scaleAnimator.interpolator = AccelerateDecelerateInterpolator()
+
+        scaleAnimator.addUpdateListener {
+            val scale = it.animatedValue as Float
+            scale(scale, focusX, focusY)
+        }
+        scaleAnimator.start()
+    }
+
+    fun scale(scale: Float, focusX: Float, focusY: Float) {
+        updateMatrixValues()
+
+        val currentScale = mValues[Matrix.MSCALE_X]
+        val newScale = scale.coerceIn(MIN_SCALE, MAX_SCALE)
+        minOffsetX = width - width * newScale
+        minOffsetY = height - height * newScale
+
+        val factor = scale/currentScale
+        transformsMatrix.postScale(factor, factor, focusX, focusY)
+        constrainsBoundAndInvalidate()
     }
 
     val overScroller = OverScroller(context)
     fun startFling(velocityX: Int, velocityY: Int) {
         updateMatrixValues()
-        if (mValues[Matrix.MSCALE_X] == 1f) return
+        if (mValues[Matrix.MSCALE_X] == MIN_SCALE) return
 
         val startX = mValues[Matrix.MTRANS_X].toInt()
         val startY = mValues[Matrix.MTRANS_Y].toInt()
+
         overScroller.forceFinished(true)
-        Timber.e("Startx: $startX, StartY: $startY, velX: $velocityX, velY $velocityY, minX: $minOffsetX, minY: $minOffsetY")
         overScroller.fling(startX, startY, velocityX, velocityY, minOffsetX.toInt(), 0, minOffsetY.toInt(), 0)
         postOnAnimation(object: Runnable {
             override fun run() {
