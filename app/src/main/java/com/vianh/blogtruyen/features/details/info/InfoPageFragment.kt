@@ -77,10 +77,6 @@ class InfoPageFragment : BaseFragment<ChapterPageFragmentBinding>(), ChapterVH.C
         cab?.destroy()
     }
 
-    override fun onWindowInsetsChange(root: View?, insets: WindowInsetsCompat): WindowInsetsCompat {
-        return WindowInsetsCompat.CONSUMED
-    }
-
     private fun onButtonStateChange(buttonState: Pair<Boolean, Int>) {
         with(requireBinding.btnRead) {
             isEnabled = buttonState.first

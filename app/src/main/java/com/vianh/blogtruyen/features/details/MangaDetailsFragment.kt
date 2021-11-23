@@ -3,6 +3,7 @@ package com.vianh.blogtruyen.features.details
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.util.TypedValue
 import android.view.LayoutInflater
@@ -10,6 +11,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.view.*
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.appbar.AppBarLayout
@@ -102,13 +104,14 @@ class MangaDetailsFragment : BaseFragment<MangaDetailsFragmentBinding>() {
 
     private val toolbarHeight by lazy { requireContext().typeValue(R.attr.actionBarSize).data }
 
-    override fun onWindowInsetsChange(root: View?, insets: WindowInsetsCompat): WindowInsetsCompat {
+    override fun onApplyWindowInsets(v: View?, insets: WindowInsetsCompat): WindowInsetsCompat {
         val systemBarInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
         with(requireBinding) {
             val totalToolbarHeight = TypedValue.complexToDimensionPixelSize(toolbarHeight, resources.displayMetrics) + systemBarInsets.top
             toolbar.updateLayoutParams<ViewGroup.LayoutParams> { height = totalToolbarHeight }
             toolbar.updatePadding(top = systemBarInsets.top)
-            getRoot().updatePadding(bottom = systemBarInsets.bottom)
+            pager.updatePadding(bottom = systemBarInsets.bottom)
+            root.updatePadding(left = systemBarInsets.left, right = systemBarInsets.right)
         }
         return WindowInsetsCompat.CONSUMED
     }

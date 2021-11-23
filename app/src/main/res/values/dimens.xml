@@ -11,4 +11,6 @@
 
     <dimen name="feed_history_width">150dp</dimen>
     <dimen name="vertical_reader_space">8dp</dimen>
+
+    <dimen name="bottom_nav_padding">50dp</dimen>
 </resources>

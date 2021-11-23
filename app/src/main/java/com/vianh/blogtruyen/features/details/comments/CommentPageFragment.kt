@@ -47,10 +47,6 @@ class CommentPageFragment: BaseFragment<CommentPageFragmentBinding>() {
         }
     }
 
-    override fun onWindowInsetsChange(root: View?, insets: WindowInsetsCompat): WindowInsetsCompat {
-        return WindowInsetsCompat.CONSUMED
-    }
-
     companion object {
         fun newInstance(): CommentPageFragment {
             return CommentPageFragment()

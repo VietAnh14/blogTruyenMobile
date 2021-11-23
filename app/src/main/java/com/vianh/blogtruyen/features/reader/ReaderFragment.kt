@@ -1,7 +1,9 @@
 package com.vianh.blogtruyen.features.reader
 
+import android.graphics.Color
 import android.os.Bundle
 import android.view.*
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updateLayoutParams
@@ -13,6 +15,7 @@ import com.vianh.blogtruyen.data.prefs.AppSettings
 import com.vianh.blogtruyen.data.prefs.ReaderMode
 import com.vianh.blogtruyen.databinding.ReaderFragmentBinding
 import com.vianh.blogtruyen.features.base.BaseFragment
+import com.vianh.blogtruyen.features.main.MainActivity
 import com.vianh.blogtruyen.features.reader.type.pager.PagerReader
 import com.vianh.blogtruyen.features.reader.type.vertical.VerticalReader
 import com.vianh.blogtruyen.utils.resetPos
@@ -64,18 +67,6 @@ class ReaderFragment : BaseFragment<ReaderFragmentBinding>(), Reader.ReaderContr
                 readerViewModel.toPreviousChapter()
             }
 
-            ViewCompat.setOnApplyWindowInsetsListener(toolbar) { v, insets ->
-                v.updateLayoutParams<ViewGroup.MarginLayoutParams> {
-                    topMargin = insets.systemWindowInsetTop
-                }
-                insets
-            }
-
-            ViewCompat.setOnApplyWindowInsetsListener(chapterController) { v, insets ->
-                v.updatePadding(bottom = insets.getInsets(WindowInsetsCompat.Type.systemBars()).bottom)
-                insets
-            }
-
             readerContainer.callback = this@ReaderFragment
         }
 
@@ -115,7 +106,15 @@ class ReaderFragment : BaseFragment<ReaderFragmentBinding>(), Reader.ReaderContr
         return state ?: throw IllegalStateException("No reader state")
     }
 
-    override fun onWindowInsetsChange(root: View?, insets: WindowInsetsCompat): WindowInsetsCompat {
+    override fun onApplyWindowInsets(v: View?, insets: WindowInsetsCompat): WindowInsetsCompat {
+        val barInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+        requireBinding.toolbar.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+            topMargin = barInsets.top
+        }
+
+        requireBinding.dummyView.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+            bottomMargin = barInsets.bottom
+        }
         return insets
     }
 

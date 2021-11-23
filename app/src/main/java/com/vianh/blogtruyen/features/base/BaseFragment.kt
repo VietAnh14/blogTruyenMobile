@@ -10,6 +10,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.OnApplyWindowInsetsListener
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
 import com.vianh.blogtruyen.R
@@ -44,19 +45,10 @@ abstract class BaseFragment<B : ViewBinding> : Fragment(), OnApplyWindowInsetsLi
         ViewCompat.setOnApplyWindowInsetsListener(view, this)
     }
 
-    open fun onWindowInsetsChange(root: View?, insets: WindowInsetsCompat): WindowInsetsCompat {
-        val systemBarInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-        view?.setPadding(
-            systemBarInsets.left,
-            systemBarInsets.top,
-            systemBarInsets.right,
-            systemBarInsets.bottom
-        )
-        return WindowInsetsCompat.CONSUMED
-    }
-
     override fun onApplyWindowInsets(v: View?, insets: WindowInsetsCompat): WindowInsetsCompat {
-        return onWindowInsetsChange(view, insets)
+        val systemBarInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+        view?.updatePadding(top = systemBarInsets.top, left = systemBarInsets.left, right = systemBarInsets.right)
+        return WindowInsetsCompat.CONSUMED
     }
 
     override fun onDestroyView() {

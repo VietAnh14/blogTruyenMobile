@@ -5,9 +5,7 @@ import com.vianh.blogtruyen.data.model.Category
 import com.vianh.blogtruyen.data.model.Chapter
 import com.vianh.blogtruyen.data.model.Comment
 import com.vianh.blogtruyen.data.model.Manga
-import com.vianh.blogtruyen.utils.await
 import com.vianh.blogtruyen.utils.getBodyString
-import com.vianh.blogtruyen.utils.hideSystemUI
 import com.vianh.blogtruyen.utils.mapToSet
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -19,7 +17,6 @@ import org.jsoup.nodes.Document
 import org.jsoup.select.Elements
 import java.util.*
 import kotlin.collections.ArrayList
-import kotlin.collections.HashSet
 
 class BlogtruyenProvider(private val client: OkHttpClient) : MangaProvider {
 
