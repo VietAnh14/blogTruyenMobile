@@ -1,5 +1,6 @@
 package com.vianh.blogtruyen.features.reader
 
+import android.os.Bundle
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
@@ -22,16 +23,16 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 
 class ReaderViewModel(
+    state: ReaderState,
     private val dataManager: DataManager,
     private val localSourceRepo: LocalSourceRepo,
-    chapter: Chapter,
-    val manga: Manga,
-    val isOffline: Boolean = false
 ) : BaseVM() {
 
+    val isOffline = state.isOffline
+    private val manga: Manga = state.manga
     private var loadPageJob: Job? = null
     private val listItems: MutableStateFlow<List<ListItem>> = MutableStateFlow(listOf(LoadingItem))
-    private val currentChapter: MutableStateFlow<Chapter> = MutableStateFlow(chapter)
+    private val currentChapter: MutableStateFlow<Chapter> = MutableStateFlow(state.chapter)
     val currentPage = MutableStateFlow(0)
 
     val uiState = combine(currentChapter, listItems) { chapter, items ->
@@ -101,6 +102,11 @@ class ReaderViewModel(
 
     fun toggleControllerVisibility() {
         controllerVisibility.value = !controllerVisibility.value!!
+    }
+
+    fun saveReaderState(bundle: Bundle) {
+        val readerState = ReaderState(manga, currentChapter.value, isOffline)
+        bundle.putParcelable(ReaderFragment.READER_STATE_KEY, readerState)
     }
 
     override fun createExceptionHandler(): CoroutineExceptionHandler {

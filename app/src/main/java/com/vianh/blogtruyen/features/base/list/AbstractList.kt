@@ -41,12 +41,11 @@ abstract class AbstractViewHolder<T : ListItem, E>(itemView: View) :
     open fun onDetachFromWindow() = Unit
 }
 
-@Suppress("UNCHECKED_CAST", "LeakingThis")
 abstract class AbstractBindingHolder<T : ListItem, E, B : ViewBinding>(
     @LayoutRes layoutRes: Int,
     parent: ViewGroup
 ) : AbstractViewHolder<T, E>(layoutRes, parent) {
-    val binding: B = bindToView(itemView)
+    val binding: B by lazy { bindToView(itemView) }
 
     protected abstract fun bindToView(view: View): B
 }

@@ -1,9 +1,7 @@
 package com.vianh.blogtruyen.features.reader
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.*
-import androidx.core.app.ActivityCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updateLayoutParams
@@ -11,8 +9,6 @@ import androidx.core.view.updatePadding
 import androidx.fragment.app.FragmentTransaction
 import androidx.fragment.app.commit
 import com.vianh.blogtruyen.R
-import com.vianh.blogtruyen.data.model.Chapter
-import com.vianh.blogtruyen.data.model.Manga
 import com.vianh.blogtruyen.data.prefs.AppSettings
 import com.vianh.blogtruyen.data.prefs.ReaderMode
 import com.vianh.blogtruyen.databinding.ReaderFragmentBinding
@@ -25,7 +21,6 @@ import com.vianh.blogtruyen.utils.slideUp
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
-import timber.log.Timber
 
 class ReaderFragment : BaseFragment<ReaderFragmentBinding>(), Reader.ReaderContract, SettingPopupWindow.Callback, ReaderContainer.Callback {
     override fun createBinding(
@@ -37,20 +32,16 @@ class ReaderFragment : BaseFragment<ReaderFragmentBinding>(), Reader.ReaderContr
     }
 
     private val appSettings by inject<AppSettings>()
+    private var lastSavedState: Bundle? = null
 
-    override val readerViewModel by viewModel<ReaderViewModel> {
-        parametersOf(
-            arguments?.getParcelable(CHAPTER_KEY),
-            arguments?.getParcelable(MANGA_KEY),
-            arguments?.getBoolean(OFFLINE_MODE_KEY)
-        )
-    }
+    override val readerViewModel by viewModel<ReaderViewModel> { parametersOf(getRestoreState()) }
 
     private val currentReader
         get() = childFragmentManager.findFragmentById(R.id.reader_container)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        lastSavedState = savedInstanceState
         setup()
         bindViewModel()
     }
@@ -112,6 +103,18 @@ class ReaderFragment : BaseFragment<ReaderFragmentBinding>(), Reader.ReaderContr
         }
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        readerViewModel.saveReaderState(outState)
+        super.onSaveInstanceState(outState)
+        lastSavedState = outState
+    }
+
+    private fun getRestoreState(): ReaderState {
+        val bundle = lastSavedState ?: arguments
+        val state = bundle?.getParcelable<ReaderState>(READER_STATE_KEY)
+        return state ?: throw IllegalStateException("No reader state")
+    }
+
     override fun onWindowInsetsChange(root: View?, insets: WindowInsetsCompat): WindowInsetsCompat {
         return insets
     }
@@ -137,10 +140,6 @@ class ReaderFragment : BaseFragment<ReaderFragmentBinding>(), Reader.ReaderContr
 
             else -> super.onMenuItemClick(item)
         }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
     }
 
     override fun onDestroy() {
@@ -175,15 +174,13 @@ class ReaderFragment : BaseFragment<ReaderFragmentBinding>(), Reader.ReaderContr
     }
 
     companion object {
-        private const val CHAPTER_KEY = "CHAPTER_BUNDLE_KEY"
-        private const val MANGA_KEY = "MANGA_BUNDLE_KEY"
-        private const val OFFLINE_MODE_KEY = "OFFLINE"
+        const val READER_STATE_KEY = "READER_STATE"
 
-        fun newInstance(chapter: Chapter, manga: Manga, isOffline: Boolean = false): ReaderFragment {
-            val bundle = Bundle(3)
-            bundle.putParcelable(CHAPTER_KEY, chapter)
-            bundle.putParcelable(MANGA_KEY, manga)
-            bundle.putBoolean(OFFLINE_MODE_KEY, isOffline)
+        fun newInstance(readerState: ReaderState): ReaderFragment {
+            val bundle = Bundle(1).apply {
+                putParcelable(READER_STATE_KEY, readerState)
+            }
+
             return ReaderFragment().apply {
                 arguments = bundle
             }

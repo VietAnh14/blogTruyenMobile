@@ -100,8 +100,8 @@ fun View.hideSoftKeyboard() {
     keyboard?.hideSoftInputFromWindow(windowToken, 0)
 }
 
-inline fun ViewGroup.inflate(@LayoutRes layoutRes: Int): View {
-    return LayoutInflater.from(context).inflate(layoutRes, this, false)
+inline fun ViewGroup.inflate(@LayoutRes layoutRes: Int, attachToParent: Boolean = false): View {
+    return LayoutInflater.from(context).inflate(layoutRes, this, attachToParent)
 }
 
 inline fun <T : ViewBinding> ViewGroup.viewBinding(factory: (inflater: LayoutInflater, parent: ViewGroup, attachToParent: Boolean) -> T) =

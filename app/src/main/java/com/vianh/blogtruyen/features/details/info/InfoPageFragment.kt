@@ -33,6 +33,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.children
 import androidx.core.view.updateLayoutParams
 import androidx.core.view.updatePadding
+import com.vianh.blogtruyen.features.reader.ReaderState
 
 
 class InfoPageFragment : BaseFragment<ChapterPageFragmentBinding>(), ChapterVH.ChapterClick,
@@ -150,7 +151,7 @@ class InfoPageFragment : BaseFragment<ChapterPageFragmentBinding>(), ChapterVH.C
     private fun toReaderFragment(chapter: Chapter) {
         hostActivity?.changeFragment(
             ReaderFragment
-            .newInstance(chapter, viewModel.currentManga, viewModel.isOffline), true)
+            .newInstance(ReaderState(viewModel.currentManga, chapter, viewModel.isOffline)), true)
     }
 
     private fun updateCab() {

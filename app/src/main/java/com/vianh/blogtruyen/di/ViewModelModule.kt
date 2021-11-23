@@ -11,6 +11,6 @@ val viewModelModule
     get() = module {
         viewModel { MainViewModel(get(), get()) }
         viewModel { HomeViewModel(get(), get()) }
-        viewModel { parameters -> ReaderViewModel(get(), get(), parameters[0], parameters[1], parameters[2]) }
+        viewModel { parameters -> ReaderViewModel(parameters[0] ,get(), get()) }
         viewModel { NewFeedViewModel(get(), get()) }
     }

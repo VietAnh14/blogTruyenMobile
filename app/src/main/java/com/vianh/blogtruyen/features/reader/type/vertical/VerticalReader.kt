@@ -27,7 +27,6 @@ class VerticalReader: Reader(R.layout.vertical_reader_layout), ErrorItemVH.Error
     }
 
     override fun onDestroyView() {
-        Timber.e("Destroy vertical reader")
         readerAdapter = null
         pinchRecyclerView = null
         super.onDestroyView()

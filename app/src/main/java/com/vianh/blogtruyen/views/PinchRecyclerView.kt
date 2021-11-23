@@ -91,15 +91,6 @@ class PinchRecyclerView @JvmOverloads constructor(
 
             val currentScale = mValues[Matrix.MSCALE_X]
             val newScale = (currentScale * detector.scaleFactor).coerceIn(MIN_SCALE, MAX_SCALE)
-//            minOffsetX = width - width * newScale
-//            minOffsetY = height - height * newScale
-//
-//            // newScale = currentScale * scale < MAX_SCALE => scale < MAX_SCALE / currentScale (same for min)
-//            val minScale = 1f/currentScale
-//            val maxScale = 3f/currentScale
-//            val factor = detector.scaleFactor.coerceIn(minScale, maxScale)
-//            transformsMatrix.postScale(factor, factor, detector.focusX, detector.focusY)
-//            constrainsBoundAndInvalidate()
             scale(newScale, detector.focusX, detector.focusY)
             return true
         }
@@ -135,7 +126,6 @@ class PinchRecyclerView @JvmOverloads constructor(
             velocityX: Float,
             velocityY: Float
         ): Boolean {
-            Timber.e("Vx: $velocityX, Vy: $velocityY")
             startFling(velocityX.toInt(), velocityY.toInt())
             return super.onFling(e1, e2, velocityX, velocityY)
         }
