@@ -68,24 +68,24 @@ class ExampleUnitTest {
     // Using coroutineScope and it throw exception normally cause coroutine scope cancel all child
     // and rethrow any exceptions
     // Or we could use withContext block and it fail as expected
-    @Test
-    fun testException() {
-        val job = scope.launch(exHandler) {
-            println("Run test")
-            try {
-                supervisorScope {
-                    launch { doSomethingUsefulTwo() }
-                    launch { doSomethingUsefulOne() }
-                    println("I'm still alive")
-                }
-            } catch (e: Exception) {
-                println("I'm dead by now ${e.message}")
-            }
-        }
-        runBlocking {
-            job.join()
-        }
-    }
+//    @Test
+//    fun testException() {
+//        val job = scope.launch(exHandler) {
+//            println("Run test")
+//            try {
+//                supervisorScope {
+//                    launch { doSomethingUsefulTwo() }
+//                    launch { doSomethingUsefulOne() }
+//                    println("I'm still alive")
+//                }
+//            } catch (e: Exception) {
+//                println("I'm dead by now ${e.message}")
+//            }
+//        }
+//        runBlocking {
+//            job.join()
+//        }
+//    }
 
 //    @Test
 //    fun main() {
@@ -102,36 +102,36 @@ class ExampleUnitTest {
 //        println("Completed in $time ms")
 //    }
 
-    @ObsoleteCoroutinesApi
-    @Test
-    fun testFlow() {
-        val flowA = flow {
-            cancelableCatching {
-                emit(1)
-                delay(1000)
-                emit(100)
-                delay(2000)
-                throw CancellationException()
-                emit(1000)
-            }
-        }
-
-        val job = flowA
-            .catch {
-                emit(-200)
-                println("Catch err 2 $it")
-            }
-            .onCompletion {
-                println("Complete $it")
-            }
-            .onEach { println("On each $it") }
-            .launchIn(GlobalScope)
-
-
-        runBlocking {
-            delay(1500)
-//            job.cancel()
-            delay(3000)
-        }
-    }
+//    @ObsoleteCoroutinesApi
+//    @Test
+//    fun testFlow() {
+//        val flowA = flow {
+//            cancelableCatching {
+//                emit(1)
+//                delay(1000)
+//                emit(100)
+//                delay(2000)
+//                throw CancellationException()
+//                emit(1000)
+//            }
+//        }
+//
+//        val job = flowA
+//            .catch {
+//                emit(-200)
+//                println("Catch err 2 $it")
+//            }
+//            .onCompletion {
+//                println("Complete $it")
+//            }
+//            .onEach { println("On each $it") }
+//            .launchIn(GlobalScope)
+//
+//
+//        runBlocking {
+//            delay(1500)
+////            job.cancel()
+//            delay(3000)
+//        }
+//    }
 }

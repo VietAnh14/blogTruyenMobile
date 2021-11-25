@@ -16,9 +16,6 @@ class ParserUnitTest {
         .build()
     private val blogtruyenProvider = BlogtruyenProvider(client)
 
-
-
-    @Test
     fun testParseComments() {
         val mangaId = 25859
         val page = 1
@@ -28,8 +25,7 @@ class ParserUnitTest {
             assertEquals(20, comments.size)
         }
     }
-    
-    @Test
+
     fun testParseNewFeed() {
         runBlocking {
             val response = blogtruyenProvider.fetchNewFeed()
@@ -37,7 +33,6 @@ class ParserUnitTest {
     }
 
 
-    @Test
     fun checkSize() {
         val request = Request.Builder().url("https://blogtruyen.vn").build()
         val mRequest = Request.Builder().url("https://m.blogtruyen.vn").build()
@@ -51,7 +46,7 @@ class ParserUnitTest {
         println("${mContent/1024} kB")
     }
 
-    @Test
+
     fun testSearchHasFullPageResult() {
         runBlocking {
             val searchResults = blogtruyenProvider.searchByName("home", 1)
@@ -60,7 +55,6 @@ class ParserUnitTest {
     }
 
 
-    @Test
     fun testSearchHasEmptyResult() {
         runBlocking {
             val searchResults = blogtruyenProvider.searchByName("some random search keywords", 1)
