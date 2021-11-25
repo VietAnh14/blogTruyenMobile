@@ -8,14 +8,31 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v1
+      - name: Clone
+        uses: actions/checkout@v2
+
       - name: Setup JDK
         uses: actions/setup-java@v1
         with:
           java-version: 11
 
-#      - name: Run test
-#        run: ./gradlew test
-
       - name: Build project
-        run: ./gradlew assemble
+        run: ./gradlew build
+
+      - name: Sign release apk
+        uses: r0adkll/sign-android-release@v1
+        id: sign_app
+        with:
+          releaseDirectory: app/build/outputs/apk/release
+          signingKeyBase64: ${{ secrets.SIGNING_KEY }}
+          alias: ${{ secrets.ALIAS }}
+          keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
+          keyPassword: ${{ secrets.KEY_PASSWORD }}
+        env:
+          BUILD_TOOLS_VERSION: "30.0.3"
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: signed apk
+          path: ${{steps.sign_app.outputs.signedReleaseFile}}
