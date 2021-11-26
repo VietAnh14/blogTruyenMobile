@@ -29,7 +29,7 @@
 <!--        <item name="android:windowDrawsSystemBarBackgrounds">true</item>-->
 <!--        <item name="android:windowTranslucentStatus">false</item>-->
 <!--        <item name="android:windowTranslucentNavigation">false</item>-->
-<!--        <item name="android:windowLayoutInDisplayCutoutMode" tools:targetApi="o_mr1">shortEdges</item>-->
+        <item name="android:windowLayoutInDisplayCutoutMode" tools:targetApi="o_mr1">shortEdges</item>
     </style>
 
     <style name="SearchViewTheme" parent="Widget.AppCompat.SearchView">

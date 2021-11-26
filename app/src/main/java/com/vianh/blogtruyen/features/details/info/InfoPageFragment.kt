@@ -6,8 +6,9 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.FrameLayout
-import androidx.lifecycle.coroutineScope
+import androidx.browser.customtabs.CustomTabColorSchemeParams
+import androidx.browser.customtabs.CustomTabsIntent
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -16,24 +17,17 @@ import com.afollestad.materialcab.attached.destroy
 import com.afollestad.materialcab.createCab
 import com.vianh.blogtruyen.R
 import com.vianh.blogtruyen.data.model.Chapter
+import com.vianh.blogtruyen.data.model.Favorite
 import com.vianh.blogtruyen.data.model.Manga
 import com.vianh.blogtruyen.databinding.ChapterPageFragmentBinding
 import com.vianh.blogtruyen.features.base.BaseFragment
-import com.vianh.blogtruyen.features.download.DownloadIntent
-import com.vianh.blogtruyen.features.download.DownloadService
 import com.vianh.blogtruyen.features.details.MangaDetailsViewModel
 import com.vianh.blogtruyen.features.details.info.adapter.*
+import com.vianh.blogtruyen.features.download.DownloadService
 import com.vianh.blogtruyen.features.reader.ReaderFragment
+import com.vianh.blogtruyen.features.reader.ReaderState
 import org.koin.androidx.viewmodel.ext.android.getViewModel
 import timber.log.Timber
-import androidx.browser.customtabs.CustomTabsIntent
-import androidx.browser.customtabs.CustomTabColorSchemeParams
-import androidx.core.content.ContextCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.children
-import androidx.core.view.updateLayoutParams
-import androidx.core.view.updatePadding
-import com.vianh.blogtruyen.features.reader.ReaderState
 
 
 class InfoPageFragment : BaseFragment<ChapterPageFragmentBinding>(), ChapterVH.ChapterClick,
@@ -65,7 +59,7 @@ class InfoPageFragment : BaseFragment<ChapterPageFragmentBinding>(), ChapterVH.C
         viewModel.headerItem.observe(viewLifecycleOwner, this::onHeaderChange)
         viewModel.manga.observe(viewLifecycleOwner, this::onMangaChange)
         viewModel.isLoading.observe(viewLifecycleOwner, this::onLoadingChange)
-        viewModel.isFavorite.observe(viewLifecycleOwner, this::onFavoriteStateChange)
+        viewModel.favorite.observe(viewLifecycleOwner, this::onFavoriteChange)
         viewModel.toReaderEvent.observe(viewLifecycleOwner, this::toReaderFragment)
         viewModel.readButtonState.observe(viewLifecycleOwner, this::onButtonStateChange)
         viewModel.onNewPageSelected.observe(viewLifecycleOwner, this::onNewPageSelected)
@@ -88,8 +82,8 @@ class InfoPageFragment : BaseFragment<ChapterPageFragmentBinding>(), ChapterVH.C
         chapterHeaderAdapter?.submitList(listOf(headerItem))
     }
 
-    private fun onFavoriteStateChange(isFavorite: Boolean) {
-        requireBinding.actionFollow.isChecked = isFavorite
+    private fun onFavoriteChange(favorite: Favorite?) {
+        requireBinding.actionFollow.isChecked = favorite != null
     }
 
     private fun onMangaChange(manga: Manga) {

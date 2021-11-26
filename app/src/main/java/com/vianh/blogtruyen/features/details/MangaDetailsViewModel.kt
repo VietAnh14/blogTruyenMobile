@@ -8,6 +8,7 @@ import com.vianh.blogtruyen.BuildConfig
 import com.vianh.blogtruyen.R
 import com.vianh.blogtruyen.data.model.Chapter
 import com.vianh.blogtruyen.data.model.Comment
+import com.vianh.blogtruyen.data.model.Favorite
 import com.vianh.blogtruyen.data.model.Manga
 import com.vianh.blogtruyen.features.base.BaseVM
 import com.vianh.blogtruyen.features.details.data.MangaRepo
@@ -100,10 +101,10 @@ class MangaDetailsViewModel(
         HeaderItem(chapters.size, isDescending)
     }.asLiveDataDistinct(Dispatchers.Default)
 
-    val isFavorite: LiveData<Boolean> = favoriteRepo
-        .observeFavoriteState(manga.id)
-        .map { it != null }
-        .asLiveDataDistinct(viewModelScope.coroutineContext)
+    val favorite: LiveData<Favorite?> = favoriteRepo
+        .observeFavorite(manga.id)
+        .distinctUntilChangedBy { it?.manga?.id }
+        .asLiveData(viewModelScope.coroutineContext)
 
     val readButtonState = mainChapters.map { chapters ->
         val enable = chapters.isNotEmpty()
@@ -143,17 +144,27 @@ class MangaDetailsViewModel(
 
         mangaFlow.update { it.copy(chapters = fetchChapters) }
         remoteChapter.value = fetchChapters
-        favoriteRepo.clearNewChapters(currentManga.id)
+
+        if (!isOffline && isFavorite()) {
+            val newFavorite = favorite.value?.copy(
+                currentChapterCount = fetchChapters.size,
+                newChapterCount = 0
+            ) ?: return
+
+            favoriteRepo.upsertFavorite(newFavorite)
+        }
     }
 
     fun toggleFavorite() {
         launchJob {
-            if (isFavorite.value == false)
+            if (favorite.value == null)
                 favoriteRepo.addToFavorite(currentManga)
             else
                 favoriteRepo.removeFromFavorite(currentManga.id)
         }
     }
+
+    private fun isFavorite() = favorite.value != null
 
     fun toggleSortType() {
         descendingSort.update { !it }

@@ -42,7 +42,7 @@ jobs:
           name: signed apk
           path: ${{steps.sign_app.outputs.signedReleaseFile}}
 
-      - name: Release apk
+      - name: Release apk if needed
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
         with:

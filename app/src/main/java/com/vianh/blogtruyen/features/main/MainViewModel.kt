@@ -6,11 +6,12 @@ import com.bumptech.glide.Glide
 import com.vianh.blogtruyen.data.model.Manga
 import com.vianh.blogtruyen.features.base.BaseVM
 import com.vianh.blogtruyen.features.favorites.data.FavoriteRepository
-import com.vianh.blogtruyen.features.local.LocalSourceRepo
 import com.vianh.blogtruyen.utils.*
 import kotlinx.coroutines.Dispatchers
 
-class MainViewModel(private val favoriteRepository: FavoriteRepository, private val localSourceRepo: LocalSourceRepo): BaseVM() {
+class MainViewModel(
+    private val favoriteRepository: FavoriteRepository
+) : BaseVM() {
 
     val saveImageCompleteMessage: SingleLiveEvent<String> = SingleLiveEvent()
 

@@ -24,7 +24,7 @@ class UpdateFavoriteWorker(context: Context, workerParameters: WorkerParameters)
     private val mangaRepository by inject<MangaRepo>()
 
     override suspend fun doWork(): Result {
-        val favoriteMangas = favoriteRepository.observeFavorite().first()
+        val favoriteMangas = favoriteRepository.observeAll().first()
         if (favoriteMangas.isEmpty())
             return Result.success()
 
