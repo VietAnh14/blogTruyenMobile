@@ -2,7 +2,7 @@
 
 Android client for manga reading website [BlogTruyen](https://blogtruyen.vn/)
 
-## Features
+## Features ![Build status](https://github.com/VietAnh14/blogTruyenMobile/actions/workflows/build.yml/badge.svg)
 -  New feed, manga details, comments
 -  Read manga (vertical scroll only, zoom supported)
 -  Download and read offline
