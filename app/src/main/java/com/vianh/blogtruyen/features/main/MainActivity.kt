@@ -40,6 +40,7 @@ class MainActivity : BaseActivity<HomeActivityBinding>(), FragmentManager.OnBack
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        UpdateFavoriteWorker.executeOneTime(this)
         bindViewModel()
         setupViews()
 

@@ -2,8 +2,6 @@ package com.vianh.blogtruyen.features.favorites
 
 import android.app.PendingIntent
 import android.content.Context
-import android.content.Intent
-import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.work.*
@@ -26,7 +24,7 @@ class UpdateFavoriteWorker(context: Context, workerParameters: WorkerParameters)
     private val mangaRepository by inject<MangaRepo>()
 
     override suspend fun doWork(): Result {
-        val favoriteMangas = favoriteRepository.observeFavorite().first()
+        val favoriteMangas = favoriteRepository.observeAll().first()
         if (favoriteMangas.isEmpty())
             return Result.success()
 
@@ -69,7 +67,7 @@ class UpdateFavoriteWorker(context: Context, workerParameters: WorkerParameters)
 
         for (favorite in favorites) {
             val manga = favorite.manga
-            val remoteChapters = mangaRepository.loadChapter(manga.id, true)
+            val remoteChapters = mangaRepository.loadChapters(manga.id, true)
             val knownChapterCount = favorite.currentChapterCount + favorite.newChapterCount
             val newChapterCount = remoteChapters.size - knownChapterCount
 

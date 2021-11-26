@@ -1,5 +1,6 @@
 package com.vianh.blogtruyen.features.feed.list
 
+import android.view.View
 import android.view.ViewGroup
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
@@ -11,7 +12,7 @@ import com.vianh.blogtruyen.utils.loadNetWorkImage
 import jp.wasabeef.glide.transformations.BlurTransformation
 
 class PinVH(parent: ViewGroup, itemClick: NewFeedAdapter.Callbacks) :
-    AbstractBindingHolder<MangaItem, Unit, PinnedItemBinding>(R.layout.pinned_item, parent, { PinnedItemBinding.bind(it) }) {
+    AbstractBindingHolder<MangaItem, Unit, PinnedItemBinding>(R.layout.pinned_item, parent) {
 
     init {
         itemView.setOnClickListener {
@@ -30,5 +31,9 @@ class PinVH(parent: ViewGroup, itemClick: NewFeedAdapter.Callbacks) :
                 .apply(RequestOptions.bitmapTransform(BlurTransformation(5, 3)))
                 .into(bgBlur)
         }
+    }
+
+    override fun bindToView(view: View): PinnedItemBinding {
+        return PinnedItemBinding.bind(view)
     }
 }

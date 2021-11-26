@@ -6,7 +6,7 @@
     <string name="chapter_header_title">%1$d chương</string>
     <string name="comment">Bình luận</string>
     <string name="manga_info">Thông tin</string>
-    <string name="search_by_google">Tìm kiếm trên google</string>
+    <string name="open_with_webview">Mở trong web</string>
     <string name="clear_all_history">Xóa toàn bộ lịch sử</string>
     <string name="show_more">Xem thêm</string>
     <string name="recent_update">Vừa cập nhật</string>
@@ -26,11 +26,17 @@
     <string name="sort_title">Xắp xếp</string>
     <string name="refresh">Làm mới</string>
     <string name="next_chapter_guide">Thả để tới chương tiếp theo</string>
-    <string name="pull_down_guild">Kéo xuống để đi tới chương tiếp theo</string>
-    <string name="no_next_chapter">Hết, không có chương tiếp theo</string>
+    <string name="pull_down_guild">Hết chương %1$s, kéo xuống để đi tới chương tiếp theo</string>
+    <string name="no_next_chapter">Hết chương %1$s, không có chương tiếp theo</string>
     <string name="select_all">Chọn toàn bộ</string>
     <string name="download">Tải xuống</string>
     <string name="delete">Xóa</string>
     <string name="deleted_message">Đã xóa manga \"%1$s\"</string>
     <string name="save_cover">Lưu ảnh bìa</string>
+    <string name="end_chapter_pager">Hết chương %1$s</string>
+    <string name="vertical">Dọc</string>
+    <string name="continuous_vertical">Dọc liên tục</string>
+    <string name="horizontal">Ngang</string>
+    <string name="keep_screen_on">Giữ màn hình luôn bật</string>
+    <string name="settings">Cài đặt</string>
 </resources>

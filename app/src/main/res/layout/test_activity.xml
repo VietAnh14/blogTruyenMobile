@@ -3,82 +3,109 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:fitsSystemWindows="true">
 
-    <!-- Note: A RecyclerView can also be used -->
-    <androidx.core.widget.NestedScrollView
+    <ImageView
+        android:id="@+id/header_cover"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingTop="100dp"
-        android:clipToPadding="false"
-        android:layout_marginTop="10dp"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-        <androidx.appcompat.widget.LinearLayoutCompat
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <include layout="@layout/manga_info_item"/>
-            <include layout="@layout/manga_info_item"/>
-            <include layout="@layout/manga_info_item"/>
-            <include layout="@layout/manga_info_item"/>
-            <include layout="@layout/manga_info_item"/>
-            <include layout="@layout/manga_info_item"/>
-            <include layout="@layout/manga_info_item"/>
-            <include layout="@layout/manga_info_item"/>
-            <include layout="@layout/manga_info_item"/>
-            <include layout="@layout/manga_info_item"/>
-        </androidx.appcompat.widget.LinearLayoutCompat>
-    </androidx.core.widget.NestedScrollView>
+        android:layout_height="200dp"
+        android:scaleType="centerCrop"
+        android:layout_gravity="top|start"
+        app:layout_collapseMode="pin"
+        android:src="@drawable/lazy_corgi"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/appbar"
-        android:fitsSystemWindows="true"
+        android:id="@+id/appBarLayout"
+        android:clipToPadding="false"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:liftOnScroll="true">
+        android:layout_height="200dp"
+        android:background="@android:color/transparent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
-            android:fitsSystemWindows="true"
             android:id="@+id/collapsing_toolbar"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            app:contentScrim="#81934C4A"
+            app:titleEnabled="false"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_scrollFlags="scroll|enterAlwaysCollapsed"
-            app:titleEnabled="false">
-
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/coverImage"
-                android:layout_width="match_parent"
-                android:layout_height="300dp"
-                android:scaleType="centerCrop"
-                app:srcCompat="@drawable/lazy_corgi" />
-
-            <View
-                android:id="@+id/scrim"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@drawable/info_header_gradient"
-                android:rotation="180" />
-
-            <TextView
-                android:id="@+id/header"
-                android:text="@string/lorem_5_sentences"
-                android:minHeight="0dp"
-                android:layout_gravity="top"
-                android:layout_marginTop="300dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+            android:layout_height="match_parent">
 
             <com.google.android.material.appbar.MaterialToolbar
-                android:id="@+id/topAppBar"
+                android:id="@+id/toolbar"
+                app:title="Manga name"
+                android:layout_marginBottom="56dp"
+                app:layout_collapseMode="pin"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize" />
+
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/tab_layout"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                android:background="@android:color/transparent"
-                app:layoutDescription="@xml/test_activity_scene"
-                app:menu="@menu/search_menu"
-                app:title="App name" />
+                android:background="?attr/colorPrimary"
+                app:tabIndicatorAnimationMode="elastic"
+                android:layout_gravity="bottom"
+                app:tabIndicatorColor="?attr/colorAccent"
+                app:tabIndicatorFullWidth="false"
+                app:tabSelectedTextColor="?attr/colorAccent"
+                app:tabTextAppearance="@style/TextAppearance.AppCompat.Body1"
+                app:tabTextColor="?attr/colorControlNormal">
+
+                <com.google.android.material.tabs.TabItem
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/manga_info" />
+
+                <com.google.android.material.tabs.TabItem
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/comment" />
+            </com.google.android.material.tabs.TabLayout>
+
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.core.widget.NestedScrollView
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tab_layout">
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <include
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                layout="@layout/manga_info_item" />
+            <include
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                layout="@layout/manga_info_item" />
+            <include
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                layout="@layout/manga_info_item" />
+            <include
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                layout="@layout/manga_info_item" />
+            <include
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                layout="@layout/manga_info_item" />
+        </androidx.appcompat.widget.LinearLayoutCompat>
+    </androidx.core.widget.NestedScrollView>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

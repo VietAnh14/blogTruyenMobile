@@ -1,5 +1,6 @@
 package com.vianh.blogtruyen.features.reader.list
 
+import com.vianh.blogtruyen.data.model.Chapter
 import com.vianh.blogtruyen.features.base.list.items.ListItem
 
 sealed class ReaderItem : ListItem {
@@ -7,7 +8,7 @@ sealed class ReaderItem : ListItem {
         override val viewType: Int = PAGE_ITEM
     }
 
-    class TransitionItem(val transitionType: Int): ReaderItem() {
+    class TransitionItem(val transitionType: Int, val chapter: Chapter): ReaderItem() {
 
         override val viewType: Int
             get() = TRANSITION_ITEM

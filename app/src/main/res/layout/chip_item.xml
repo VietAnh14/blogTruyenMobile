@@ -9,5 +9,5 @@
     android:textColor="@color/colorAccent"
     android:textSize="12sp"
     app:chipStrokeColor="@color/colorAccent"
-    app:chipStrokeWidth="1dp"
+    app:chipStrokeWidth="2dp"
     app:chipSurfaceColor="@android:color/transparent" />

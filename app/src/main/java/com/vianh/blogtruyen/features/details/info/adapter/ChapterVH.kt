@@ -1,20 +1,19 @@
 package com.vianh.blogtruyen.features.details.info.adapter
 
-import android.annotation.SuppressLint
 import android.view.View
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.vianh.blogtruyen.R
 import com.vianh.blogtruyen.data.model.Chapter
 import com.vianh.blogtruyen.databinding.ChapterItemBinding
 import com.vianh.blogtruyen.features.download.DownloadState
 import com.vianh.blogtruyen.utils.getColorFromAttr
+import com.vianh.blogtruyen.utils.typeValue
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import timber.log.Timber
-import android.util.TypedValue
-import com.vianh.blogtruyen.utils.typeValue
 
 class ChapterVH(
     val binding: ChapterItemBinding,
@@ -53,7 +52,7 @@ class ChapterVH(
 
         binding.chapterName.text = item.chapter.name
         val textColor = if (item.chapter.read) {
-            itemView.context.getColorFromAttr(android.R.attr.colorControlNormal)
+            ContextCompat.getColor(itemView.context, R.color.textColorDeactivated)
         } else {
             itemView.context.getColorFromAttr(android.R.attr.textColorPrimary)
         }

@@ -3,7 +3,7 @@ package com.vianh.blogtruyen.features.base
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
+import androidx.core.view.WindowCompat
 import androidx.viewbinding.ViewBinding
 
 abstract class BaseActivity<B: ViewBinding>: AppCompatActivity() {
@@ -11,6 +11,10 @@ abstract class BaseActivity<B: ViewBinding>: AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // Make layout take full screen
+        // we'll manually handle insets in fragments
+        WindowCompat.setDecorFitsSystemWindows(window, false)
         binding = createBinding()
         setContentView(binding.root)
     }

@@ -1,5 +1,6 @@
 package com.vianh.blogtruyen.features.feed.list
 
+import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.updateLayoutParams
 import com.vianh.blogtruyen.R
@@ -11,8 +12,7 @@ import com.vianh.blogtruyen.utils.loadNetWorkImage
 class HistoryVH(
     parent: ViewGroup,
     itemClick: NewFeedAdapter.Callbacks
-) :
-    AbstractBindingHolder<MangaItem, Unit, MangaGridItemBinding>(R.layout.manga_grid_item, parent, { MangaGridItemBinding.bind(it)}) {
+) : AbstractBindingHolder<MangaItem, Unit, MangaGridItemBinding>(R.layout.manga_grid_item, parent) {
 
     init {
         binding.root.updateLayoutParams {
@@ -30,5 +30,9 @@ class HistoryVH(
             imageCover.loadNetWorkImage(manga.imageUrl)
             mangaName.text = manga.title
         }
+    }
+
+    override fun bindToView(view: View): MangaGridItemBinding {
+        return MangaGridItemBinding.bind(view)
     }
 }

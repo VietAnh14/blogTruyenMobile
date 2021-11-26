@@ -23,9 +23,9 @@ interface FavoriteRepository {
 
     fun getTotalNotificationCount(): Flow<Int>
 
-    fun observeFavorite(): Flow<List<Favorite>>
+    fun observeAll(): Flow<List<Favorite>>
 
-    fun observeFavoriteState(mangaId: Int): Flow<Favorite?>
+    fun observeFavorite(mangaId: Int): Flow<Favorite?>
 }
 
 class FavoriteRepo(private val db: MangaDb) : FavoriteRepository {
@@ -55,14 +55,14 @@ class FavoriteRepo(private val db: MangaDb) : FavoriteRepository {
         return db.favoriteDao.getTotalNotification().map { it ?: 0 }
     }
 
-    override fun observeFavorite(): Flow<List<Favorite>> {
+    override fun observeAll(): Flow<List<Favorite>> {
         return db.favoriteDao
             .observeAll()
             .mapList { it.toFavorite() }
             .flowOn(Dispatchers.IO)
     }
 
-    override fun observeFavoriteState(mangaId: Int): Flow<Favorite?> {
+    override fun observeFavorite(mangaId: Int): Flow<Favorite?> {
         return db.favoriteDao
             .observeByMangaId(mangaId)
             .map { it?.toFavorite() }

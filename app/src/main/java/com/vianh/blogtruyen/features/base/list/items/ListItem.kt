@@ -6,7 +6,7 @@ interface ListItem {
     val viewType: Int
 
     companion object {
-        private val viewTpeGenerator = AtomicInteger(1)
+        private val viewTpeGenerator = AtomicInteger(0)
         fun getNextViewType() = viewTpeGenerator.incrementAndGet()
 
         val LOADING_ITEM = getNextViewType()

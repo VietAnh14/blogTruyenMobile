@@ -1,5 +1,7 @@
 package com.vianh.blogtruyen.views
 
+import android.animation.ObjectAnimator
+import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Canvas
@@ -9,6 +11,8 @@ import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.ScaleGestureDetector
 import android.view.ScaleGestureDetector.SimpleOnScaleGestureListener
+import android.view.animation.AccelerateDecelerateInterpolator
+import android.widget.OverScroller
 import androidx.recyclerview.widget.RecyclerView
 import timber.log.Timber
 
@@ -20,18 +24,20 @@ class PinchRecyclerView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : RecyclerView(context, attrs, defStyleAttr) {
 
+    companion object {
+        const val MAX_SCALE = 3f
+        const val MIN_SCALE = 1f
+    }
+
+
     private val mScaleDetector: ScaleGestureDetector
     private val gestureDetector: GestureDetector
-
-    var callBack: ReaderCallBack? = null
 
     private var minOffsetX = 0.0f
     private var minOffsetY = 0.0f
 
     private var width = 0f
     private var height = 0f
-
-    private var preScale = 0f
 
     private val transformsMatrix = Matrix()
     private val invertMatrix = Matrix()
@@ -81,33 +87,25 @@ class PinchRecyclerView @JvmOverloads constructor(
     private inner class ScaleListener : SimpleOnScaleGestureListener() {
 
         override fun onScale(detector: ScaleGestureDetector): Boolean {
-
-            val newScale = (preScale * detector.scaleFactor).coerceIn(1f, 3f)
-            minOffsetX = width - width * newScale
-            minOffsetY = height - height * newScale
-            preScale = newScale
-
-
             updateMatrixValues()
-            val currentScale = mValues[Matrix.MSCALE_X]
 
-            // newScale = currentScale * scale < MAX_SCALE => scale < MAX_SCALE / currentScale (same for min)
-            val minScale = 1f/currentScale
-            val maxScale = 3f/currentScale
-            val factor = detector.scaleFactor.coerceIn(minScale, maxScale)
-            transformsMatrix.postScale(factor, factor, detector.focusX, detector.focusY)
-            constrainsBoundAndInvalidate()
+            val currentScale = mValues[Matrix.MSCALE_X]
+            val newScale = (currentScale * detector.scaleFactor).coerceIn(MIN_SCALE, MAX_SCALE)
+            scale(newScale, detector.focusX, detector.focusY)
             return true
         }
     }
 
     private inner class GestureListener: GestureDetector.SimpleOnGestureListener() {
-        override fun onSingleTapConfirmed(e: MotionEvent?): Boolean {
-            return callBack?.onSingleTap() ?: false || super.onSingleTapConfirmed(e)
-        }
 
         override fun onDoubleTap(e: MotionEvent?): Boolean {
-            return super.onDoubleTap(e)
+            e ?: return false
+
+            updateMatrixValues()
+            val currentScale = mValues[Matrix.MSCALE_X]
+            val newScale = if (currentScale > MIN_SCALE) MIN_SCALE else MAX_SCALE
+            startScaleAnimation(currentScale, newScale, e.x, e.y)
+            return true
         }
 
         override fun onScroll(
@@ -116,10 +114,75 @@ class PinchRecyclerView @JvmOverloads constructor(
             distanceX: Float,
             distanceY: Float
         ): Boolean {
+            overScroller.forceFinished(true)
             transformsMatrix.postTranslate(-distanceX, -distanceY)
             constrainsBoundAndInvalidate()
             return true
         }
+
+        override fun onFling(
+            e1: MotionEvent?,
+            e2: MotionEvent?,
+            velocityX: Float,
+            velocityY: Float
+        ): Boolean {
+            startFling(velocityX.toInt(), velocityY.toInt())
+            return super.onFling(e1, e2, velocityX, velocityY)
+        }
+    }
+
+    fun startScaleAnimation(from: Float, to: Float, focusX: Float, focusY: Float, duration: Long = 300) {
+        val scaleAnimator = ValueAnimator
+            .ofFloat(from, to)
+            .setDuration(duration)
+        scaleAnimator.interpolator = AccelerateDecelerateInterpolator()
+
+        scaleAnimator.addUpdateListener {
+            val scale = it.animatedValue as Float
+            scale(scale, focusX, focusY)
+        }
+        scaleAnimator.start()
+    }
+
+    fun scale(scale: Float, focusX: Float, focusY: Float) {
+        updateMatrixValues()
+
+        val currentScale = mValues[Matrix.MSCALE_X]
+        val newScale = scale.coerceIn(MIN_SCALE, MAX_SCALE)
+        minOffsetX = width - width * newScale
+        minOffsetY = height - height * newScale
+
+        val factor = scale/currentScale
+        transformsMatrix.postScale(factor, factor, focusX, focusY)
+        constrainsBoundAndInvalidate()
+    }
+
+    val overScroller = OverScroller(context)
+    fun startFling(velocityX: Int, velocityY: Int) {
+        updateMatrixValues()
+        if (mValues[Matrix.MSCALE_X] == MIN_SCALE) return
+
+        val startX = mValues[Matrix.MTRANS_X].toInt()
+        val startY = mValues[Matrix.MTRANS_Y].toInt()
+
+        overScroller.forceFinished(true)
+        overScroller.fling(startX, startY, velocityX, velocityY, minOffsetX.toInt(), 0, minOffsetY.toInt(), 0)
+        postOnAnimation(object: Runnable {
+            override fun run() {
+                if (overScroller.computeScrollOffset()) {
+                    updateMatrixValues()
+                    val newX: Int = overScroller.currX
+                    val newY: Int = overScroller.currY
+                    val curX = mValues[Matrix.MTRANS_X].toInt()
+                    val curY = mValues[Matrix.MTRANS_Y].toInt()
+                    val transX: Int = newX - curX
+                    val transY: Int = newY - curY
+                    transformsMatrix.postTranslate(transX.toFloat(), transY.toFloat())
+                    constrainsBoundAndInvalidate()
+                    postOnAnimation(this)
+                }
+            }
+        })
     }
 
     fun constrainsBoundAndInvalidate() {
@@ -146,9 +209,5 @@ class PinchRecyclerView @JvmOverloads constructor(
         transformsMatrix.postTranslate(dx, dy)
         transformsMatrix.invert(invertMatrix)
         postInvalidate()
-    }
-
-    interface ReaderCallBack {
-        fun onSingleTap(): Boolean
     }
 }

@@ -1,19 +1,15 @@
-package com.vianh.blogtruyen.features.reader.list
+package com.vianh.blogtruyen.features.reader.type.vertical
 
-import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.lifecycle.viewModelScope
 import com.bumptech.glide.RequestManager
-import com.vianh.blogtruyen.databinding.ErrorReaderItemBinding
-import com.vianh.blogtruyen.databinding.LoadingPageItemBinding
-import com.vianh.blogtruyen.databinding.MangaPageItemBinding
-import com.vianh.blogtruyen.databinding.TransitionPageBinding
 import com.vianh.blogtruyen.features.base.list.AbstractAdapter
 import com.vianh.blogtruyen.features.base.list.AbstractViewHolder
 import com.vianh.blogtruyen.features.base.list.commonVH.ErrorItemVH
-import com.vianh.blogtruyen.features.base.list.items.ListItem
 import com.vianh.blogtruyen.features.base.list.commonVH.LoadingItemVH
+import com.vianh.blogtruyen.features.base.list.items.ListItem
 import com.vianh.blogtruyen.features.reader.ReaderViewModel
+import com.vianh.blogtruyen.features.reader.list.ReaderItem
 import com.vianh.blogtruyen.utils.await
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -51,23 +47,10 @@ class ReaderAdapter(
         parent: ViewGroup,
         viewType: Int
     ): AbstractViewHolder<out ListItem, Unit> {
-        val inflater = LayoutInflater.from(parent.context)
         return when (viewType) {
-            ReaderItem.PAGE_ITEM -> {
-                val binding = MangaPageItemBinding.inflate(inflater, parent, false)
-                PageItemVH(binding, requestManager, tileSize)
-            }
-
-            ReaderItem.TRANSITION_ITEM -> TransitionPageVH(
-                TransitionPageBinding.inflate(
-                    inflater,
-                    parent,
-                    false
-                ), viewModel
-            )
-
+            ReaderItem.PAGE_ITEM -> PageItemVH(parent, requestManager, tileSize)
+            ReaderItem.TRANSITION_ITEM -> TransitionPageVH(parent, viewModel)
             ListItem.LOADING_ITEM -> LoadingItemVH(parent)
-
             ListItem.ERROR_ITEM -> ErrorItemVH(parent, listener)
 
             else -> throw IllegalArgumentException("Unknown view type $viewType")

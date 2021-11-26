@@ -8,38 +8,71 @@
         <entry key="../../Android/Sdk/platforms/android-30/data/res/drawable/ic_ab_back_holo_dark.xml" value="0.24791666666666667" />
         <entry key="../../Android/Sdk/platforms/android-30/data/res/drawable/ic_ab_back_material.xml" value="0.24791666666666667" />
         <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.24791666666666667" />
+        <entry key="app/src/main/res/drawable/badge_bg.xml" value="0.24791666666666667" />
+        <entry key="app/src/main/res/drawable/bottom_border.xml" value="0.24791666666666667" />
+        <entry key="app/src/main/res/drawable/bottom_shadow_gradient.xml" value="0.24791666666666667" />
         <entry key="app/src/main/res/drawable/btn_state_list.xml" value="0.24791666666666667" />
+        <entry key="app/src/main/res/drawable/checked_btn_state.xml" value="0.24791666666666667" />
         <entry key="app/src/main/res/drawable/divider_bg.xml" value="0.24791666666666667" />
+        <entry key="app/src/main/res/drawable/follow_btn_state.xml" value="0.24791666666666667" />
+        <entry key="app/src/main/res/drawable/home_menu_bg.xml" value="0.24791666666666667" />
+        <entry key="app/src/main/res/drawable/ic_arrow_circle_down.xml" value="0.24791666666666667" />
+        <entry key="app/src/main/res/drawable/ic_arrow_circle_up.xml" value="0.24791666666666667" />
+        <entry key="app/src/main/res/drawable/ic_book_24.xml" value="0.24791666666666667" />
+        <entry key="app/src/main/res/drawable/ic_book_24_selected.xml" value="0.24791666666666667" />
+        <entry key="app/src/main/res/drawable/ic_bookmarks_24.xml" value="0.24791666666666667" />
+        <entry key="app/src/main/res/drawable/ic_bookmarks_24_selected.xml" value="0.24791666666666667" />
         <entry key="app/src/main/res/drawable/ic_broken_image.xml" value="0.24791666666666667" />
+        <entry key="app/src/main/res/drawable/ic_chevron_right.xml" value="0.24791666666666667" />
         <entry key="app/src/main/res/drawable/ic_clear_all.xml" value="0.24791666666666667" />
+        <entry key="app/src/main/res/drawable/ic_continuous_vertical.xml" value="0.24791666666666667" />
         <entry key="app/src/main/res/drawable/ic_delete.xml" value="0.24791666666666667" />
+        <entry key="app/src/main/res/drawable/ic_download_done.xml" value="0.24791666666666667" />
+        <entry key="app/src/main/res/drawable/ic_downloading.xml" value="0.24791666666666667" />
+        <entry key="app/src/main/res/drawable/ic_east_24.xml" value="0.24791666666666667" />
+        <entry key="app/src/main/res/drawable/ic_favorite_black_24dp.xml" value="0.24791666666666667" />
+        <entry key="app/src/main/res/drawable/ic_file_download.xml" value="0.24791666666666667" />
+        <entry key="app/src/main/res/drawable/ic_global.xml" value="0.24791666666666667" />
+        <entry key="app/src/main/res/drawable/ic_grid_view.xml" value="0.24791666666666667" />
         <entry key="app/src/main/res/drawable/ic_history_24.xml" value="0.24791666666666667" />
         <entry key="app/src/main/res/drawable/ic_history_24_selected.xml" value="0.24791666666666667" />
         <entry key="app/src/main/res/drawable/ic_home_24.xml" value="0.24791666666666667" />
         <entry key="app/src/main/res/drawable/ic_home_24_selected.xml" value="0.24791666666666667" />
+        <entry key="app/src/main/res/drawable/ic_hoziron_view.xml" value="0.24791666666666667" />
         <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.24791666666666667" />
+        <entry key="app/src/main/res/drawable/ic_list_view.xml" value="0.24791666666666667" />
+        <entry key="app/src/main/res/drawable/ic_more_vert.xml" value="0.24791666666666667" />
         <entry key="app/src/main/res/drawable/ic_notifications.xml" value="0.24791666666666667" />
         <entry key="app/src/main/res/drawable/ic_refresh.xml" value="0.24791666666666667" />
+        <entry key="app/src/main/res/drawable/ic_save_alt.xml" value="0.24791666666666667" />
         <entry key="app/src/main/res/drawable/ic_search_24.xml" value="0.24791666666666667" />
+        <entry key="app/src/main/res/drawable/ic_select_all.xml" value="0.24791666666666667" />
+        <entry key="app/src/main/res/drawable/ic_settings.xml" value="0.24791666666666667" />
+        <entry key="app/src/main/res/drawable/ic_skip_next.xml" value="0.24791666666666667" />
+        <entry key="app/src/main/res/drawable/ic_skip_previous.xml" value="0.24791666666666667" />
+        <entry key="app/src/main/res/drawable/info_header_gradient.xml" value="0.24791666666666667" />
         <entry key="app/src/main/res/drawable/round_corner_bg.xml" value="0.24791666666666667" />
         <entry key="app/src/main/res/drawable/round_corners_bg.xml" value="0.24791666666666667" />
         <entry key="app/src/main/res/layout/bookmarks_fragment.xml" value="0.25" />
         <entry key="app/src/main/res/layout/category_view.xml" value="0.23715277777777777" />
+        <entry key="app/src/main/res/layout/chapter_header_item.xml" value="0.23715277777777777" />
         <entry key="app/src/main/res/layout/chapter_item.xml" value="0.25" />
-        <entry key="app/src/main/res/layout/chapter_page_fragment.xml" value="0.22" />
+        <entry key="app/src/main/res/layout/chapter_page_fragment.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/chip_item.xml" value="0.23715277777777777" />
         <entry key="app/src/main/res/layout/comment_item.xml" value="0.23715277777777777" />
         <entry key="app/src/main/res/layout/comment_page_fragment.xml" value="0.23715277777777777" />
         <entry key="app/src/main/res/layout/details_manga_list_item.xml" value="0.25" />
         <entry key="app/src/main/res/layout/empty_item.xml" value="0.23715277777777777" />
         <entry key="app/src/main/res/layout/empty_manga_item.xml" value="0.23715277777777777" />
-        <entry key="app/src/main/res/layout/error_reader_item.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/error_reader_item.xml" value="0.33" />
         <entry key="app/src/main/res/layout/feed_fragment.xml" value="0.23715277777777777" />
         <entry key="app/src/main/res/layout/feed_item.xml" value="0.25" />
         <entry key="app/src/main/res/layout/footer_item_error.xml" value="0.23715277777777777" />
         <entry key="app/src/main/res/layout/history_fragment.xml" value="0.25" />
         <entry key="app/src/main/res/layout/history_item.xml" value="0.23715277777777777" />
-        <entry key="app/src/main/res/layout/home_activity.xml" value="0.22" />
+        <entry key="app/src/main/res/layout/home_activity.xml" value="0.33" />
         <entry key="app/src/main/res/layout/home_fragment.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/horizon_reader_layout.xml" value="0.23715277777777777" />
         <entry key="app/src/main/res/layout/loading_page_item.xml" value="0.23715277777777777" />
         <entry key="app/src/main/res/layout/main_tab_fragment.xml" value="0.23715277777777777" />
         <entry key="app/src/main/res/layout/manga_details_fragment.xml" value="0.25" />
@@ -47,10 +80,16 @@
         <entry key="app/src/main/res/layout/manga_info_item.xml" value="0.23715277777777777" />
         <entry key="app/src/main/res/layout/manga_page_item.xml" value="0.2" />
         <entry key="app/src/main/res/layout/new_upload_item.xml" value="0.23470790378006873" />
+        <entry key="app/src/main/res/layout/pager_reader_item.xml" value="0.23715277777777777" />
+        <entry key="app/src/main/res/layout/pager_reader_layout.xml" value="0.23715277777777777" />
+        <entry key="app/src/main/res/layout/pager_transition_item.xml" value="0.23715277777777777" />
+        <entry key="app/src/main/res/layout/pinned_item.xml" value="0.23715277777777777" />
         <entry key="app/src/main/res/layout/reader_fragment.xml" value="0.23470790378006873" />
-        <entry key="app/src/main/res/layout/test_activity.xml" value="0.18044914134742404" />
+        <entry key="app/src/main/res/layout/reader_setting_popup_layout.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/test_activity.xml" value="0.25" />
         <entry key="app/src/main/res/layout/time_item.xml" value="0.23715277777777777" />
-        <entry key="app/src/main/res/layout/transition_page.xml" value="0.1625" />
+        <entry key="app/src/main/res/layout/transition_page.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/vertical_reader_layout.xml" value="0.23715277777777777" />
         <entry key="app/src/main/res/menu/chapter_selection_menu.xml" value="0.23715277777777777" />
         <entry key="app/src/main/res/menu/details_manga_menu.xml" value="0.23715277777777777" />
         <entry key="app/src/main/res/menu/favorite_toolbar_menu.xml" value="0.23715277777777777" />
@@ -60,6 +99,7 @@
         <entry key="app/src/main/res/menu/manga_details_menu.xml" value="0.23715277777777777" />
         <entry key="app/src/main/res/menu/manga_popup_menu.xml" value="0.23715277777777777" />
         <entry key="app/src/main/res/menu/new_feed_menu.xml" value="0.23715277777777777" />
+        <entry key="app/src/main/res/menu/reader_menu.xml" value="0.23715277777777777" />
         <entry key="app/src/main/res/menu/search_menu.xml" value="0.23715277777777777" />
       </map>
     </option>

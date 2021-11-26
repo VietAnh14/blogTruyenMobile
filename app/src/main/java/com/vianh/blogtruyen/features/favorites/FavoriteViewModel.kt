@@ -18,7 +18,7 @@ class FavoriteViewModel(private val favoriteRepository: FavoriteRepository) : Ba
     private val searchQuery = MutableStateFlow<String?>(null)
 
     val content = combine(
-        favoriteRepository.observeFavorite(),
+        favoriteRepository.observeAll(),
         searchQuery.debounce(500).distinctUntilChanged().onStart { emit("") }
     ) { favorites, query -> filterContent(favorites, query) }
         .mapList { mapFavoriteToFeedItem(it) }
