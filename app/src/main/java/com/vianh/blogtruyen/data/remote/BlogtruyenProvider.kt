@@ -28,10 +28,10 @@ class BlogtruyenProvider(private val client: OkHttpClient) : MangaProvider {
 
     override suspend fun fetchNewManga(pageNumber: Int): List<Manga> {
         return withContext(Dispatchers.IO) {
-            val url = BuildConfig.HOST + "/page-$pageNumber"
+            val url = BuildConfig.HOST_FULL + "/page-$pageNumber"
             val request = Request.Builder().url(url).build()
             val response = client.newCall(request).getBodyString()
-            parseManga(response)
+            parseListManga(Jsoup.parse(response))
         }
     }
 
@@ -101,7 +101,7 @@ class BlogtruyenProvider(private val client: OkHttpClient) : MangaProvider {
             val doc = Jsoup.parse(response)
             val pinStories = getPinStories(doc)
             val newUpdates = parseNewUpdate(doc)
-            val newManga = parseNewManga(doc)
+            val newManga = parseListManga(doc)
 
             FeedItem(pinStories, newUpdates, newManga)
         }
@@ -149,7 +149,7 @@ class BlogtruyenProvider(private val client: OkHttpClient) : MangaProvider {
         return mangas
     }
 
-    private fun parseNewManga(doc: Document): List<Manga> {
+    private fun parseListManga(doc: Document): List<Manga> {
         val newStories = doc.getElementById("top-newest-story") ?: return emptyList()
         return newStories.getElementsByTag("a").map {
             val link = it.attr("href")
