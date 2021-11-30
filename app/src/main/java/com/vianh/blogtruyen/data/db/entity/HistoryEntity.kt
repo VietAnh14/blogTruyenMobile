@@ -1,4 +1,4 @@
-package com.vianh.blogtruyen.data.local.entity
+package com.vianh.blogtruyen.data.db.entity
 
 import androidx.room.*
 import com.vianh.blogtruyen.data.model.History

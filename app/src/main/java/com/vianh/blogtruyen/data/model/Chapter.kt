@@ -9,6 +9,7 @@ data class Chapter(
     val url: String,
     val name: String,
     val number: Int,
+    val uploadDate: Long,
     val pages: List<String> = listOf(),
     var read: Boolean = false
 ): Parcelable

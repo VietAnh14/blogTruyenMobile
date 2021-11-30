@@ -1,8 +1,8 @@
-package com.vianh.blogtruyen.data.local.dao
+package com.vianh.blogtruyen.data.db.dao
 
 import androidx.room.Dao
 import androidx.room.Transaction
-import com.vianh.blogtruyen.data.local.entity.CategoryEntity
+import com.vianh.blogtruyen.data.db.entity.CategoryEntity
 
 @Dao
 abstract class CategoryDao: BaseDao<CategoryEntity>() {

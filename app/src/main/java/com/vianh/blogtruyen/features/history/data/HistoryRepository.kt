@@ -1,13 +1,12 @@
 package com.vianh.blogtruyen.features.history.data
 
-import com.vianh.blogtruyen.data.local.MangaDb
-import com.vianh.blogtruyen.data.local.entity.HistoryEntity
+import com.vianh.blogtruyen.data.db.MangaDb
+import com.vianh.blogtruyen.data.db.entity.HistoryEntity
 import com.vianh.blogtruyen.data.model.History
 import com.vianh.blogtruyen.utils.mapList
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.map
 
 
 interface HistoryRepository {

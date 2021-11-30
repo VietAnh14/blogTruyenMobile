@@ -3,9 +3,9 @@ package com.vianh.blogtruyen.features.history.data
 import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
-import com.vianh.blogtruyen.data.local.dao.BaseDao
-import com.vianh.blogtruyen.data.local.entity.FullHistory
-import com.vianh.blogtruyen.data.local.entity.HistoryEntity
+import com.vianh.blogtruyen.data.db.dao.BaseDao
+import com.vianh.blogtruyen.data.db.entity.FullHistory
+import com.vianh.blogtruyen.data.db.entity.HistoryEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao

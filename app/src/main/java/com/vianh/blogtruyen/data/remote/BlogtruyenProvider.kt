@@ -15,6 +15,7 @@ import org.json.JSONArray
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.select.Elements
+import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -296,13 +297,19 @@ class BlogtruyenProvider(private val client: OkHttpClient) : MangaProvider {
             val row = element.child(0)
             val title = row.child(0).child(0).text()
             val link = row.child(0).child(0).attr("href")
+            val updateDateString = row.child(1).text()
+            val updateDate = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
+                .parse(updateDateString)?.time ?: 0
+
             val id = link.split('/')[1]
+
             result.add(
                 Chapter(
                     id = id,
                     name = title,
                     url = link,
-                    number = 0
+                    number = 0,
+                    uploadDate = updateDate
                 )
             )
         }

@@ -40,7 +40,7 @@
 <!--            </intent-filter>-->
         </activity>
 
-        <service android:name=".features.download.DownloadService" />
+        <service android:exported="true" android:name=".features.download.DownloadService" />
     </application>
 
 </manifest>

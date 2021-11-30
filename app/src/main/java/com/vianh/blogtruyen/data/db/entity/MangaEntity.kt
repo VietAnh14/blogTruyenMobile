@@ -1,10 +1,10 @@
-package com.vianh.blogtruyen.data.local.entity
+package com.vianh.blogtruyen.data.db.entity
 
 import androidx.room.Entity
 import com.vianh.blogtruyen.data.model.Manga
 
 @Entity(
-    tableName = "manga",
+    tableName = MangaEntity.TABLE_NAME,
     primaryKeys = ["mangaId"]
 )
 data class MangaEntity(
@@ -29,6 +29,7 @@ data class MangaEntity(
 
 
     companion object {
+        const val TABLE_NAME = "manga"
         fun fromManga(manga: Manga):MangaEntity {
             return MangaEntity(
                 imageUrl = manga.imageUrl,

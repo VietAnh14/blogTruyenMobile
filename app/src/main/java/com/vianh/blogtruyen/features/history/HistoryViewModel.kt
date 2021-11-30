@@ -61,9 +61,8 @@ class HistoryViewModel(private val historyRepository: HistoryRepository) : BaseV
     }
 
     private fun timeStampToTime(timestamp: Long, dateFormat: String): String {
-        val calendar = Calendar.getInstance()
-        calendar.timeInMillis = timestamp
-        return SimpleDateFormat(dateFormat, Locale.ROOT).format(calendar.time)
+        val date = Date(timestamp)
+        return SimpleDateFormat(dateFormat, Locale.ROOT).format(date)
     }
 
     fun clearAllHistory() {

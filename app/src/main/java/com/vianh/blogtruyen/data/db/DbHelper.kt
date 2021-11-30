@@ -1,4 +1,4 @@
-package com.vianh.blogtruyen.data.local
+package com.vianh.blogtruyen.data.db
 
 import com.vianh.blogtruyen.data.model.Chapter
 import com.vianh.blogtruyen.data.model.History

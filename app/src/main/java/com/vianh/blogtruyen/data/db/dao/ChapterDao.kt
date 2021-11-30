@@ -1,10 +1,8 @@
-package com.vianh.blogtruyen.data.local.dao
+package com.vianh.blogtruyen.data.db.dao
 
 import androidx.room.Dao
 import androidx.room.Query
-import com.vianh.blogtruyen.data.local.dao.BaseDao
-import com.vianh.blogtruyen.data.local.entity.ChapterEntity
-import com.vianh.blogtruyen.data.model.Chapter
+import com.vianh.blogtruyen.data.db.entity.ChapterEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao

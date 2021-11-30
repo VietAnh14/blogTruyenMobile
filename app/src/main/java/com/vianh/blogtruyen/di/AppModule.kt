@@ -4,9 +4,9 @@ import android.content.Context
 import com.vianh.blogtruyen.data.AppDataManager
 import com.vianh.blogtruyen.data.DataManager
 import com.vianh.blogtruyen.data.github.GithubRepo
-import com.vianh.blogtruyen.data.local.AppDbHelper
-import com.vianh.blogtruyen.data.local.DbHelper
-import com.vianh.blogtruyen.data.local.MangaDb
+import com.vianh.blogtruyen.data.db.AppDbHelper
+import com.vianh.blogtruyen.data.db.DbHelper
+import com.vianh.blogtruyen.data.db.MangaDb
 import com.vianh.blogtruyen.data.remote.BlogtruyenProvider
 import com.vianh.blogtruyen.data.remote.MangaProvider
 import com.vianh.blogtruyen.features.local.LocalSourceRepo

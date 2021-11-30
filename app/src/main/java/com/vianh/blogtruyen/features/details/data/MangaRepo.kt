@@ -1,8 +1,8 @@
 package com.vianh.blogtruyen.features.details.data
 
 import androidx.room.withTransaction
-import com.vianh.blogtruyen.data.local.MangaDb
-import com.vianh.blogtruyen.data.local.entity.*
+import com.vianh.blogtruyen.data.db.MangaDb
+import com.vianh.blogtruyen.data.db.entity.*
 import com.vianh.blogtruyen.data.model.Chapter
 import com.vianh.blogtruyen.data.model.Comment
 import com.vianh.blogtruyen.data.model.Manga
@@ -10,8 +10,6 @@ import com.vianh.blogtruyen.data.remote.MangaProvider
 import com.vianh.blogtruyen.utils.mapList
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.transform
 
 interface MangaRepo {
     suspend fun upsertManga(manga: Manga, updateCategories: Boolean = true)

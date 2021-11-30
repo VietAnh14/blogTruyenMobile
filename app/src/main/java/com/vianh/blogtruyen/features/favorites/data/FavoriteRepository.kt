@@ -1,7 +1,7 @@
 package com.vianh.blogtruyen.features.favorites.data
 
-import com.vianh.blogtruyen.data.local.MangaDb
-import com.vianh.blogtruyen.data.local.entity.FavoriteEntity
+import com.vianh.blogtruyen.data.db.MangaDb
+import com.vianh.blogtruyen.data.db.entity.FavoriteEntity
 import com.vianh.blogtruyen.data.model.Favorite
 import com.vianh.blogtruyen.data.model.Manga
 import com.vianh.blogtruyen.utils.mapList
