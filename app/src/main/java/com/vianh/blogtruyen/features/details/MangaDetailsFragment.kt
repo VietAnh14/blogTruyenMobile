@@ -54,6 +54,7 @@ class MangaDetailsFragment : BaseFragment<MangaDetailsFragmentBinding>() {
 
     private fun onContentChange(manga: Manga) {
         with(requireBinding) {
+            collapsingToolbar.title = manga.title
             toolbar.title = manga.title
             headerCover.loadNetWorkImage(manga.imageUrl)
             smallCover.loadNetWorkImage(manga.imageUrl)

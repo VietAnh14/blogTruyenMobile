@@ -12,6 +12,7 @@ import com.vianh.blogtruyen.features.history.historyModule
 import com.vianh.blogtruyen.features.local.localModule
 import com.vianh.blogtruyen.features.details.infoModule
 import com.vianh.blogtruyen.features.search.searchModule
+import com.vianh.blogtruyen.features.update.UpdateHelper
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 import timber.log.Timber
@@ -38,6 +39,7 @@ class BlogApp: Application() {
         }
 
         DownloadNotificationHelper.createNotificationChannel(this)
+        UpdateHelper.createNotificationChannel(this)
 
         UpdateFavoriteWorker.setupUpdateWork(applicationContext)
     }

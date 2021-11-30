@@ -100,7 +100,6 @@ class InfoPageFragment : BaseFragment<ChapterPageFragmentBinding>(), ChapterVH.C
         headerAdapter = InfoHeaderAdapter()
         chapterHeaderAdapter = ChapterHeaderAdapter(viewModel)
         with(requireBinding.chapterRecycler) {
-            itemAnimator = null
             adapter = ConcatAdapter(headerAdapter, chapterHeaderAdapter, chapterAdapter)
             setHasFixedSize(true)
         }

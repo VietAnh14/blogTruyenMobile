@@ -149,7 +149,7 @@ class BlogtruyenProvider(private val client: OkHttpClient) : MangaProvider {
         return mangas
     }
 
-    private fun parseListManga(doc: Document): List<Manga> {
+    private fun parseNewUpdate(doc: Document): List<Manga> {
         val newStories = doc.getElementById("top-newest-story") ?: return emptyList()
         return newStories.getElementsByTag("a").map {
             val link = it.attr("href")
@@ -166,7 +166,7 @@ class BlogtruyenProvider(private val client: OkHttpClient) : MangaProvider {
         }
     }
 
-    private fun parseNewUpdate(doc: Document): List<Manga> {
+    private fun parseListManga(doc: Document): List<Manga> {
         val list = doc.getElementsByClass("list-mainpage")[0].child(0)
         val listItems = list.getElementsByClass("storyitem")
         return listItems.map {
@@ -184,7 +184,7 @@ class BlogtruyenProvider(private val client: OkHttpClient) : MangaProvider {
                 .getElementsByTag("a")
 
             val categories = categoryNodes.mapToSet { category ->
-                Category(category.attr("href"), category.text())
+                Category(category.text(), category.attr("href"))
             }
 
             Manga(

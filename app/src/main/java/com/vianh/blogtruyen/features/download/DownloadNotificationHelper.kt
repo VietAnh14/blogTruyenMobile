@@ -5,11 +5,13 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.os.Build
+import androidx.core.app.NotificationChannelCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.vianh.blogtruyen.R
 import com.vianh.blogtruyen.data.model.Manga
 import com.vianh.blogtruyen.features.details.MangaDetailsFragment
+import com.vianh.blogtruyen.utils.NotificationHelper
 
 class DownloadNotificationHelper(private val context: Context) {
 
@@ -62,18 +64,8 @@ class DownloadNotificationHelper(private val context: Context) {
         private const val CHANNEL_NAME = "BLOG NOTIFICATION"
 
         fun createNotificationChannel(context: Context) {
-            // Create the NotificationChannel, but only on API 26+ because
-            // the NotificationChannel class is new and not in the support library
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                val importance = NotificationManager.IMPORTANCE_DEFAULT
-                val channel = NotificationChannel(NOTIFICATION_CHANNEL_ID, CHANNEL_NAME, importance)
-                    .apply {
-                        description = "Blogtruyen download service"
-                    }
-                // Register the channel with the system
-                val notificationManager: NotificationManager =
-                    context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-                notificationManager.createNotificationChannel(channel)
+            NotificationHelper.createNotificationChannel(context, NOTIFICATION_CHANNEL_ID, CHANNEL_NAME) {
+                setDescription("Blogtruyen download service")
             }
         }
     }

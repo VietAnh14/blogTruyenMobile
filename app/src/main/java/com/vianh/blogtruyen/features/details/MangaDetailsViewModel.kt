@@ -157,10 +157,10 @@ class MangaDetailsViewModel(
 
     fun toggleFavorite() {
         launchJob {
-            if (favorite.value == null)
-                favoriteRepo.addToFavorite(currentManga)
-            else
+            if (isFavorite())
                 favoriteRepo.removeFromFavorite(currentManga.id)
+            else
+                favoriteRepo.addToFavorite(currentManga)
         }
     }
 
