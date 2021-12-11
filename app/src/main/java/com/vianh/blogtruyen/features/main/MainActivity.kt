@@ -22,6 +22,7 @@ import com.vianh.blogtruyen.features.update.UpdateHelper
 import com.vianh.blogtruyen.utils.showToast
 import com.vianh.blogtruyen.views.ViewHeightAnimator
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import timber.log.Timber
 
 class MainActivity : BaseActivity<HomeActivityBinding>(), FragmentManager.OnBackStackChangedListener {
 

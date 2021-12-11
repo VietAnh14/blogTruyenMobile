@@ -19,6 +19,7 @@
 
         <ImageView
             android:id="@+id/cover"
+            android:scaleType="centerCrop"
             android:src="@drawable/lazy_corgi"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />

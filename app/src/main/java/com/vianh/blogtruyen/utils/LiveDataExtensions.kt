@@ -27,3 +27,12 @@ inline fun <T> Flow<T>.asLiveDataDistinct(context: CoroutineContext, start: T): 
 inline fun <T> Flow<T>.asLiveDataDistinct(context: CoroutineContext): LiveData<T> {
     return this.distinctUntilChanged().asLiveData(context)
 }
+
+inline fun <T> Flow<T>.withPrevious(crossinline block: suspend (prev: T?, new: T) -> Unit): Flow<T> {
+    var prev: T? = null
+
+    return onEach {
+        block.invoke(prev, it)
+        prev = it
+    }
+}

@@ -32,6 +32,15 @@
         <item name="android:windowLayoutInDisplayCutoutMode" tools:targetApi="o_mr1">shortEdges</item>
     </style>
 
+<!--    Bottom sheet-->
+    <style name="Theme.BottomSheetTheme" parent="@style/Theme.Design.BottomSheetDialog">
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:navigationBarColor">?attr/colorPrimary</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+    </style>
+
     <style name="SearchViewTheme" parent="Widget.AppCompat.SearchView">
         <item name="hintTextColor">@color/darkGray</item>
         <item name="queryBackground">@null</item>

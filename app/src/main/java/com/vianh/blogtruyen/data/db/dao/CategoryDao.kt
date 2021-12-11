@@ -1,8 +1,10 @@
 package com.vianh.blogtruyen.data.db.dao
 
 import androidx.room.Dao
+import androidx.room.Query
 import androidx.room.Transaction
 import com.vianh.blogtruyen.data.db.entity.CategoryEntity
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 abstract class CategoryDao: BaseDao<CategoryEntity>() {
@@ -14,4 +16,7 @@ abstract class CategoryDao: BaseDao<CategoryEntity>() {
             }
         }
     }
+
+    @Query("SELECT * FROM categories")
+    abstract fun observeAll(): Flow<List<CategoryEntity>>
 }

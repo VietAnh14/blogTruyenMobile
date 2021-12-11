@@ -8,6 +8,7 @@ import com.vianh.blogtruyen.features.base.list.AbstractViewHolder
 import com.vianh.blogtruyen.features.base.list.ItemClick
 import com.vianh.blogtruyen.utils.gone
 import com.vianh.blogtruyen.utils.loadNetWorkImage
+import com.vianh.blogtruyen.utils.visible
 
 class MangaItemVH(private val binding: FeedItemBinding, clickListener: ItemClick<MangaItem>) :
     AbstractViewHolder<MangaItem, Unit>(binding.root) {
@@ -34,6 +35,7 @@ class MangaItemVH(private val binding: FeedItemBinding, clickListener: ItemClick
             mangaName.text = data.manga.title
 
             if (data.notificationCount > 0) {
+                notificationText.visible()
                 notificationText.text = data.notificationCount.toString()
             } else {
                 notificationText.gone()

@@ -43,4 +43,7 @@
     <string name="reader_mode" translatable="false">Reader mode</string>
     <string name="keep_screen_on">Keep screen on</string>
     <string name="settings">Settings</string>
+    <string name="filter_out_categories">Filter out categories</string>
+    <string name="filter">Filter</string>
+    <string name="clear" translatable="false">Clear</string>
 </resources>

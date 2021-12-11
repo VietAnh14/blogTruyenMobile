@@ -1,6 +1,7 @@
 package com.vianh.blogtruyen.utils
 
 import android.content.Context
+import android.content.res.Resources
 import android.util.TypedValue
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -126,3 +127,8 @@ inline fun Context.typeValue(resId: Int): TypedValue {
 fun Context.showToast(message: String, duration: Int = Toast.LENGTH_SHORT) {
     Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
 }
+
+val Number.toPx get() = TypedValue.applyDimension(
+    TypedValue.COMPLEX_UNIT_DIP,
+    this.toFloat(),
+    Resources.getSystem().displayMetrics)

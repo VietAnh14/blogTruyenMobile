@@ -2,6 +2,9 @@ package com.vianh.blogtruyen.features.list
 
 import android.os.Bundle
 import android.view.*
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updateLayoutParams
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.vianh.blogtruyen.R
 import com.vianh.blogtruyen.data.prefs.ListMode
@@ -10,6 +13,7 @@ import com.vianh.blogtruyen.features.base.BaseFragment
 import com.vianh.blogtruyen.features.base.list.ItemClick
 import com.vianh.blogtruyen.features.base.list.items.ListItem
 import com.vianh.blogtruyen.features.details.MangaDetailsFragment
+import com.vianh.blogtruyen.features.list.filter.FilterDialogFragment
 import com.vianh.blogtruyen.features.main.MainActivity
 import com.vianh.blogtruyen.features.search.SearchFragment
 import com.vianh.blogtruyen.utils.*
@@ -23,13 +27,22 @@ class HomeFragment: BaseFragment<HomeFragmentBinding>(), ItemClick<MangaItem> {
     ): HomeFragmentBinding = HomeFragmentBinding.inflate(inflater, container, false)
 
     private val viewModel by viewModel<HomeViewModel>()
-
     private var listAdapter: MangaListAdapter? = null
+    private val filterDialogFragment by lazy { FilterDialogFragment.newInstance() }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setup()
         observe()
+    }
+
+    override fun onApplyWindowInsets(v: View?, insets: WindowInsetsCompat): WindowInsetsCompat {
+        val barInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+        requireBinding.btnFilter.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+            rightMargin = barInsets.right + 10.0.toPx.toInt()
+            bottomMargin = barInsets.bottom + 10.0.toPx.toInt()
+        }
+        return super.onApplyWindowInsets(v, insets)
     }
 
     private fun observe() {
@@ -54,7 +67,24 @@ class HomeFragment: BaseFragment<HomeFragmentBinding>(), ItemClick<MangaItem> {
 //            addItemDecoration(GridItemSpacingDecorator(20))
             adapter = MangaListAdapter(this@HomeFragment).also { listAdapter = it }
             addOnScrollListener(ScrollLoadMore(2) {
-                viewModel.loadPage()
+                viewModel.loadNextPage()
+            })
+            addOnScrollListener(object: RecyclerView.OnScrollListener() {
+                var lastDy = 0
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    super.onScrolled(recyclerView, dx, dy)
+                    val newState = lastDy * dy
+                    lastDy = dy
+                    if (newState >= 0) {
+                        return
+                    }
+
+                    if (dy > 0) {
+                        requireBinding.btnFilter.extend()
+                    } else {
+                        requireBinding.btnFilter.shrink()
+                    }
+                }
             })
 
             val spanSizeLookup = DefaultSpanSizeLookup(this)
@@ -65,6 +95,10 @@ class HomeFragment: BaseFragment<HomeFragmentBinding>(), ItemClick<MangaItem> {
 
         requireBinding.swipeRefreshLayout.setOnRefreshListener {
             viewModel.loadPage(1)
+        }
+
+        requireBinding.btnFilter.setOnClickListener {
+            filterDialogFragment.show(childFragmentManager, null)
         }
     }
 

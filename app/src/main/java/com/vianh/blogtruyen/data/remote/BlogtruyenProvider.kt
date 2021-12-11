@@ -101,8 +101,8 @@ class BlogtruyenProvider(private val client: OkHttpClient) : MangaProvider {
             val response = client.newCall(request).getBodyString()
             val doc = Jsoup.parse(response)
             val pinStories = getPinStories(doc)
-            val newUpdates = parseNewUpdate(doc)
-            val newManga = parseListManga(doc)
+            val newUpdates = parseListManga(doc)
+            val newManga = parseNewUpdate(doc)
 
             FeedItem(pinStories, newUpdates, newManga)
         }

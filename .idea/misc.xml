@@ -67,11 +67,13 @@
         <entry key="app/src/main/res/layout/error_reader_item.xml" value="0.33" />
         <entry key="app/src/main/res/layout/feed_fragment.xml" value="0.23715277777777777" />
         <entry key="app/src/main/res/layout/feed_item.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/filter_dialog_fragment.xml" value="0.33" />
+        <entry key="app/src/main/res/layout/filter_item.xml" value="0.25" />
         <entry key="app/src/main/res/layout/footer_item_error.xml" value="0.23715277777777777" />
         <entry key="app/src/main/res/layout/history_fragment.xml" value="0.25" />
         <entry key="app/src/main/res/layout/history_item.xml" value="0.23715277777777777" />
         <entry key="app/src/main/res/layout/home_activity.xml" value="0.33" />
-        <entry key="app/src/main/res/layout/home_fragment.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/home_fragment.xml" value="0.22" />
         <entry key="app/src/main/res/layout/horizon_reader_layout.xml" value="0.23715277777777777" />
         <entry key="app/src/main/res/layout/loading_page_item.xml" value="0.23715277777777777" />
         <entry key="app/src/main/res/layout/main_tab_fragment.xml" value="0.23715277777777777" />

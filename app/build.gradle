@@ -13,8 +13,8 @@ android {
         applicationId "com.vianh.blogtruyen"
         minSdkVersion 21
         targetSdkVersion 31
-        versionCode 10
-        versionName "0.10"
+        versionCode 11
+        versionName "0.11"
         setArchivesBaseName("blogTruyen_$versionName")
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -94,7 +94,7 @@ dependencies {
     implementation 'com.davemorrissey.labs:subsampling-scale-image-view-androidx:3.10.0'
     implementation 'io.github.everythingme:overscroll-decor-android:1.1.1'
     implementation 'com.afollestad:material-cab:2.0.1'
-    implementation 'com.github.zawadz88.materialpopupmenu:material-popup-menu:4.1.0'
+//    implementation 'com.github.zawadz88.materialpopupmenu:material-popup-menu:4.1.0'
 
     // Network
     implementation "com.squareup.okhttp3:okhttp:4.9.1"

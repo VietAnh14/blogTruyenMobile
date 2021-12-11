@@ -11,7 +11,7 @@ import androidx.core.view.OnApplyWindowInsetsListener
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
-import com.github.zawadz88.materialpopupmenu.popupMenu
+//import com.github.zawadz88.materialpopupmenu.popupMenu
 import com.vianh.blogtruyen.data.prefs.ReaderMode
 import com.vianh.blogtruyen.databinding.TestActivityBinding
 import com.vianh.blogtruyen.features.base.BaseActivity
@@ -42,32 +42,32 @@ class TestActivity: BaseActivity<TestActivityBinding>(), OnApplyWindowInsetsList
 //        }
     }
 
-    private fun showPopupMenu(view: View) {
-        popupMenu {
-
-            section {
-
-                title = getString(R.string.settings)
-                item {
-                    dismissOnSelect = false
-                    icon = R.drawable.ic_list_view
-                    labelRes = R.string.vertical
-                }
-
-                item {
-                    dismissOnSelect = false
-                    icon = R.drawable.ic_continuous_vertical
-                    labelRes = R.string.continuous_vertical
-                }
-
-                item {
-                    dismissOnSelect = false
-                    icon = R.drawable.ic_grid_view
-                    labelRes = R.string.horizontal
-                }
-            }
-        }.show(view.context, view)
-    }
+//    private fun showPopupMenu(view: View) {
+//        popupMenu {
+//
+//            section {
+//
+//                title = getString(R.string.settings)
+//                item {
+//                    dismissOnSelect = false
+//                    icon = R.drawable.ic_list_view
+//                    labelRes = R.string.vertical
+//                }
+//
+//                item {
+//                    dismissOnSelect = false
+//                    icon = R.drawable.ic_continuous_vertical
+//                    labelRes = R.string.continuous_vertical
+//                }
+//
+//                item {
+//                    dismissOnSelect = false
+//                    icon = R.drawable.ic_grid_view
+//                    labelRes = R.string.horizontal
+//                }
+//            }
+//        }.show(view.context, view)
+//    }
 
     fun getSpannableContent(): CharSequence {
         return buildSpannedString {

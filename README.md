@@ -20,6 +20,6 @@ Browse       | Manga details  | Reader        | Comments
 
 ## Todo
 - [x] Create a todo list
-- [ ] Filter manga by category
-- [ ] Auto update to new version
+- [x] Filter manga by category
+- [x] Notify when a new version is available
 - [ ] Export and import data
