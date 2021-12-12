@@ -13,6 +13,7 @@ import com.vianh.blogtruyen.features.base.list.items.LoadingFooterItem
 import com.vianh.blogtruyen.features.list.data.CategoryRepo
 import com.vianh.blogtruyen.features.list.filter.FilterCategoryItem
 import com.vianh.blogtruyen.utils.SingleLiveEvent
+import com.vianh.blogtruyen.utils.asLiveDataDistinct
 import com.vianh.blogtruyen.utils.mapToSet
 import com.vianh.blogtruyen.utils.withPrevious
 import kotlinx.coroutines.Dispatchers
@@ -35,10 +36,14 @@ class HomeViewModel(
         filterManga(manga, filters)
     }.shareIn(viewModelScope + Dispatchers.Default, SharingStarted.Eagerly, 1)
 
-    val categoryItems = combine(filterCategories, categoryRepo.observeAll())
+    val categories = categoryRepo.observeAll().distinctUntilChanged()
+    val categoryItems = combine(filterCategories, categories)
     { filterCategories, categories ->
-        categories.map { FilterCategoryItem(it, filterCategories.contains(it.name)) }
-    }.asLiveData(Dispatchers.Default)
+        val newList = categories
+            .mapTo(ArrayList()) { FilterCategoryItem(it, filterCategories.contains(it.name)) }
+        newList.sortBy { it.category.name.lowercase() }
+        return@combine newList
+    }.asLiveDataDistinct(Dispatchers.Default)
 
     val content = combine(filterManga, listMode)
     { mangaList, mode ->

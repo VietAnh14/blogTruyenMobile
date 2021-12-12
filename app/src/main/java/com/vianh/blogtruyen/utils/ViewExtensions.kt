@@ -132,3 +132,9 @@ val Number.toPx get() = TypedValue.applyDimension(
     TypedValue.COMPLEX_UNIT_DIP,
     this.toFloat(),
     Resources.getSystem().displayMetrics)
+
+val screenHeight
+    get() = Resources.getSystem().displayMetrics.heightPixels
+
+val screenWidth
+    get() = Resources.getSystem().displayMetrics.widthPixels

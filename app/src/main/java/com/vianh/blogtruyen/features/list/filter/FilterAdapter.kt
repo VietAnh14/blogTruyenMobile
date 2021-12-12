@@ -6,7 +6,6 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.vianh.blogtruyen.databinding.FilterItemBinding
-import timber.log.Timber
 
 
 class FilterAdapter: ListAdapter<FilterCategoryItem, FilterAdapter.FilterItemVH>(DiffCallback()) {
@@ -44,14 +43,13 @@ class FilterAdapter: ListAdapter<FilterCategoryItem, FilterAdapter.FilterItemVH>
 
     }
 
-    class FilterItemVH(val binding: FilterItemBinding): RecyclerView.ViewHolder(binding.root) {
-
-        var boundItem: FilterCategoryItem? = null
+    inner class FilterItemVH(val binding: FilterItemBinding): RecyclerView.ViewHolder(binding.root) {
 
         init {
 
             fun onItemClick() {
-                boundItem?.let {
+                val item = getItem(bindingAdapterPosition)
+                item?.let {
                     val isSelected = !it.isSelected
                     it.isSelected = isSelected
                     binding.checkBox.isChecked = isSelected
@@ -69,7 +67,6 @@ class FilterAdapter: ListAdapter<FilterCategoryItem, FilterAdapter.FilterItemVH>
 
 
         fun bind(item: FilterCategoryItem) {
-            boundItem = item
             binding.categoryName.text = item.category.name
             binding.checkBox.isChecked = item.isSelected
         }

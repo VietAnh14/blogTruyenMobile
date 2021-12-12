@@ -1,9 +1,9 @@
 package com.vianh.blogtruyen.views
 
 import android.view.View
-import android.view.ViewTreeObserver
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.Interpolator
+import androidx.core.view.doOnLayout
 import com.vianh.blogtruyen.utils.gone
 import com.vianh.blogtruyen.utils.visible
 
@@ -14,13 +14,9 @@ class ViewHeightAnimator(val view: View) {
         if (view.height > 0) {
             height = view.height
         } else {
-            view.viewTreeObserver.addOnGlobalLayoutListener(object :
-                ViewTreeObserver.OnGlobalLayoutListener {
-                override fun onGlobalLayout() {
-                    height = view.height
-                    view.viewTreeObserver.removeOnGlobalLayoutListener(this)
-                }
-            })
+            view.doOnLayout {
+                height = it.height
+            }
         }
     }
 

@@ -37,12 +37,13 @@ class HomeFragment: BaseFragment<HomeFragmentBinding>(), ItemClick<MangaItem> {
     }
 
     override fun onApplyWindowInsets(v: View?, insets: WindowInsetsCompat): WindowInsetsCompat {
+        super.onApplyWindowInsets(v, insets)
         val barInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
         requireBinding.btnFilter.updateLayoutParams<ViewGroup.MarginLayoutParams> {
-            rightMargin = barInsets.right + 10.0.toPx.toInt()
-            bottomMargin = barInsets.bottom + 10.0.toPx.toInt()
+            rightMargin = barInsets.right + 10.toPx.toInt()
+            bottomMargin = barInsets.bottom + 10.toPx.toInt()
         }
-        return super.onApplyWindowInsets(v, insets)
+        return insets
     }
 
     private fun observe() {
@@ -97,6 +98,7 @@ class HomeFragment: BaseFragment<HomeFragmentBinding>(), ItemClick<MangaItem> {
             viewModel.loadPage(1)
         }
 
+        requireBinding.btnFilter.show()
         requireBinding.btnFilter.setOnClickListener {
             filterDialogFragment.show(childFragmentManager, null)
         }
