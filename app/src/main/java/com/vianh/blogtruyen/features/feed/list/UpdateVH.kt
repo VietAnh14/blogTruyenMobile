@@ -20,12 +20,17 @@ class UpdateVH(parent: ViewGroup, itemClick: NewFeedAdapter.Callbacks) :
     override fun onBind(data: MangaItem, extra: Unit) {
         val manga = data.manga
         with(binding) {
-            imageCover.loadNetWorkImage(manga.imageUrl)
+            root.loadImage(data.manga.imageUrl)
             mangaName.text = manga.title
         }
     }
 
     override fun bindToView(view: View): MangaGridItemBinding {
         return MangaGridItemBinding.bind(view)
+    }
+
+    override fun onRecycle() {
+        binding.root.clearLoading()
+        super.onRecycle()
     }
 }

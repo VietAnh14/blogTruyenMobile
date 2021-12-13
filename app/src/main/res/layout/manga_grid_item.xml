@@ -9,14 +9,6 @@
     app:cardCornerRadius="8dp"
     app:cardElevation="10dp">
 
-    <ImageView
-        android:id="@+id/imageCover"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:contentDescription="@string/media_image"
-        android:scaleType="centerCrop"
-        android:src="@drawable/one_punch" />
-
     <TextView
         android:id="@+id/mangaName"
         android:layout_width="match_parent"
@@ -32,4 +24,6 @@
         android:paddingBottom="10dp"
         android:textColor="@android:color/white"
         android:textSize="12sp" />
+
+
 </com.vianh.blogtruyen.views.MangaGridItem>

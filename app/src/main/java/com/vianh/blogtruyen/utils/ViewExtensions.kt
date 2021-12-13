@@ -131,7 +131,7 @@ fun Context.showToast(message: String, duration: Int = Toast.LENGTH_SHORT) {
 val Number.toPx get() = TypedValue.applyDimension(
     TypedValue.COMPLEX_UNIT_DIP,
     this.toFloat(),
-    Resources.getSystem().displayMetrics)
+    Resources.getSystem().displayMetrics).toInt()
 
 val screenHeight
     get() = Resources.getSystem().displayMetrics.heightPixels

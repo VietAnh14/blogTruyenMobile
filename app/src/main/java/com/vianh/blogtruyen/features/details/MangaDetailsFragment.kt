@@ -57,7 +57,7 @@ class MangaDetailsFragment : BaseFragment<MangaDetailsFragmentBinding>() {
             collapsingToolbar.title = manga.title
             toolbar.title = manga.title
             headerCover.loadNetWorkImage(manga.imageUrl)
-            smallCover.loadNetWorkImage(manga.imageUrl)
+            smallCover.loadImage(manga.imageUrl)
             mangaTitle.text = manga.title
         }
     }

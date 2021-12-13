@@ -27,7 +27,7 @@ class HistoryVH(
     override fun onBind(data: MangaItem, extra: Unit) {
         val manga = data.manga
         with(binding) {
-            imageCover.loadNetWorkImage(manga.imageUrl)
+            root.loadImage(manga.imageUrl)
             mangaName.text = manga.title
         }
     }

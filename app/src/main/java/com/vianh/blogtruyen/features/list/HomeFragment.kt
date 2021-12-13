@@ -40,8 +40,8 @@ class HomeFragment: BaseFragment<HomeFragmentBinding>(), ItemClick<MangaItem> {
         super.onApplyWindowInsets(v, insets)
         val barInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
         requireBinding.btnFilter.updateLayoutParams<ViewGroup.MarginLayoutParams> {
-            rightMargin = barInsets.right + 10.toPx.toInt()
-            bottomMargin = barInsets.bottom + 10.toPx.toInt()
+            rightMargin = barInsets.right + 10.toPx
+            bottomMargin = barInsets.bottom + 10.toPx
         }
         return insets
     }

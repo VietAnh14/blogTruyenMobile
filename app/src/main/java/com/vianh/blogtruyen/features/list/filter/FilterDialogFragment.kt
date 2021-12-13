@@ -1,25 +1,20 @@
 package com.vianh.blogtruyen.features.list.filter
 
 import android.app.Dialog
-import android.content.Context
 import android.content.DialogInterface
-import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.core.graphics.Insets
-import androidx.core.view.OnApplyWindowInsetsListener
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.updatePadding
+import androidx.core.view.*
 import androidx.fragment.app.FragmentManager
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.vianh.blogtruyen.R
 import com.vianh.blogtruyen.databinding.FilterDialogFragmentBinding
 import com.vianh.blogtruyen.features.list.HomeViewModel
+import com.vianh.blogtruyen.utils.screenHeight
 import com.vianh.blogtruyen.utils.toPx
 import org.koin.androidx.viewmodel.ext.android.getViewModel
 import timber.log.Timber
@@ -42,6 +37,7 @@ class FilterDialogFragment: BottomSheetDialogFragment(), OnApplyWindowInsetsList
         savedInstanceState: Bundle?
     ): View {
         binding = FilterDialogFragmentBinding.inflate(inflater, container, false)
+        binding.root.minHeight = screenHeight
         ViewCompat.setOnApplyWindowInsetsListener(binding.filterRecycler, this)
         return binding.root
     }
@@ -54,9 +50,9 @@ class FilterDialogFragment: BottomSheetDialogFragment(), OnApplyWindowInsetsList
         lastInsets = barInsets
         Timber.e(barInsets.toString())
         v?.updatePadding(
-            bottom = barInsets.bottom + 10.toPx.toInt(),
             left = barInsets.left,
-            right = barInsets.right
+            right = barInsets.right,
+            bottom = barInsets.bottom + 20.toPx
         )
         return WindowInsetsCompat.CONSUMED
     }

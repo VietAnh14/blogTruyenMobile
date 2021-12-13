@@ -31,7 +31,8 @@ class MangaItemVH(private val binding: FeedItemBinding, clickListener: ItemClick
 
     override fun onBind(data: MangaItem, extra: Unit) {
         with(binding) {
-            imageCover.loadNetWorkImage(data.manga.imageUrl)
+//            imageCover.loadNetWorkImage(data.manga.imageUrl)
+            root.loadImage(data.manga.imageUrl)
             mangaName.text = data.manga.title
 
             if (data.notificationCount > 0) {
@@ -44,7 +45,8 @@ class MangaItemVH(private val binding: FeedItemBinding, clickListener: ItemClick
     }
 
     override fun onRecycle() {
-        Glide.with(itemView.context).clear(binding.imageCover)
+//        Glide.with(itemView.context).clear(binding.imageCover)
+        binding.root.clearLoading()
         super.onRecycle()
     }
 
