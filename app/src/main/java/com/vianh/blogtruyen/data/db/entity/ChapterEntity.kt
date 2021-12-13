@@ -1,4 +1,4 @@
-package com.vianh.blogtruyen.data.local.entity
+package com.vianh.blogtruyen.data.db.entity
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
@@ -6,7 +6,7 @@ import com.vianh.blogtruyen.data.model.Chapter
 
 //TODO: ADD INDEX
 @Entity(
-    tableName = "chapters",
+    tableName = ChapterEntity.TABLE_NAME,
     primaryKeys = ["id"],
     foreignKeys = [
         ForeignKey(
@@ -23,6 +23,7 @@ data class ChapterEntity(
     val id: String,
     val mangaId: Int,
     val number: Int,
+    val uploadDate: Long,
     val isRead: Boolean = false
 ) {
     fun toChapter(): Chapter {
@@ -31,11 +32,13 @@ data class ChapterEntity(
             url = url,
             name = name,
             number = number,
+            uploadDate = uploadDate,
             read = isRead
         )
     }
 
     companion object {
+        const val TABLE_NAME = "chapters"
         fun fromChapter(chapter: Chapter, mangaId: Int): ChapterEntity {
             return ChapterEntity(
                 url = chapter.url,
@@ -43,7 +46,8 @@ data class ChapterEntity(
                 id =  chapter.id,
                 mangaId = mangaId,
                 isRead = chapter.read,
-                number = chapter.number
+                number = chapter.number,
+                uploadDate = chapter.uploadDate
             )
         }
     }

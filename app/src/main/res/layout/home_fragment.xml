@@ -46,4 +46,20 @@
             app:title="@string/home_menu" />
     </com.google.android.material.appbar.AppBarLayout>
 
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/btn_filter"
+        app:backgroundTint="@color/colorAccent"
+        app:icon="@drawable/ic_filter_list"
+        app:iconTint="?attr/colorOnPrimary"
+        android:textColor="?attr/colorOnPrimary"
+        android:text="@string/filter"
+        tools:visibility="visible"
+        android:visibility="gone"
+        android:textAllCaps="false"
+        app:elevation="8dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

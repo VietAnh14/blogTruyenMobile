@@ -15,6 +15,7 @@ import org.json.JSONArray
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.select.Elements
+import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -28,10 +29,10 @@ class BlogtruyenProvider(private val client: OkHttpClient) : MangaProvider {
 
     override suspend fun fetchNewManga(pageNumber: Int): List<Manga> {
         return withContext(Dispatchers.IO) {
-            val url = BuildConfig.HOST + "/page-$pageNumber"
+            val url = BuildConfig.HOST_FULL + "/page-$pageNumber"
             val request = Request.Builder().url(url).build()
             val response = client.newCall(request).getBodyString()
-            parseManga(response)
+            parseListManga(Jsoup.parse(response))
         }
     }
 
@@ -100,8 +101,8 @@ class BlogtruyenProvider(private val client: OkHttpClient) : MangaProvider {
             val response = client.newCall(request).getBodyString()
             val doc = Jsoup.parse(response)
             val pinStories = getPinStories(doc)
-            val newUpdates = parseNewUpdate(doc)
-            val newManga = parseNewManga(doc)
+            val newUpdates = parseListManga(doc)
+            val newManga = parseNewUpdate(doc)
 
             FeedItem(pinStories, newUpdates, newManga)
         }
@@ -149,7 +150,7 @@ class BlogtruyenProvider(private val client: OkHttpClient) : MangaProvider {
         return mangas
     }
 
-    private fun parseNewManga(doc: Document): List<Manga> {
+    private fun parseNewUpdate(doc: Document): List<Manga> {
         val newStories = doc.getElementById("top-newest-story") ?: return emptyList()
         return newStories.getElementsByTag("a").map {
             val link = it.attr("href")
@@ -166,7 +167,7 @@ class BlogtruyenProvider(private val client: OkHttpClient) : MangaProvider {
         }
     }
 
-    private fun parseNewUpdate(doc: Document): List<Manga> {
+    private fun parseListManga(doc: Document): List<Manga> {
         val list = doc.getElementsByClass("list-mainpage")[0].child(0)
         val listItems = list.getElementsByClass("storyitem")
         return listItems.map {
@@ -184,7 +185,7 @@ class BlogtruyenProvider(private val client: OkHttpClient) : MangaProvider {
                 .getElementsByTag("a")
 
             val categories = categoryNodes.mapToSet { category ->
-                Category(category.attr("href"), category.text())
+                Category(category.text(), category.attr("href"))
             }
 
             Manga(
@@ -296,13 +297,19 @@ class BlogtruyenProvider(private val client: OkHttpClient) : MangaProvider {
             val row = element.child(0)
             val title = row.child(0).child(0).text()
             val link = row.child(0).child(0).attr("href")
+            val updateDateString = row.child(1).text()
+            val updateDate = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
+                .parse(updateDateString)?.time ?: 0
+
             val id = link.split('/')[1]
+
             result.add(
                 Chapter(
                     id = id,
                     name = title,
                     url = link,
-                    number = 0
+                    number = 0,
+                    uploadDate = updateDate
                 )
             )
         }

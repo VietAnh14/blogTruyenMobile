@@ -21,12 +21,17 @@ class NewStoriesVH(parent: ViewGroup, itemClick: ItemClick<MangaItem>) :
     override fun onBind(data: MangaItem, extra: Unit) {
         val manga = data.manga
         with(binding) {
-            cover.loadNetWorkImage(manga.imageUrl)
+            cardContainer.loadImage(manga.imageUrl)
             title.text = manga.title
         }
     }
 
     override fun bindToView(view: View): NewUploadItemBinding {
         return NewUploadItemBinding.bind(view)
+    }
+
+    override fun onRecycle() {
+        binding.cardContainer.clearLoading()
+        super.onRecycle()
     }
 }

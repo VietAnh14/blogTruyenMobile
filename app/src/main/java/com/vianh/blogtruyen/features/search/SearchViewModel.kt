@@ -18,7 +18,7 @@ class SearchViewModel(private val provider: MangaProvider) : BaseVM() {
 
     val contents = combine(listContent, pageError, hasNextPage) { newContents, error, hasNext ->
         if (error != null) {
-            val isFirstPage = newContents.getOrNull(0)?.viewType == NewFeedItem.LOADING_ITEM
+            val isFirstPage = newContents.getOrNull(0)?.viewType == ListItem.LOADING_ITEM
             if (isFirstPage) {
                 return@combine listOf(ErrorItem(error))
             } else

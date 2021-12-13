@@ -52,7 +52,7 @@ class PageItemVH(
     init {
         with(binding.page) {
             setMaxTileSize(tileSize)
-            setMinimumScaleType(SubsamplingScaleImageView.SCALE_TYPE_CENTER_CROP)
+            setMinimumScaleType(SubsamplingScaleImageView.SCALE_TYPE_CUSTOM)
             setMinimumDpi(90)
             setMinimumTileDpi(180)
         }

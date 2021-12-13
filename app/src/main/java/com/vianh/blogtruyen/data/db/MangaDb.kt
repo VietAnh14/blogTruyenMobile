@@ -1,14 +1,14 @@
-package com.vianh.blogtruyen.data.local
+package com.vianh.blogtruyen.data.db
 
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.vianh.blogtruyen.data.local.dao.CategoryDao
-import com.vianh.blogtruyen.data.local.dao.ChapterDao
+import com.vianh.blogtruyen.data.db.dao.CategoryDao
+import com.vianh.blogtruyen.data.db.dao.ChapterDao
 import com.vianh.blogtruyen.features.history.data.HistoryDao
 import com.vianh.blogtruyen.features.details.data.MangaDao
-import com.vianh.blogtruyen.data.local.entity.*
+import com.vianh.blogtruyen.data.db.entity.*
 import com.vianh.blogtruyen.features.favorites.data.FavoriteDao
 
 @Database(
@@ -20,8 +20,8 @@ import com.vianh.blogtruyen.features.favorites.data.FavoriteDao
         HistoryEntity::class,
         FavoriteEntity::class
     ],
-    exportSchema = false,
-    version = 1
+    exportSchema = true,
+    version = 2
 )
 abstract class MangaDb : RoomDatabase() {
     abstract val mangaDao: MangaDao
@@ -47,7 +47,9 @@ abstract class MangaDb : RoomDatabase() {
 //            }
 
             mangaDb = Room.databaseBuilder(context, MangaDb::class.java, DB_NAME)
+                .addMigrations(Migrations.MIGRATION_1_2)
 //                .addCallback(callback)
+                .fallbackToDestructiveMigration()
                 .build()
             return mangaDb
         }

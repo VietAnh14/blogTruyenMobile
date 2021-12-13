@@ -1,4 +1,4 @@
-package com.vianh.blogtruyen.data.local.dao
+package com.vianh.blogtruyen.data.db.dao
 
 import androidx.room.*
 

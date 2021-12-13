@@ -1,7 +1,7 @@
-package com.vianh.blogtruyen.data.local
+package com.vianh.blogtruyen.data.db
 
 import androidx.room.withTransaction
-import com.vianh.blogtruyen.data.local.entity.*
+import com.vianh.blogtruyen.data.db.entity.*
 import com.vianh.blogtruyen.data.model.Chapter
 import com.vianh.blogtruyen.data.model.History
 import com.vianh.blogtruyen.data.model.Manga

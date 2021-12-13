@@ -1,10 +1,10 @@
 package com.vianh.blogtruyen.features.details.data
 
 import androidx.room.*
-import com.vianh.blogtruyen.data.local.dao.BaseDao
-import com.vianh.blogtruyen.data.local.entity.FullManga
-import com.vianh.blogtruyen.data.local.entity.MangaCategory
-import com.vianh.blogtruyen.data.local.entity.MangaEntity
+import com.vianh.blogtruyen.data.db.dao.BaseDao
+import com.vianh.blogtruyen.data.db.entity.FullManga
+import com.vianh.blogtruyen.data.db.entity.MangaCategory
+import com.vianh.blogtruyen.data.db.entity.MangaEntity
 
 @Dao
 abstract class MangaDao: BaseDao<MangaEntity>() {

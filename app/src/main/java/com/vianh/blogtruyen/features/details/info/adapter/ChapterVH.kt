@@ -51,6 +51,7 @@ class ChapterVH(
         }
 
         binding.chapterName.text = item.chapter.name
+        binding.uploadDate.text = item.uploadTimeString
         val textColor = if (item.chapter.read) {
             ContextCompat.getColor(itemView.context, R.color.textColorDeactivated)
         } else {

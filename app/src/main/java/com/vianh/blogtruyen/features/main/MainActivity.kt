@@ -8,6 +8,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.vianh.blogtruyen.R
+import com.vianh.blogtruyen.data.github.Release
 import com.vianh.blogtruyen.data.model.Manga
 import com.vianh.blogtruyen.databinding.HomeActivityBinding
 import com.vianh.blogtruyen.features.base.BaseActivity
@@ -17,6 +18,7 @@ import com.vianh.blogtruyen.features.favorites.UpdateFavoriteWorker
 import com.vianh.blogtruyen.features.feed.NewFeedFragment
 import com.vianh.blogtruyen.features.history.HistoryFragment
 import com.vianh.blogtruyen.features.local.LocalMangaFragment
+import com.vianh.blogtruyen.features.update.UpdateHelper
 import com.vianh.blogtruyen.utils.showToast
 import com.vianh.blogtruyen.views.ViewHeightAnimator
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -50,9 +52,14 @@ class MainActivity : BaseActivity<HomeActivityBinding>(), FragmentManager.OnBack
     }
 
     private fun bindViewModel() {
-        viewModel.notificationCount.observe(this, this::onNotificationCountChange)
-        viewModel.saveImageCompleteMessage.observe(this, this::showToast)
+        viewModel.newRelease.observe(this, ::onNewRelease)
+        viewModel.saveImageCompleteMessage.observe(this, ::showToast)
+        viewModel.notificationCount.observe(this, ::onNotificationCountChange)
         viewModel.error.observe(this, { showToast(it.message ?: "Unknown error") })
+    }
+
+    private fun onNewRelease(release: Release) {
+        UpdateHelper.sendUpdateNotification(this, release)
     }
 
     private fun onNotificationCountChange(num: Int) {
