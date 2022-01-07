@@ -7,13 +7,9 @@ import com.vianh.blogtruyen.R
 import com.vianh.blogtruyen.features.base.list.commonVH.ErrorItemVH
 import com.vianh.blogtruyen.features.reader.Reader
 import com.vianh.blogtruyen.features.reader.ReaderModel
-import com.vianh.blogtruyen.utils.ItemPosScrollListener
-import com.vianh.blogtruyen.utils.PreCacheLayoutManager
-import com.vianh.blogtruyen.utils.SpaceDecorator
-import com.vianh.blogtruyen.utils.maxTileSize
+import com.vianh.blogtruyen.utils.*
 import com.vianh.blogtruyen.views.PinchRecyclerView
 import me.everything.android.ui.overscroll.OverScrollDecoratorHelper
-import timber.log.Timber
 
 class VerticalReader: Reader(R.layout.vertical_reader_layout), ErrorItemVH.ErrorReloadClick {
 

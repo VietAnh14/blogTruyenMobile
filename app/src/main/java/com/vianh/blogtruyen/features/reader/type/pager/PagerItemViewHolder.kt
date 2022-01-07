@@ -41,7 +41,7 @@ class PagerItemViewHolder(parent: ViewGroup, val requestManager: RequestManager)
 
     init {
         with(binding.page) {
-            setMaxTileSize(maxTileSize)
+            setMaxTileSize(getMaxTextureSize())
             setMinimumScaleType(SubsamplingScaleImageView.SCALE_TYPE_CENTER_INSIDE)
         }
     }

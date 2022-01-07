@@ -44,7 +44,7 @@ class TransitionPageVH(val parent: ViewGroup, val viewModel: ReaderViewModel) :
                 description.setText(R.string.next_chapter_guide)
             } else {
                 canProcess = false
-                description.text = context.getString(R.string.pull_down_guild, boundData?.chapter?.number.toString())
+                description.text = context.getString(R.string.pull_down_guild, boundData?.chapter?.name)
             }
         }
     }

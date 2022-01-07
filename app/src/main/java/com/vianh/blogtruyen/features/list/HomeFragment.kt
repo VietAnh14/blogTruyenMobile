@@ -76,14 +76,14 @@ class HomeFragment: BaseFragment<HomeFragmentBinding>(), ItemClick<MangaItem> {
                     super.onScrolled(recyclerView, dx, dy)
                     val newState = lastDy * dy
                     lastDy = dy
-                    if (newState >= 0) {
+                    if (newState > 0) {
                         return
                     }
 
-                    if (dy > 0) {
-                        requireBinding.btnFilter.extend()
-                    } else {
+                    if (dy >= 0) {
                         requireBinding.btnFilter.shrink()
+                    } else {
+                        requireBinding.btnFilter.extend()
                     }
                 }
             })
