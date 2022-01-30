@@ -1,13 +1,9 @@
 package com.vianh.blogtruyen.features.reader
 
-import android.graphics.Color
 import android.os.Bundle
 import android.view.*
-import androidx.core.content.ContextCompat
-import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updateLayoutParams
-import androidx.core.view.updatePadding
 import androidx.fragment.app.FragmentTransaction
 import androidx.fragment.app.commit
 import com.vianh.blogtruyen.R
@@ -15,7 +11,6 @@ import com.vianh.blogtruyen.data.prefs.AppSettings
 import com.vianh.blogtruyen.data.prefs.ReaderMode
 import com.vianh.blogtruyen.databinding.ReaderFragmentBinding
 import com.vianh.blogtruyen.features.base.BaseFragment
-import com.vianh.blogtruyen.features.main.MainActivity
 import com.vianh.blogtruyen.features.reader.type.pager.PagerReader
 import com.vianh.blogtruyen.features.reader.type.vertical.VerticalReader
 import com.vianh.blogtruyen.utils.resetPos

@@ -83,7 +83,7 @@ class NewFeedFragment : BaseFragment<FeedFragmentBinding>(), SwipeRefreshLayout.
             }
         }
 
-        setupToolbar(requireBinding.toolbar, menuId = R.menu.new_feed_menu)
+        setupToolbar(requireBinding.toolbar, getString(R.string.app_name), R.menu.new_feed_menu)
     }
 
     override fun onMenuItemClick(item: MenuItem): Boolean {

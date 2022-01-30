@@ -22,7 +22,7 @@ class FilterAdapter: ListAdapter<FilterCategoryItem, FilterAdapter.FilterItemVH>
 
     fun clearFilters() {
         currentList.forEach { it.isSelected = false }
-        notifyDataSetChanged()
+        notifyItemRangeChanged(0, itemCount)
     }
 
 
@@ -48,12 +48,11 @@ class FilterAdapter: ListAdapter<FilterCategoryItem, FilterAdapter.FilterItemVH>
         init {
 
             fun onItemClick() {
-                val item = getItem(bindingAdapterPosition)
-                item?.let {
-                    val isSelected = !it.isSelected
-                    it.isSelected = isSelected
-                    binding.checkBox.isChecked = isSelected
-                }
+                val item = getItem(bindingAdapterPosition) ?: return
+                val isSelected = !item.isSelected
+                item.isSelected = isSelected
+
+                binding.checkBox.isChecked = isSelected
             }
 
             itemView.setOnClickListener {

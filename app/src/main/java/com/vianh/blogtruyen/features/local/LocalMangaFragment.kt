@@ -17,7 +17,7 @@ import com.vianh.blogtruyen.utils.DefaultSpanSizeLookup
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class LocalMangaFragment : BaseFragment<HomeFragmentBinding>(),
-    SwipeRefreshLayout.OnRefreshListener, ItemClick<MangaItem> {
+    SwipeRefreshLayout.OnRefreshListener, MangaListAdapter.Callback {
     override fun createBinding(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -92,6 +92,10 @@ class LocalMangaFragment : BaseFragment<HomeFragmentBinding>(),
         popUp.show()
         return true
     }
+
+    override fun onReload() = Unit
+
+    override fun onRetryClick() = Unit
 
     override fun onRefresh() {
         viewModel.loadMangaList()

@@ -20,11 +20,11 @@ inline fun <T, R> Flow<List<T>>.mapList(crossinline transform: (T) -> R): Flow<L
     }
 }
 
-inline fun <T> Flow<T>.asLiveDataDistinct(context: CoroutineContext, start: T): LiveData<T> {
+fun <T> Flow<T>.asLiveDataDistinct(context: CoroutineContext, start: T): LiveData<T> {
     return this.onStart { emit(start) }.distinctUntilChanged().asLiveData(context)
 }
 
-inline fun <T> Flow<T>.asLiveDataDistinct(context: CoroutineContext): LiveData<T> {
+fun <T> Flow<T>.asLiveDataDistinct(context: CoroutineContext): LiveData<T> {
     return this.distinctUntilChanged().asLiveData(context)
 }
 

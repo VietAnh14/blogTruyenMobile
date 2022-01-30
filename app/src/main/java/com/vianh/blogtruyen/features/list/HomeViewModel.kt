@@ -1,21 +1,16 @@
 package com.vianh.blogtruyen.features.list
 
-import androidx.lifecycle.asLiveData
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.vianh.blogtruyen.data.DataManager
+import com.vianh.blogtruyen.data.model.Category
 import com.vianh.blogtruyen.data.model.Manga
 import com.vianh.blogtruyen.data.prefs.AppSettings
 import com.vianh.blogtruyen.data.prefs.ListMode
-import com.vianh.blogtruyen.features.base.BaseVM
-import com.vianh.blogtruyen.features.base.list.items.EmptyItem
-import com.vianh.blogtruyen.features.base.list.items.ListItem
-import com.vianh.blogtruyen.features.base.list.items.LoadingFooterItem
+import com.vianh.blogtruyen.features.base.list.items.*
 import com.vianh.blogtruyen.features.list.data.CategoryRepo
 import com.vianh.blogtruyen.features.list.filter.FilterCategoryItem
-import com.vianh.blogtruyen.utils.SingleLiveEvent
-import com.vianh.blogtruyen.utils.asLiveDataDistinct
-import com.vianh.blogtruyen.utils.mapToSet
-import com.vianh.blogtruyen.utils.withPrevious
+import com.vianh.blogtruyen.utils.*
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.*
@@ -24,48 +19,44 @@ import timber.log.Timber
 
 class HomeViewModel(
     private val dataManager: DataManager,
-    private val categoryRepo: CategoryRepo,
-    private val appSettings: AppSettings
-) : BaseVM() {
+    categoryRepo: CategoryRepo,
+    settings: AppSettings,
+) : MangaViewModel(settings, categoryRepo) {
 
-    private val remoteManga: MutableStateFlow<List<Manga>> = MutableStateFlow(emptyList())
-    private val listMode = MutableStateFlow(appSettings.getListMode())
-    private val filterCategories = MutableStateFlow(appSettings.getFilterCategories())
-    private val filterManga = combine(remoteManga, filterCategories)
-    { manga, filters ->
-        filterManga(manga, filters)
-    }.shareIn(viewModelScope + Dispatchers.Default, SharingStarted.Eagerly, 1)
+    private val listError = MutableStateFlow<Throwable?>(null)
+    private val remoteManga = MutableStateFlow(emptyList<Manga>())
+    private val hasNextPage = MutableStateFlow(true)
+    val pageReload = MutableLiveData(false)
 
-    val categories = categoryRepo.observeAll().distinctUntilChanged()
-    val categoryItems = combine(filterCategories, categories)
-    { filterCategories, categories ->
-        val newList = categories
-            .mapTo(ArrayList()) { FilterCategoryItem(it, filterCategories.contains(it.name)) }
-        newList.sortBy { it.category.name.lowercase() }
-        return@combine newList
-    }.asLiveDataDistinct(Dispatchers.Default)
+    // Using share flow to allow emit many times when list not change
+    private val filterManga: SharedFlow<List<Manga>> =
+        combine(remoteManga, filterCategories, this::filterManga)
+            .shareIn(viewModelScope + Dispatchers.Default, SharingStarted.Eagerly, 1)
 
-    val content = combine(filterManga, listMode)
-    { mangaList, mode ->
-        combineContent(mangaList, mode)
-    }.asLiveData(viewModelScope.coroutineContext)
+
+    override val content = combine(filterManga, listError, hasNextPage, listMode, this::combineContent)
+        .asLiveData(viewModelScope.coroutineContext + Dispatchers.Default)
+
 
     private var loadPageJob: Job? = null
-    val pageReload = SingleLiveEvent(false)
+
     var currentPage: Int = 1
-    val nextPage
+        private set
+
+    private val nextPage
         get() = currentPage + 1
 
     init {
         loadPage(1)
 
+        filterCategories.value = settings.getFilterCategories()
         filterManga
             .withPrevious { prev, new ->
                 if (currentPage == 1) {
                     return@withPrevious
                 }
 
-                val preSize = prev?.size ?: 0
+                val preSize = prev?.size ?: return@withPrevious
                 if (new.size == preSize) {
                     loadPage(nextPage)
                 }
@@ -73,17 +64,27 @@ class HomeViewModel(
             .launchIn(viewModelScope)
     }
 
-    private fun combineContent(
-        mangaList: List<Manga>,
-        listMode: ListMode
-    ): List<ListItem> {
-        val type = when (listMode) {
+    private fun combineContent(mangaList: List<Manga>, error: Throwable?, hasNextPage: Boolean, mode: ListMode): List<ListItem> {
+        val type = when (mode) {
             ListMode.GRID -> MangaItem.MANGA_GRID_ITEM
             ListMode.DETAILS_LIST -> MangaItem.MANGA_DETAIL_LIST_ITEM
         }
 
-        val filterItems = mangaList.map { MangaItem(it, type) }
-        return if (filterItems.isEmpty()) listOf(EmptyItem()) else filterItems + LoadingFooterItem
+        val listItem = mangaList.map { MangaItem(it, type) }
+        val isFirstPage = mangaList.isEmpty()
+        if (error != null) {
+            if (isFirstPage) {
+                return listOf(ErrorItem(error))
+            } else {
+                return listItem + ErrorFooterItem(error)
+            }
+        }
+
+        if (isFirstPage && hasNextPage) {
+            return listOf(LoadingItem)
+        } else {
+            return listItem + LoadingFooterItem
+        }
     }
 
     private fun filterManga(manga: List<Manga>, filters: Set<String>): List<Manga> {
@@ -94,59 +95,43 @@ class HomeViewModel(
     }
 
 
-    fun loadPage(offset: Int = currentPage + 1) {
-        if (loadPageJob?.isCompleted == false) {
+    fun loadPage(offset: Int) {
+        if (loadPageJob?.isCompleted == false || !hasNextPage.value) {
             return
         }
 
         Timber.e("Load page $offset")
+        listError.value = null
+        loadPageJob = launchJob {
 
-        loadPageJob = launchLoading {
-            if (offset == 1) {
-                pageReload.setValue(true)
-            }
+            cancelableCatching {
+                val newManga = dataManager
+                    .mangaProvider
+                    .fetchNewManga(offset)
 
-            val newManga = dataManager
-                .mangaProvider
-                .fetchNewManga(offset)
-
-            remoteManga.update {
-                if (offset == 1) {
-                    newManga
-                } else {
-                    it + newManga
+                currentPage = offset
+                hasNextPage.value = newManga.isNotEmpty()
+                remoteManga.update {
+                    if (offset == 1) {
+                        newManga
+                    } else {
+                        it + newManga
+                    }
                 }
+            }.onFailure {
+                listError.value = it
             }
 
-            currentPage = offset
-            pageReload.setValue(false)
+            pageReload.value = false
         }
     }
 
-    fun loadNextPage() {
+    override fun loadNextPage() {
         loadPage(nextPage)
     }
 
-    fun saveListMode(listMode: ListMode) {
-        appSettings.saveListMode(listMode)
-        this.listMode.value = listMode
-    }
-
-
-    // ------------------------Filter------------------
-
-    fun applyFilter() {
-        if (categoryItems.value!!.all { it.isSelected }) {
-            error.postValue(IllegalStateException("You can't filter out all categories"))
-            return
-        }
-
-        val filterItems = categoryItems.value.orEmpty()
-            .filter { it.isSelected }
-            .mapToSet { it.category }
-
-        Timber.d("Filter item $filterItems")
-        filterCategories.value = filterItems.mapToSet { it.name }
-        appSettings.saveFilterCategories(filterItems)
+    override fun reload() {
+        pageReload.value = true
+        loadPage(1)
     }
 }

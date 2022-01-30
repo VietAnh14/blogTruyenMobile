@@ -16,7 +16,7 @@ import com.vianh.blogtruyen.features.list.MangaListAdapter
 import com.vianh.blogtruyen.utils.DefaultSpanSizeLookup
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class FavoritesFragment: BaseFragment<HomeFragmentBinding>(), ItemClick<MangaItem>, SearchView.OnQueryTextListener {
+class FavoritesFragment: BaseFragment<HomeFragmentBinding>(), MangaListAdapter.Callback, SearchView.OnQueryTextListener {
     override fun createBinding(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -82,6 +82,10 @@ class FavoritesFragment: BaseFragment<HomeFragmentBinding>(), ItemClick<MangaIte
     override fun onLongClick(view: View, item: MangaItem): Boolean {
         return false
     }
+
+    override fun onReload() = Unit
+
+    override fun onRetryClick() = Unit
 
     override fun onQueryTextSubmit(query: String?): Boolean {
         return false

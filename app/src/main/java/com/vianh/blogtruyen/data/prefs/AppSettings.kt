@@ -55,12 +55,12 @@ class AppSettings(context: Context) {
         return prefs.getStringSet(FILTER_CATEGORIES, emptySet()) ?: emptySet()
     }
 
-    fun saveFilterCategories(categories: Set<Category>?) {
+    fun saveFilterCategories(categories: Set<String>?) {
         if (categories.isNullOrEmpty()) {
             prefs.edit { remove(FILTER_CATEGORIES) }
             return
         }
 
-        prefs.edit { putStringSet(FILTER_CATEGORIES, categories.mapToSet { it.name }) }
+        prefs.edit { putStringSet(FILTER_CATEGORIES, categories) }
     }
 }

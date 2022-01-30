@@ -7,23 +7,31 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.graphics.Insets
-import androidx.core.view.*
+import androidx.core.view.OnApplyWindowInsetsListener
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import androidx.fragment.app.FragmentManager
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.vianh.blogtruyen.R
 import com.vianh.blogtruyen.databinding.FilterDialogFragmentBinding
-import com.vianh.blogtruyen.features.list.HomeViewModel
+import com.vianh.blogtruyen.features.list.MangaFragment
+import com.vianh.blogtruyen.features.list.MangaViewModel
 import com.vianh.blogtruyen.utils.screenHeight
 import com.vianh.blogtruyen.utils.toPx
-import org.koin.androidx.viewmodel.ext.android.getViewModel
 import timber.log.Timber
 
 class FilterDialogFragment: BottomSheetDialogFragment(), OnApplyWindowInsetsListener {
     lateinit var binding: FilterDialogFragmentBinding
-    private val viewModel: HomeViewModel by lazy { requireParentFragment().getViewModel() }
+    private val viewModel by lazy { parentViewModel() }
     private var filterAdapter: FilterAdapter? = null
     private var lastInsets: Insets? = null
+
+    private fun parentViewModel(): MangaViewModel {
+        val parent = requireParentFragment() as MangaFragment<*>
+        return parent.viewModel
+    }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialog = super.onCreateDialog(savedInstanceState)

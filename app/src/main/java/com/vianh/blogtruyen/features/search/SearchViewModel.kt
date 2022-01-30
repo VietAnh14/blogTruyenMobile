@@ -72,6 +72,7 @@ class SearchViewModel(private val provider: MangaProvider) : BaseVM() {
 
         hasNextPage.value = searchResult.isNotEmpty()
         listContent.value = if (index == 1) searchResult else listContent.value + searchResult
+        pageNumber = index
     }
 
     override fun createExceptionHandler(): CoroutineExceptionHandler {

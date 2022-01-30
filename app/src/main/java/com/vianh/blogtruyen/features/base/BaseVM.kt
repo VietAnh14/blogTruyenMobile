@@ -1,5 +1,6 @@
 package com.vianh.blogtruyen.features.base
 
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.vianh.blogtruyen.utils.SingleLiveEvent
@@ -9,7 +10,7 @@ import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.EmptyCoroutineContext
 
 abstract class BaseVM: ViewModel() {
-    val isLoading = SingleLiveEvent<Boolean>()
+    val isLoading = MutableLiveData<Boolean>()
     val error = SingleLiveEvent<Throwable>()
     val toast = SingleLiveEvent<String>()
 
@@ -38,6 +39,7 @@ abstract class BaseVM: ViewModel() {
 
     protected open fun createExceptionHandler() =
         CoroutineExceptionHandler { _, throwable ->
+            isLoading.value = false
             if (throwable !is CancellationException) {
                 Timber.e(throwable)
                 error.postValue(throwable)
