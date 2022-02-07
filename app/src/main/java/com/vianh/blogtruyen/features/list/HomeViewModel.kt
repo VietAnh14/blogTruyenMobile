@@ -71,16 +71,16 @@ class HomeViewModel(
         }
 
         val listItem = mangaList.map { MangaItem(it, type) }
-        val isFirstPage = mangaList.isEmpty()
+        val isMangaEmpty = mangaList.isEmpty()
         if (error != null) {
-            if (isFirstPage) {
+            if (isMangaEmpty) {
                 return listOf(ErrorItem(error))
             } else {
                 return listItem + ErrorFooterItem(error)
             }
         }
 
-        if (isFirstPage && hasNextPage) {
+        if (isMangaEmpty && hasNextPage) {
             return listOf(LoadingItem)
         } else {
             return listItem + LoadingFooterItem

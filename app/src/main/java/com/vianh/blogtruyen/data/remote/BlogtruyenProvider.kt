@@ -377,20 +377,21 @@ class BlogtruyenProvider(private val client: OkHttpClient) : MangaProvider {
         val doc = Jsoup.parse(html)
         val content = doc.getElementById("content")
 
-        // Check if chapter is render by angular
-        val script = requireNotNull(content).children().findLast { it.tagName() == "script" }
-        if (script == null) {
-            val elements = content.children().filter { it.tagName() == "img" }
-            for (image in elements) {
-                images.add(image.attr("src"))
-            }
-        } else {
+        val contentImages = requireNotNull(content).children()
+            .filter { it.tagName() == "img" }
+            .map { it.attr("src") }
+        images.addAll(contentImages)
+
+        // Some chapters are render by js script
+        val script = content.getElementsByTag("script").lastOrNull()
+        if (script != null && script.data().contains("listImageCaption")) {
             val listImageCaption = script.data().split(";")[0].split("=")[1].trim()
             val imageArr = JSONArray(listImageCaption)
             for (i in 0 until imageArr.length()) {
                 images.add(imageArr.getJSONObject(i).getString("url"))
             }
         }
+
         return images
     }
 
