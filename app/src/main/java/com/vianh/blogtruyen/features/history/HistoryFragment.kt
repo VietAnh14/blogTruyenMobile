@@ -3,6 +3,7 @@ package com.vianh.blogtruyen.features.history
 import android.os.Bundle
 import android.view.*
 import androidx.appcompat.widget.SearchView
+import androidx.appcompat.widget.Toolbar
 import com.vianh.blogtruyen.R
 import com.vianh.blogtruyen.databinding.HistoryFragmentBinding
 import com.vianh.blogtruyen.features.base.BaseFragment
@@ -22,6 +23,7 @@ class HistoryFragment: BaseFragment<HistoryFragmentBinding>() {
 
     private var historyAdapter: HistoryAdapter? = null
 
+    override fun getToolbar(): Toolbar = requireBinding.toolbar
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -55,7 +57,6 @@ class HistoryFragment: BaseFragment<HistoryFragmentBinding>() {
     }
 
     private fun setup() {
-        setupToolbar(requireBinding.toolbar)
         setHasOptionsMenu(true)
 
         with(requireBinding.contentRecycler) {

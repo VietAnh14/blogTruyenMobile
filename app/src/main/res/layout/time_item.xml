@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     android:textStyle="bold"
     android:text="22 12 2022"
-    android:background="@color/colorPrimaryDark"
-    android:textColor="@color/secondaryTextColor"
+    android:background="@color/md_theme_light_tertiaryContainer"
+    android:textColor="@color/md_theme_light_onTertiaryContainer"
     android:padding="@dimen/history_padding_dimens"
     />

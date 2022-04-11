@@ -55,8 +55,9 @@ class ChapterVH(
         val textColor = if (item.chapter.read) {
             ContextCompat.getColor(itemView.context, R.color.textColorDeactivated)
         } else {
-            itemView.context.getColorFromAttr(android.R.attr.textColorPrimary)
+            itemView.context.getColorFromAttr(R.attr.colorOnSurface)
         }
+
         binding.chapterName.setTextColor(textColor)
 
         downloadJob = item.downloadState.onEach {

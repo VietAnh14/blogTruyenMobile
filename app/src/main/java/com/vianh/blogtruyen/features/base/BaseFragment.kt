@@ -2,19 +2,22 @@ package com.vianh.blogtruyen.features.base
 
 import android.content.Context
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
 import androidx.annotation.MenuRes
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
-import androidx.core.view.OnApplyWindowInsetsListener
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.updatePadding
+import androidx.core.graphics.Insets
+import androidx.core.view.*
 import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
 import com.vianh.blogtruyen.R
 import com.vianh.blogtruyen.features.main.MainActivity
+import com.vianh.blogtruyen.utils.attrDimenPixel
+import com.vianh.blogtruyen.utils.getSurfaceColorPrimary
 
 abstract class BaseFragment<B : ViewBinding> : Fragment(), OnApplyWindowInsetsListener,
     Toolbar.OnMenuItemClickListener {
@@ -22,7 +25,9 @@ abstract class BaseFragment<B : ViewBinding> : Fragment(), OnApplyWindowInsetsLi
     val requireBinding: B
         get() = checkNotNull(binding)
 
-    var hostActivity: MainActivity? = null
+    protected var hostActivity: MainActivity? = null
+
+    protected open fun getToolbar(): Toolbar? = null
 
     abstract fun createBinding(
         inflater: LayoutInflater,
@@ -31,7 +36,7 @@ abstract class BaseFragment<B : ViewBinding> : Fragment(), OnApplyWindowInsetsLi
     ): B
 
     override fun onCreateView(
-        inflater: LayoutInflater,
+        inflater: LayoutInflater,                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
@@ -43,12 +48,27 @@ abstract class BaseFragment<B : ViewBinding> : Fragment(), OnApplyWindowInsetsLi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         ViewCompat.setOnApplyWindowInsetsListener(view, this)
+        setupToolbar()
     }
 
     override fun onApplyWindowInsets(v: View?, insets: WindowInsetsCompat): WindowInsetsCompat {
         val systemBarInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-        view?.updatePadding(top = systemBarInsets.top, left = systemBarInsets.left, right = systemBarInsets.right)
-        return WindowInsetsCompat.CONSUMED
+        return if (applyInsets(systemBarInsets)) WindowInsetsCompat.CONSUMED else insets
+    }
+
+    protected val toolbarHeight by lazy { requireContext().attrDimenPixel(R.attr.actionBarSize) }
+    open fun applyInsets(insets: Insets): Boolean {
+        val currentToolbar = getToolbar()
+        if (currentToolbar != null) {
+            val totalToolbarHeight = toolbarHeight + insets.top
+            currentToolbar.updateLayoutParams<ViewGroup.LayoutParams> { height = totalToolbarHeight }
+            currentToolbar.updatePadding(top = insets.top)
+            view?.updatePadding(left = insets.left, right = insets.right)
+        } else {
+            view?.updatePadding(top = insets.top, left = insets.left, right = insets.right)
+        }
+
+        return true
     }
 
     override fun onDestroyView() {
@@ -56,15 +76,20 @@ abstract class BaseFragment<B : ViewBinding> : Fragment(), OnApplyWindowInsetsLi
         super.onDestroyView()
     }
 
-    fun setupToolbar(toolbar: Toolbar, title: String? = null, @MenuRes menuId: Int? = null) {
+    fun configToolbar(title: String? = null, @MenuRes menuId: Int? = null) {
+        val toolbar = getToolbar() ?: return
         if (menuId != null) {
             toolbar.menu.clear()
             toolbar.inflateMenu(menuId)
         }
 
-        if (title != null)
+        if (title != null) {
             toolbar.title = title
+        }
+    }
 
+    private fun setupToolbar() {
+        val toolbar = getToolbar() ?: return
         if (hostActivity?.canNavigateUp() == true) {
             toolbar.navigationIcon = ContextCompat.getDrawable(
                 requireContext(),
@@ -72,7 +97,7 @@ abstract class BaseFragment<B : ViewBinding> : Fragment(), OnApplyWindowInsetsLi
             )
         }
 
-        toolbar.popupTheme = R.style.PopupMenu
+        toolbar.setBackgroundColor(requireContext().getSurfaceColorPrimary())
         toolbar.setOnMenuItemClickListener(this)
         toolbar.setNavigationOnClickListener {
             activity?.onBackPressed()

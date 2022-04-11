@@ -2,9 +2,8 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:clipToPadding="false"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     xmlns:tools="http://schemas.android.com/tools">
 
     <FrameLayout
@@ -30,30 +29,36 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/clear_filter"
-            android:textSize="14sp"
+            style="@style/Widget.Material3.Button.OutlinedButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="@style/Widget.MaterialComponents.Button.TextButton"
-            android:textColor="?attr/colorAccent"
             android:layout_gravity="end"
-            android:textAllCaps="false"
             android:text="@string/clear"
+            android:textAllCaps="false"
+            android:textColor="?attr/colorAccent"
+            android:textSize="14sp"
             app:layout_constraintBaseline_toBaselineOf="@+id/textView1"
             app:layout_constraintEnd_toEndOf="parent" />
     </FrameLayout>
 
+    <com.google.android.material.divider.MaterialDivider
+        android:id="@+id/materialDivider2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/header_container" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/filter_recycler"
         android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
+        android:minHeight="400dp"
         android:clipToPadding="false"
         android:scrollbars="vertical"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/header_container"
-        tools:itemCount="10"
+        app:layout_constraintTop_toBottomOf="@+id/materialDivider2"
+        tools:itemCount="3"
         tools:listitem="@layout/filter_item" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

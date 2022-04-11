@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.graphics.Insets
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updateLayoutParams
 import com.vianh.blogtruyen.R
@@ -34,19 +35,19 @@ class HomeFragment: MangaFragment<HomeViewModel>() {
         observe()
     }
 
-    override fun onApplyWindowInsets(v: View?, insets: WindowInsetsCompat): WindowInsetsCompat {
-        super.onApplyWindowInsets(v, insets)
-        val barInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+    override fun applyInsets(insets: Insets): Boolean {
+        super.applyInsets(insets)
         requireBinding.btnFilter.updateLayoutParams<ViewGroup.MarginLayoutParams> {
-            rightMargin = barInsets.right + 10.toPx
-            bottomMargin = barInsets.bottom + 10.toPx
+            rightMargin = insets.right + 10.toPx
+            bottomMargin = insets.bottom + 10.toPx
         }
-        return insets
+
+        return true
     }
 
     private fun observe() {
         viewModel.pageReload.observe(viewLifecycleOwner, this::onPageReload)
-        viewModel.error.observe(viewLifecycleOwner, { showToast(it.message) })
+        viewModel.error.observe(viewLifecycleOwner) { showToast(it.message) }
     }
 
     private fun onPageReload(reload: Boolean?) {

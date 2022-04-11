@@ -60,6 +60,10 @@ class PinchRecyclerView @JvmOverloads constructor(
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(ev: MotionEvent): Boolean {
+        if (!overScroller.isFinished) {
+            overScroller.forceFinished(true)
+        }
+
         // Transform to scaled event for detector to work properly
         ev.transform(transformsMatrix)
         gestureDetector.onTouchEvent(ev)
@@ -103,7 +107,7 @@ class PinchRecyclerView @JvmOverloads constructor(
 
             updateMatrixValues()
             val currentScale = mValues[Matrix.MSCALE_X]
-            val newScale = if (currentScale > MIN_SCALE) MIN_SCALE else MAX_SCALE
+            val newScale = if (currentScale > MIN_SCALE) 1f else MAX_SCALE
             startScaleAnimation(currentScale, newScale, e.x, e.y)
             return true
         }
@@ -114,7 +118,6 @@ class PinchRecyclerView @JvmOverloads constructor(
             distanceX: Float,
             distanceY: Float
         ): Boolean {
-            overScroller.forceFinished(true)
             transformsMatrix.postTranslate(-distanceX, -distanceY)
             constrainsBoundAndInvalidate()
             return true
@@ -131,7 +134,7 @@ class PinchRecyclerView @JvmOverloads constructor(
         }
     }
 
-    fun startScaleAnimation(from: Float, to: Float, focusX: Float, focusY: Float, duration: Long = 300) {
+    fun startScaleAnimation(from: Float, to: Float, focusX: Float, focusY: Float, duration: Long = 200) {
         val scaleAnimator = ValueAnimator
             .ofFloat(from, to)
             .setDuration(duration)

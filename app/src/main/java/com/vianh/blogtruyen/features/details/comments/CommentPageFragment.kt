@@ -31,9 +31,9 @@ class CommentPageFragment: BaseFragment<CommentPageFragmentBinding>() {
     }
 
     private fun observe() {
-        viewModel.comments.observe(viewLifecycleOwner, {
+        viewModel.comments.observe(viewLifecycleOwner) {
             (requireBinding.commentRecycler.adapter as CommentAdapter).submitList(it)
-        })
+        }
         viewModel.loadComments()
     }
 

@@ -17,11 +17,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        app:backgroundTint="@color/colorPrimary"
+        style="@style/Widget.Material3.BottomNavigationView"
         app:elevation="4dp"
         app:layout_behavior="com.google.android.material.behavior.HideBottomViewOnScrollBehavior"
-        style="@style/Widget.MaterialComponents.BottomNavigationView.Colored"
-        app:menu="@menu/home_bottom_nav_menu"
-        app:itemIconTint="@color/bottom_nav_selector"
-        app:itemTextColor="@color/bottom_nav_selector"/>
+        app:menu="@menu/home_bottom_nav_menu" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

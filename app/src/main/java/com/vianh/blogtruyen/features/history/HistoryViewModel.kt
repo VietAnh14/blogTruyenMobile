@@ -44,8 +44,8 @@ class HistoryViewModel(private val historyRepository: HistoryRepository) : BaseV
     }
 
 
-    private val dateFormat = "d MMM ',' yyyy"
-    private val timeFormat = "hh:mm"
+    private val dateFormat = "dd/MM/yyyy"
+    private val timeFormat = "HH:mm"
     private fun mapHistoryToListItem(items: List<History>): List<HistoryListItem> {
         val timeMap = items.asSequence()
             .map { HistoryListItem.HistoryItem(it, timeStampToTime(it.lastRead, timeFormat)) }

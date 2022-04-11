@@ -2,6 +2,7 @@ package com.vianh.blogtruyen.features.feed
 
 import android.os.Bundle
 import android.view.*
+import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
@@ -37,6 +38,8 @@ class NewFeedFragment : BaseFragment<FeedFragmentBinding>(), SwipeRefreshLayout.
     private var updateAdapter: NewFeedAdapter? = null
     private var newStoriesAdapter: NewFeedAdapter? = null
     private var historyAdapter: NewFeedAdapter? = null
+
+    override fun getToolbar(): Toolbar? = requireBinding.toolbar
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -83,7 +86,7 @@ class NewFeedFragment : BaseFragment<FeedFragmentBinding>(), SwipeRefreshLayout.
             }
         }
 
-        setupToolbar(requireBinding.toolbar, getString(R.string.app_name), R.menu.new_feed_menu)
+        configToolbar(getString(R.string.app_name), R.menu.new_feed_menu)
     }
 
     override fun onMenuItemClick(item: MenuItem): Boolean {

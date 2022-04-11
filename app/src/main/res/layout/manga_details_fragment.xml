@@ -13,16 +13,18 @@
         android:clipToPadding="false"
         android:layout_width="match_parent"
         android:layout_height="400dp"
+        app:liftOnScroll="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:id="@+id/collapsing_toolbar"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed"
-            app:contentScrim="?attr/colorPrimary"
-            app:titleEnabled="true"
-            app:expandedTitleTextAppearance="@style/InvisibleText"
+            style="?attr/collapsingToolbarLayoutLargeSize"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed|snap"
+            android:minHeight="?attr/actionBarSize"
+            app:expandedTitleTextColor="@android:color/transparent"
+            app:scrimVisibleHeightTrigger="200dp"
             android:fitsSystemWindows="true"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -33,8 +35,7 @@
                 android:layout_height="match_parent"
                 android:scaleType="centerCrop"
                 android:fitsSystemWindows="true"
-                app:layout_collapseMode="parallax"
-                android:src="?attr/colorPrimary" />
+                app:layout_collapseMode="parallax" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/header_container"
@@ -56,19 +57,18 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <com.vianh.blogtruyen.views.MangaGridItem
+                <com.vianh.blogtruyen.views.CardImageView
                     android:id="@+id/small_cover"
                     android:layout_width="120dp"
                     android:layout_height="wrap_content"
                     app:ratio_width="9"
                     app:ratio_height="13"
-                    app:cardBackgroundColor="?attr/colorPrimary"
+                    app:cardCornerRadius="8dp"
                     android:layout_marginBottom="?attr/actionBarSize"
                     android:layout_marginStart="10dp"
                     android:scaleType="centerCrop"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:shapeAppearanceOverlay="@style/RoundCornerShape"
                     app:srcCompat="@drawable/one_punch" />
 
                 <TextView
@@ -78,7 +78,7 @@
                     android:layout_marginStart="10dp"
                     android:layout_marginBottom="20dp"
                     android:text="Some manga name"
-                    android:textColor="@color/pureWhite"
+                    android:textColor="?attr/colorOnSurface"
                     android:textSize="25sp"
                     app:layout_constraintBottom_toBottomOf="@+id/small_cover"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -98,16 +98,10 @@
                 android:id="@+id/tab_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="?attr/colorPrimary"
-                app:tabIndicatorAnimationMode="elastic"
                 android:layout_gravity="bottom"
+                app:tabIndicatorAnimationMode="elastic"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/appBarLayout"
-                app:tabIndicatorColor="?attr/colorAccent"
-                app:tabIndicatorFullWidth="false"
-                app:tabSelectedTextColor="?attr/colorAccent"
-                app:tabTextAppearance="@style/TextAppearance.AppCompat.Body1"
-                app:tabTextColor="?attr/colorControlNormal">
+                app:layout_constraintTop_toBottomOf="@+id/appBarLayout" >
 
                 <com.google.android.material.tabs.TabItem
                     android:layout_width="wrap_content"

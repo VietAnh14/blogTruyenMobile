@@ -5,14 +5,16 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
-import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
-import androidx.core.view.*
+import androidx.appcompat.widget.Toolbar
+import androidx.core.graphics.Insets
+import androidx.core.view.doOnLayout
+import androidx.core.view.updateLayoutParams
+import androidx.core.view.updatePadding
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.tabs.TabLayoutMediator
@@ -23,8 +25,8 @@ import com.vianh.blogtruyen.features.base.BaseFragment
 import com.vianh.blogtruyen.features.main.MainActivity
 import com.vianh.blogtruyen.features.main.MainViewModel
 import com.vianh.blogtruyen.utils.PendingIntentHelper
+import com.vianh.blogtruyen.utils.getSurfaceColorPrimary
 import com.vianh.blogtruyen.utils.loadNetWorkImage
-import com.vianh.blogtruyen.utils.typeValue
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
@@ -40,6 +42,10 @@ class MangaDetailsFragment : BaseFragment<MangaDetailsFragmentBinding>() {
     private val activityViewModel by sharedViewModel<MainViewModel>()
     private val viewModel: MangaDetailsViewModel by viewModel {
         parametersOf(getManga(), getOfflineState())
+    }
+
+    override fun getToolbar(): Toolbar? {
+        return requireBinding.toolbar
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -63,7 +69,7 @@ class MangaDetailsFragment : BaseFragment<MangaDetailsFragmentBinding>() {
     }
 
     private fun setup() {
-        setupToolbar(requireBinding.toolbar, menuId = R.menu.manga_details_menu)
+        configToolbar(menuId = R.menu.manga_details_menu)
         with(requireBinding) {
             pager.adapter = ContentPagerAdapter(this@MangaDetailsFragment)
             TabLayoutMediator(tabLayout, pager) { tab, position ->
@@ -94,6 +100,8 @@ class MangaDetailsFragment : BaseFragment<MangaDetailsFragmentBinding>() {
                 else -> appBarLayout.setExpanded(true)
             }
 
+            toolbar.setBackgroundColor(Color.TRANSPARENT)
+            collapsingToolbar.setContentScrimColor(requireContext().getSurfaceColorPrimary())
             appBarLayout.addOnOffsetChangedListener(object: AppBarLayout.OnOffsetChangedListener {
                 override fun onOffsetChanged(appBarLayout: AppBarLayout, verticalOffset: Int) {
                     val progress = -verticalOffset.toFloat()/appBarLayout.totalScrollRange
@@ -103,18 +111,14 @@ class MangaDetailsFragment : BaseFragment<MangaDetailsFragmentBinding>() {
         }
     }
 
-    private val toolbarHeight by lazy { requireContext().typeValue(R.attr.actionBarSize).data }
-
-    override fun onApplyWindowInsets(v: View?, insets: WindowInsetsCompat): WindowInsetsCompat {
-        val systemBarInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+    override fun applyInsets(insets: Insets): Boolean {
+        super.applyInsets(insets)
         with(requireBinding) {
-            val totalToolbarHeight = TypedValue.complexToDimensionPixelSize(toolbarHeight, resources.displayMetrics) + systemBarInsets.top
-            toolbar.updateLayoutParams<ViewGroup.LayoutParams> { height = totalToolbarHeight }
-            toolbar.updatePadding(top = systemBarInsets.top)
-            pager.updatePadding(bottom = systemBarInsets.bottom)
-            root.updatePadding(left = systemBarInsets.left, right = systemBarInsets.right)
+            pager.updatePadding(bottom = insets.bottom)
+            root.updatePadding(left = insets.left, right = insets.right)
         }
-        return WindowInsetsCompat.CONSUMED
+
+        return true
     }
 
     override fun onMenuItemClick(item: MenuItem): Boolean {

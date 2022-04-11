@@ -5,11 +5,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
+import androidx.appcompat.widget.Toolbar
 import com.vianh.blogtruyen.R
 import com.vianh.blogtruyen.databinding.HomeFragmentBinding
 import com.vianh.blogtruyen.features.base.BaseFragment
-import com.vianh.blogtruyen.features.base.list.ItemClick
-import com.vianh.blogtruyen.features.base.list.items.ListItem
 import com.vianh.blogtruyen.features.details.MangaDetailsFragment
 import com.vianh.blogtruyen.features.list.MangaItem
 import com.vianh.blogtruyen.features.list.MangaListAdapter
@@ -28,6 +27,10 @@ class FavoritesFragment: BaseFragment<HomeFragmentBinding>(), MangaListAdapter.C
     private val viewModel: FavoriteViewModel by viewModel()
     private var listAdapter: MangaListAdapter? = null
 
+    override fun getToolbar(): Toolbar? {
+        return requireBinding.toolbar
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setup()
@@ -43,7 +46,7 @@ class FavoritesFragment: BaseFragment<HomeFragmentBinding>(), MangaListAdapter.C
         setHasOptionsMenu(true)
 
         with(requireBinding) {
-            setupToolbar(toolbar, getString(R.string.bookmarks), R.menu.favorite_toolbar_menu)
+            configToolbar(getString(R.string.bookmarks), R.menu.favorite_toolbar_menu)
             val searchView = toolbar.menu.findItem(R.id.search_bar).actionView as SearchView
             searchView.setOnQueryTextListener(this@FavoritesFragment)
 

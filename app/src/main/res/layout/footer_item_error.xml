@@ -10,6 +10,7 @@
         android:layout_width="0dp"
         android:layout_weight="1"
         android:layout_marginEnd="8dp"
+        android:textColor="?attr/colorError"
         android:text="error"
         android:layout_height="wrap_content"
         android:textSize="14sp"/>
@@ -17,10 +18,10 @@
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_reload"
         style="?attr/materialButtonOutlinedStyle"
-        app:strokeColor="?attr/colorAccent"
+        app:strokeColor="?attr/colorError"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="?attr/colorOnPrimary"
+        android:textColor="?attr/colorError"
         android:textAllCaps="false"
         android:text="@string/retry" />
 </LinearLayout>

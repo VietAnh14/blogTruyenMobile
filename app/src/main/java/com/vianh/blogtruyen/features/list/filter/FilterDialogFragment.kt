@@ -18,9 +18,11 @@ import com.vianh.blogtruyen.R
 import com.vianh.blogtruyen.databinding.FilterDialogFragmentBinding
 import com.vianh.blogtruyen.features.list.MangaFragment
 import com.vianh.blogtruyen.features.list.MangaViewModel
+import com.vianh.blogtruyen.utils.dpToPx
 import com.vianh.blogtruyen.utils.screenHeight
 import com.vianh.blogtruyen.utils.toPx
 import timber.log.Timber
+import kotlin.math.roundToInt
 
 class FilterDialogFragment: BottomSheetDialogFragment(), OnApplyWindowInsetsListener {
     lateinit var binding: FilterDialogFragmentBinding
@@ -56,7 +58,6 @@ class FilterDialogFragment: BottomSheetDialogFragment(), OnApplyWindowInsetsList
         if (lastInsets == barInsets) return WindowInsetsCompat.CONSUMED
 
         lastInsets = barInsets
-        Timber.e(barInsets.toString())
         v?.updatePadding(
             left = barInsets.left,
             right = barInsets.right,
@@ -72,6 +73,7 @@ class FilterDialogFragment: BottomSheetDialogFragment(), OnApplyWindowInsetsList
     }
 
     override fun onDestroyView() {
+        lastInsets = null
         filterAdapter = null
         super.onDestroyView()
     }

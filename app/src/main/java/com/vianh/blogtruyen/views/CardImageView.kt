@@ -19,7 +19,7 @@ import com.vianh.blogtruyen.utils.getColorFromAttr
 import com.vianh.blogtruyen.utils.gone
 import com.vianh.blogtruyen.utils.toPx
 
-class MangaGridItem @JvmOverloads constructor(
+class CardImageView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0

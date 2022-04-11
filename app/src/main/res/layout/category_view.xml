@@ -2,6 +2,8 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="?attr/colorOnSurfaceInverse"
+    android:paddingVertical="8dp"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:tools="http://schemas.android.com/tools">
@@ -11,10 +13,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/recent_update"
+        android:textColor="?attr/colorOnSurface"
         android:textSize="20sp"
         android:textStyle="bold"
         android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -22,19 +24,18 @@
         android:id="@+id/see_all"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:background="?attr/selectableItemBackground"
         android:clickable="true"
-        android:paddingStart="10dp"
+        android:drawableEnd="@drawable/ic_chevron_right"
+        android:focusable="true"
         android:gravity="center"
+        android:paddingStart="10dp"
         android:paddingTop="4dp"
         android:paddingBottom="4dp"
-        android:background="?attr/selectableItemBackground"
-        android:drawableEnd="@drawable/ic_chevron_right"
-        app:drawableTint="@color/pureWhite"
         android:text="@string/show_more"
-        app:layout_constraintBottom_toTopOf="@+id/content_recycler"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:focusable="true" />
+        android:textColor="?attr/colorOnSurface"
+        app:layout_constraintBaseline_toBaselineOf="@+id/title"
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/content_recycler"

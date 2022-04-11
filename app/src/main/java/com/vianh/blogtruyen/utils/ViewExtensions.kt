@@ -2,6 +2,7 @@ package com.vianh.blogtruyen.utils
 
 import android.content.Context
 import android.content.res.Resources
+import android.util.DisplayMetrics
 import android.util.TypedValue
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -21,6 +22,7 @@ import androidx.core.content.ContextCompat
 import androidx.viewbinding.ViewBinding
 import com.bumptech.glide.GenericTransitionOptions
 import com.bumptech.glide.Glide
+import com.google.android.material.elevation.SurfaceColors
 import com.vianh.blogtruyen.R
 
 inline fun ImageView.loadNetWorkImage(url: String, @DrawableRes errorDrawable: Int = R.drawable.ic_broken_image) {
@@ -132,6 +134,22 @@ val Number.toPx get() = TypedValue.applyDimension(
     TypedValue.COMPLEX_UNIT_DIP,
     this.toFloat(),
     Resources.getSystem().displayMetrics).toInt()
+
+fun Number.dpToPx(context: Context): Float {
+    return this.toFloat() * (context.resources.displayMetrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT)
+}
+
+fun Number.pxToDp(context: Context): Float {
+    return this.toFloat() / (context.resources.displayMetrics.densityDpi.toFloat() / DisplayMetrics.DENSITY_DEFAULT)
+}
+
+fun Context.attrDimenPixel(id: Int): Int {
+    return TypedValue.complexToDimensionPixelSize(typeValue(id).data, resources.displayMetrics)
+}
+
+fun Context.getSurfaceColorPrimary(): Int {
+    return SurfaceColors.SURFACE_2.getColor(this)
+}
 
 val screenHeight
     get() = Resources.getSystem().displayMetrics.heightPixels

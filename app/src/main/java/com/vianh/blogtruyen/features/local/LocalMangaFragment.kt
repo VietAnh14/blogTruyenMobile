@@ -3,13 +3,11 @@ package com.vianh.blogtruyen.features.local
 import android.os.Bundle
 import android.view.*
 import androidx.appcompat.widget.PopupMenu
-import androidx.recyclerview.widget.GridLayoutManager
+import androidx.appcompat.widget.Toolbar
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.vianh.blogtruyen.R
 import com.vianh.blogtruyen.databinding.HomeFragmentBinding
 import com.vianh.blogtruyen.features.base.BaseFragment
-import com.vianh.blogtruyen.features.base.list.ItemClick
-import com.vianh.blogtruyen.features.base.list.items.ListItem
 import com.vianh.blogtruyen.features.details.MangaDetailsFragment
 import com.vianh.blogtruyen.features.list.MangaItem
 import com.vianh.blogtruyen.features.list.MangaListAdapter
@@ -29,6 +27,8 @@ class LocalMangaFragment : BaseFragment<HomeFragmentBinding>(),
     private val viewModel by viewModel<LocalViewModel>()
     private var adapter: MangaListAdapter? = null
 
+    override fun getToolbar(): Toolbar = requireBinding.toolbar
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setUpView()
@@ -42,7 +42,7 @@ class LocalMangaFragment : BaseFragment<HomeFragmentBinding>(),
 
     private fun setUpView() {
         with(requireBinding) {
-            setupToolbar(toolbar, resources.getString(R.string.downloaded))
+            configToolbar(resources.getString(R.string.downloaded))
             swipeRefreshLayout.setOnRefreshListener(this@LocalMangaFragment)
 
             val spanSizeLookup = DefaultSpanSizeLookup(feedRecycler)
@@ -76,8 +76,7 @@ class LocalMangaFragment : BaseFragment<HomeFragmentBinding>(),
     }
 
     override fun onLongClick(view: View, item: MangaItem): Boolean {
-        val wrapper = ContextThemeWrapper(requireActivity(), R.style.PopupMenu)
-        val popUp = PopupMenu(wrapper, view)
+        val popUp = PopupMenu(requireActivity(), view)
         popUp.inflate(R.menu.manga_popup_menu)
         popUp.setOnMenuItemClickListener {
             when (it.itemId) {

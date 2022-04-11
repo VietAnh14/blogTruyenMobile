@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item android:id="@+id/home_menu"
         app:showAsAction="ifRoom"
-        android:icon="@drawable/home_menu_bg"
+        android:icon="@drawable/ic_home_24"
         android:title="@string/home_menu" />
 
     <item android:id="@+id/history"
@@ -18,7 +18,7 @@
 
     <item android:id="@+id/downloads"
         app:showAsAction="ifRoom"
-        android:icon="@drawable/ic_downloading"
+        android:icon="@drawable/ic_file_download"
         android:title="@string/downloaded"
         />
 </menu>

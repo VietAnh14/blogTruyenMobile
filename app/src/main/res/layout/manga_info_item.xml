@@ -3,6 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:padding="@dimen/main_margin"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -11,11 +12,8 @@
         style="@style/TextAppearance.AppCompat.Medium"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
         android:text="@string/summary"
-        android:textColor="@color/pureWhite"
+        android:textColor="?attr/colorSecondaryVariant"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -25,7 +23,6 @@
         android:layout_width="0dp"
         android:layout_marginTop="10dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="20dp"
         android:text="@string/lorem_5_sentences"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/textView5"
@@ -34,7 +31,7 @@
     <com.google.android.material.chip.ChipGroup
         android:id="@+id/category_group"
         android:layout_width="0dp"
-        android:layout_marginTop="4dp"
+        android:paddingVertical="@dimen/small_margin"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="@+id/summary"
         app:layout_constraintStart_toStartOf="@+id/summary"
@@ -43,12 +40,7 @@
         <com.google.android.material.chip.Chip
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Comedy"
-            android:textColor="@color/colorAccent"
-            android:textSize="12sp"
-            app:chipStrokeColor="@color/colorAccent"
-            app:chipStrokeWidth="1dp"
-            app:chipSurfaceColor="@android:color/transparent" />
+            android:text="Comedy" />
     </com.google.android.material.chip.ChipGroup>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

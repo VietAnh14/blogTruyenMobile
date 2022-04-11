@@ -47,7 +47,7 @@
             android:ellipsize="end"
             android:gravity="center_vertical"
             android:maxLines="1"
-            android:textColor="@color/textColorDeactivated"
+            android:textColor="?attr/colorControlActivated"
             tools:text="11/01/2021 10:13"/>
     </androidx.appcompat.widget.LinearLayoutCompat>
 

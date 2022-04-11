@@ -30,6 +30,15 @@ android {
         disable 'MissingTranslation'
     }
 
+    signingConfigs {
+        debug {
+            storeFile file("../keystore.jks")
+            storePassword "datchim147"
+            keyAlias "key0"
+            keyPassword "datchim147"
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled true
@@ -78,7 +87,7 @@ dependencies {
     implementation "androidx.fragment:fragment-ktx:1.4.1"
 
     // life cycle
-    def lifecycle_version = "2.4.0"
+    def lifecycle_version = "2.4.1"
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
     implementation "androidx.lifecycle:lifecycle-service:$lifecycle_version"
@@ -87,7 +96,7 @@ dependencies {
     implementation "androidx.work:work-runtime-ktx:$work_version"
 
     // views
-    implementation 'com.google.android.material:material:1.4.0'
+    implementation 'com.google.android.material:material:1.5.0'
     implementation 'androidx.recyclerview:recyclerview:1.2.1'
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
     implementation 'com.davemorrissey.labs:subsampling-scale-image-view-androidx:3.10.0'
@@ -113,7 +122,7 @@ dependencies {
     implementation "com.github.bumptech.glide:okhttp3-integration:$glide_version"
     implementation 'jp.wasabeef:glide-transformations:4.3.0'
 
-    def room_version = "2.4.1"
+    def room_version = "2.4.2"
     implementation "androidx.room:room-runtime:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
     implementation "androidx.room:room-ktx:$room_version"

@@ -27,9 +27,9 @@ class MangaInfoHeaderVH(private val binding: MangaInfoItemBinding) : RecyclerVie
 
 
     private fun createChip(name: String): Chip {
-        val chipBinding = ChipItemBinding.inflate(LayoutInflater.from(itemView.context))
-        chipBinding.chip.text = name
-        return chipBinding.chip
+        val chip = Chip(itemView.context)
+        chip.text = name
+        return chip
     }
 
     companion object {

@@ -67,16 +67,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/action_bg" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_read"
         android:layout_width="160dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="15dp"
-        android:background="@drawable/round_corners_bg"
         android:stateListAnimator="@drawable/btn_state_list"
+        style="@style/Widget.Material3.Button.TonalButton"
+        app:backgroundTint="?attr/colorSecondary"
+        android:textColor="?attr/colorOnSecondary"
         android:text="Read"
         android:textAllCaps="false"
-        app:backgroundTint="@null"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/action_bg"
         app:layout_constraintTop_toTopOf="@+id/action_bg" />

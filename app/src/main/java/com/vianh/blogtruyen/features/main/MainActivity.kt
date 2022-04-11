@@ -3,6 +3,7 @@ package com.vianh.blogtruyen.features.main
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.MenuItem
 import androidx.annotation.IdRes
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -55,7 +56,7 @@ class MainActivity : BaseActivity<HomeActivityBinding>(), FragmentManager.OnBack
         viewModel.newRelease.observe(this, ::onNewRelease)
         viewModel.saveImageCompleteMessage.observe(this, ::showToast)
         viewModel.notificationCount.observe(this, ::onNotificationCountChange)
-        viewModel.error.observe(this, { showToast(it.message ?: "Unknown error") })
+        viewModel.error.observe(this) { showToast(it.message ?: "Unknown error") }
     }
 
     private fun onNewRelease(release: Release) {
@@ -69,7 +70,6 @@ class MainActivity : BaseActivity<HomeActivityBinding>(), FragmentManager.OnBack
             binding.bottomNav.getOrCreateBadge(R.id.bookmarks).apply {
                 isVisible = true
                 number = num
-                backgroundColor = ContextCompat.getColor(this@MainActivity, R.color.colorAccent)
             }
         }
     }
@@ -133,6 +133,15 @@ class MainActivity : BaseActivity<HomeActivityBinding>(), FragmentManager.OnBack
             else -> super.onBackPressed()
 
         }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == android.R.id.home) {
+            onBackPressed()
+            return true
+        }
+
+        return super.onOptionsItemSelected(item)
     }
 
     fun navigateUp() {

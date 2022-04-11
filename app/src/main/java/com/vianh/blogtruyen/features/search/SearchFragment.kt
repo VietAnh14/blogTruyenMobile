@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
+import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.vianh.blogtruyen.R
@@ -13,7 +14,6 @@ import com.vianh.blogtruyen.databinding.HomeFragmentBinding
 import com.vianh.blogtruyen.features.base.BaseFragment
 import com.vianh.blogtruyen.features.details.MangaDetailsFragment
 import com.vianh.blogtruyen.features.feed.list.NewFeedAdapter
-import com.vianh.blogtruyen.features.feed.list.NewFeedItem
 import com.vianh.blogtruyen.features.list.MangaItem
 import com.vianh.blogtruyen.utils.ScrollLoadMore
 import com.vianh.blogtruyen.utils.hideSoftKeyboard
@@ -32,6 +32,10 @@ class SearchFragment: BaseFragment<HomeFragmentBinding>(), SearchView.OnQueryTex
     private val viewModel by viewModel<SearchViewModel>()
     private var searchAdapter: NewFeedAdapter? = null
 
+    override fun getToolbar(): Toolbar? {
+        return requireBinding.toolbar
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupViews()
@@ -39,7 +43,7 @@ class SearchFragment: BaseFragment<HomeFragmentBinding>(), SearchView.OnQueryTex
     }
 
     private fun setupViews() {
-        setupToolbar(requireBinding.toolbar, getString(R.string.search), R.menu.search_menu)
+        configToolbar(getString(R.string.search), R.menu.search_menu)
 
         with(requireBinding.toolbar) {
             title = getString(R.string.search)

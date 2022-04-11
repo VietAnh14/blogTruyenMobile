@@ -37,7 +37,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        android:textColor="@color/secondaryTextColor"
+        android:textColor="?attr/colorOnSurface"
         android:text="7h 21"
         app:layout_constraintStart_toStartOf="@+id/manga_title"
         app:layout_constraintTop_toBottomOf="@+id/manga_title" />
@@ -49,7 +49,7 @@
         android:layout_marginTop="8dp"
         android:maxLines="3"
         android:ellipsize="end"
-        android:textColor="@color/secondaryTextColor"
+        android:textColor="?attr/colorOnSurface"
         android:text="@string/lorem_5_sentences"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/time_text"
@@ -63,7 +63,6 @@
         android:padding="4dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:tint="@color/pureWhite"
         app:srcCompat="@drawable/ic_delete" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

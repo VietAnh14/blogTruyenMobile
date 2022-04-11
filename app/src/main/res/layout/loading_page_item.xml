@@ -6,7 +6,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <com.google.android.material.progressindicator.CircularProgressIndicator
         android:id="@+id/progress_circular"
-        app:indicatorColor="?attr/colorAccent"
         app:hideAnimationBehavior="inward"
         app:trackCornerRadius="10dp"
         android:layout_margin="20dp"

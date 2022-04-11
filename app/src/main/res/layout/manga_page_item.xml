@@ -13,10 +13,11 @@
     <com.google.android.material.button.MaterialButton
         android:id="@+id/retry_button"
         android:text="@string/retry"
-        style="?attr/materialButtonOutlinedStyle"
+        style="@style/Widget.Material3.Button.OutlinedButton"
         app:backgroundTint="@android:color/transparent"
         android:textAllCaps="false"
-        android:textColor="?attr/colorAccent"
+        app:strokeColor="?attr/colorError"
+        android:textColor="?attr/colorError"
         android:layout_marginTop="50dp"
         android:layout_gravity="center"
         android:layout_width="wrap_content"
@@ -24,6 +25,7 @@
     <TextView
         android:id="@+id/err_text"
         android:text="Some things went wrong!"
+        android:textColor="?attr/colorError"
         android:maxLines="2"
         android:ellipsize="end"
         android:layout_gravity="center"

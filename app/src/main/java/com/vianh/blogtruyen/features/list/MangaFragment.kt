@@ -6,7 +6,8 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
-import androidx.core.view.WindowInsetsCompat
+import androidx.appcompat.widget.Toolbar
+import androidx.core.graphics.Insets
 import androidx.core.view.updateLayoutParams
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -15,7 +16,6 @@ import com.vianh.blogtruyen.R
 import com.vianh.blogtruyen.data.prefs.ListMode
 import com.vianh.blogtruyen.databinding.HomeFragmentBinding
 import com.vianh.blogtruyen.features.base.BaseFragment
-import com.vianh.blogtruyen.features.base.list.ItemClick
 import com.vianh.blogtruyen.features.list.filter.FilterDialogFragment
 import com.vianh.blogtruyen.utils.ScrollLoadMore
 import com.vianh.blogtruyen.utils.toPx
@@ -37,6 +37,10 @@ abstract class MangaFragment<VM : MangaViewModel> : BaseFragment<HomeFragmentBin
 
     abstract val title: String
 
+    override fun getToolbar(): Toolbar? {
+        return requireBinding.toolbar
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setup()
@@ -44,7 +48,7 @@ abstract class MangaFragment<VM : MangaViewModel> : BaseFragment<HomeFragmentBin
     }
 
     private fun setup() {
-        setupToolbar(requireBinding.toolbar, title, R.menu.home_toolbar_menu)
+        configToolbar(title, R.menu.home_toolbar_menu)
         mangaAdapter = MangaListAdapter(this)
         with(requireBinding.feedRecycler) {
             setHasFixedSize(true)
@@ -99,14 +103,14 @@ abstract class MangaFragment<VM : MangaViewModel> : BaseFragment<HomeFragmentBin
         }
     }
 
-    override fun onApplyWindowInsets(v: View?, insets: WindowInsetsCompat): WindowInsetsCompat {
-        super.onApplyWindowInsets(v, insets)
-        val barInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+    override fun applyInsets(insets: Insets): Boolean {
+        super.applyInsets(insets)
         requireBinding.btnFilter.updateLayoutParams<ViewGroup.MarginLayoutParams> {
-            rightMargin = barInsets.right + 10.toPx
-            bottomMargin = barInsets.bottom + 10.toPx
+            rightMargin = insets.right + 10.toPx
+            bottomMargin = insets.bottom + 10.toPx
         }
-        return insets
+
+        return true
     }
 
     override fun onRefresh() {
@@ -139,7 +143,7 @@ abstract class MangaFragment<VM : MangaViewModel> : BaseFragment<HomeFragmentBin
 
     private fun showListModeDialog() {
         val listModes = ListMode.values().map { it.name }.toTypedArray()
-        MaterialAlertDialogBuilder(requireActivity(), R.style.PopupMenu)
+        MaterialAlertDialogBuilder(requireActivity())
             .setTitle("Select list mode")
             .setNegativeButton("Cancel") { dialog, _ -> dialog.dismiss() }
             .setItems(listModes) { dialog, which ->

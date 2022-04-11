@@ -1,81 +1,58 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="android:windowBackground">@color/colorPrimary</item>
-        <item name="colorAccent">@color/colorAccent</item>
+    <style name="AppTheme" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/md_theme_light_primary</item>
+        <item name="colorOnPrimary">@color/md_theme_light_onPrimary</item>
+        <item name="colorPrimaryContainer">@color/md_theme_light_primaryContainer</item>
+        <item name="colorOnPrimaryContainer">@color/md_theme_light_onPrimaryContainer</item>
+        <item name="colorSecondary">@color/md_theme_light_secondary</item>
+        <item name="colorOnSecondary">@color/md_theme_light_onSecondary</item>
+        <item name="colorSecondaryContainer">@color/md_theme_light_secondaryContainer</item>
+        <item name="colorOnSecondaryContainer">@color/md_theme_light_onSecondaryContainer</item>
+        <item name="colorTertiary">@color/md_theme_light_tertiary</item>
+        <item name="colorOnTertiary">@color/md_theme_light_onTertiary</item>
+        <item name="colorTertiaryContainer">@color/md_theme_light_tertiaryContainer</item>
+        <item name="colorOnTertiaryContainer">@color/md_theme_light_onTertiaryContainer</item>
+        <item name="colorError">@color/md_theme_light_error</item>
+        <item name="colorErrorContainer">@color/md_theme_light_errorContainer</item>
+        <item name="colorOnError">@color/md_theme_light_onError</item>
+        <item name="colorOnErrorContainer">@color/md_theme_light_onErrorContainer</item>
+        <item name="android:colorBackground">@color/md_theme_light_background</item>
+        <item name="colorOnBackground">@color/md_theme_light_onBackground</item>
+        <item name="colorSurface">@color/md_theme_light_surface</item>
+        <item name="colorOnSurface">@color/md_theme_light_onSurface</item>
+        <item name="colorSurfaceVariant">@color/md_theme_light_surfaceVariant</item>
+        <item name="colorOnSurfaceVariant">@color/md_theme_light_onSurfaceVariant</item>
+        <item name="colorOutline">@color/md_theme_light_outline</item>
+        <item name="colorOnSurfaceInverse">@color/md_theme_light_inverseOnSurface</item>
+        <item name="colorSurfaceInverse">@color/md_theme_light_inverseSurface</item>
+        <item name="colorPrimaryInverse">@color/md_theme_light_primaryInverse</item>
 
-<!--        ripple-->
-        <item name="colorControlHighlight">@color/colorControlHighlight</item>
-
-        <item name="titleTextColor">@android:color/white</item>
-        <item name="android:textColorPrimary">@color/lightGray</item>
-        <item name="colorControlNormal">@color/pureWhite</item>
-
-        <item name="actionMenuTextColor">@color/pureWhite</item>
-        <item name="popupTheme">@style/PopupMenu</item>
-        <item name="android:textColor">@color/lightGray</item>
-        <item name="searchViewStyle">@style/SearchViewTheme</item>
-        <item name="android:textColorHint">@color/darkGray</item>
-
-<!--        status bar-->
         <item name="android:statusBarColor">@android:color/transparent</item>
-        <item name="android:navigationBarColor">@android:color/transparent</item>
-<!--        <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>-->
-<!--        <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">true</item>-->
-<!--        <item name="android:windowDrawsSystemBarBackgrounds">true</item>-->
-<!--        <item name="android:windowTranslucentStatus">false</item>-->
-<!--        <item name="android:windowTranslucentNavigation">false</item>-->
+        <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
         <item name="android:windowLayoutInDisplayCutoutMode" tools:targetApi="o_mr1">shortEdges</item>
+
+        <!--        Widget-->
+        <item name="searchViewStyle">@style/Widget.SearchView</item>
+        <item name="appBarLayoutStyle">@style/Widget.Material3.AppBarLayout</item>
+        <item name="toolbarStyle">@style/Widget.Material3.Toolbar</item>
+        <item name="chipStyle">@style/Widget.AppTheme.Chip</item>
     </style>
 
-<!--    Bottom sheet-->
-    <style name="Theme.BottomSheetTheme" parent="ThemeOverlay.MaterialComponents.BottomSheetDialog">
-        <item name="android:windowIsFloating">true</item>
-        <item name="colorSurface">@color/colorPrimary</item>
-
-<!--        <item name="android:navigationBarColor">@color/colorPrimary</item>-->
+    <!--    Bottom sheet-->
+    <style name="Theme.BottomSheetTheme" parent="ThemeOverlay.Material3.BottomSheetDialog">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsFloating">false</item>
+        <item name="windowMinWidthMajor">@dimen/abc_dialog_min_width_major</item>
+        <item name="windowMinWidthMinor">@dimen/abc_dialog_min_width_minor</item>
     </style>
 
-    <style name="SearchViewTheme" parent="Widget.AppCompat.SearchView">
+    <style name="Widget.SearchView" parent="Widget.AppCompat.SearchView">
         <item name="hintTextColor">@color/darkGray</item>
         <item name="queryBackground">@null</item>
         <item name="searchHintIcon">@null</item>
         <item name="submitBackground">@null</item>
-    </style>
-    
-    <style name="Widget.App.BottomNavigationView" parent="Widget.MaterialComponents.BottomNavigationView.Colored">
-        <item name="materialThemeOverlay">@style/ThemeOverlay.App.BottomNavigationView</item>
-    </style>
-
-    <style name="ThemeOverlay.App.BottomNavigationView" parent="">
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorOnPrimary">@color/pureWhite</item>
-    </style>
-
-    <style name="PopupMenu" parent="Widget.AppCompat.Light.PopupMenu">
-        <item name="android:popupBackground">@android:color/black</item>
-        <item name="popupMenuBackground">@android:color/black</item>
-    </style>
-
-    <style name="AppTheme.StatusTranslucent" parent="AppTheme">
-        <item name="android:windowTranslucentStatus">true</item>
-    </style>
-
-    <style name="TextSmall" parent="TextAppearance.AppCompat.Body2">
-        <item name="android:textSize">16sp</item>
-    </style>
-
-    <style name="Text.Title" parent="TextAppearance.AppCompat.Large">
-        <item name="android:textColor">@android:color/white</item>
-    </style>
-
-    <style name="NormalBlackText">
-        <item name="android:textSize">14sp</item>
-        <item name="android:textColor">@android:color/black</item>
     </style>
 
     <style name="RoundCornerShape" parent="">
@@ -83,9 +60,9 @@
         <item name="cornerSize">5dp</item>
     </style>
 
-    <style name="InvisibleText">
-        <item name="android:textSize">0sp</item>
-        <item name="android:textColor">@android:color/transparent</item>
+    <style name="Widget.AppTheme.Chip" parent="Widget.Material3.Chip.Suggestion">
+        <item name="chipMinHeight">26dp</item>
+        <item name="chipMinTouchTargetSize">28dp</item>
     </style>
 
 </resources>

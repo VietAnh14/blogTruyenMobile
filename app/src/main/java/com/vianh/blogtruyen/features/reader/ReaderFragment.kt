@@ -2,7 +2,10 @@ package com.vianh.blogtruyen.features.reader
 
 import android.os.Bundle
 import android.view.*
-import androidx.core.view.WindowInsetsCompat
+import androidx.appcompat.widget.Toolbar
+import androidx.core.graphics.Insets
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.FragmentTransaction
 import androidx.fragment.app.commit
@@ -13,6 +16,7 @@ import com.vianh.blogtruyen.databinding.ReaderFragmentBinding
 import com.vianh.blogtruyen.features.base.BaseFragment
 import com.vianh.blogtruyen.features.reader.type.pager.PagerReader
 import com.vianh.blogtruyen.features.reader.type.vertical.VerticalReader
+import com.vianh.blogtruyen.utils.getSurfaceColorPrimary
 import com.vianh.blogtruyen.utils.resetPos
 import com.vianh.blogtruyen.utils.slideDown
 import com.vianh.blogtruyen.utils.slideUp
@@ -37,6 +41,10 @@ class ReaderFragment : BaseFragment<ReaderFragmentBinding>(), Reader.ReaderContr
     private val currentReader
         get() = childFragmentManager.findFragmentById(R.id.reader_container)
 
+    override fun getToolbar(): Toolbar? {
+        return requireBinding.toolbar
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         lastSavedState = savedInstanceState
@@ -52,7 +60,6 @@ class ReaderFragment : BaseFragment<ReaderFragmentBinding>(), Reader.ReaderContr
     }
 
     private fun setup() {
-        setupToolbar(requireBinding.toolbar)
         with(requireBinding) {
             btnNext.setOnClickListener {
                 readerViewModel.toNextChapter()
@@ -63,6 +70,7 @@ class ReaderFragment : BaseFragment<ReaderFragmentBinding>(), Reader.ReaderContr
             }
 
             readerContainer.callback = this@ReaderFragment
+            chapterController.setBackgroundColor(requireContext().getSurfaceColorPrimary())
         }
 
         changeReader(getReader(appSettings.getReaderMode()))
@@ -101,16 +109,13 @@ class ReaderFragment : BaseFragment<ReaderFragmentBinding>(), Reader.ReaderContr
         return state ?: throw IllegalStateException("No reader state")
     }
 
-    override fun onApplyWindowInsets(v: View?, insets: WindowInsetsCompat): WindowInsetsCompat {
-        val barInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-        requireBinding.toolbar.updateLayoutParams<ViewGroup.MarginLayoutParams> {
-            topMargin = barInsets.top
+    override fun applyInsets(insets: Insets): Boolean {
+        super.applyInsets(insets)
+        requireBinding.dummyView.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+            bottomMargin = insets.bottom
         }
 
-        requireBinding.dummyView.updateLayoutParams<ViewGroup.MarginLayoutParams> {
-            bottomMargin = barInsets.bottom
-        }
-        return insets
+        return true
     }
 
     private fun onContentChange(content: ReaderModel) {
