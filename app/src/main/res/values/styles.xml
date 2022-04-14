@@ -61,6 +61,7 @@
     </style>
 
     <style name="Widget.AppTheme.Chip" parent="Widget.Material3.Chip.Suggestion">
+        <item name="android:checkable">false</item>
         <item name="chipMinHeight">26dp</item>
         <item name="chipMinTouchTargetSize">28dp</item>
     </style>

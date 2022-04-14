@@ -2,8 +2,10 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/md_theme_light_surfaceVariant"
+    android:background="?attr/colorSurface"
     xmlns:tools="http://schemas.android.com/tools"
+    android:minWidth="200dp"
+    android:padding="8dp"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
 
@@ -13,7 +15,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
         android:background="@drawable/checked_btn_state"
-        android:drawablePadding="10dp"
         android:gravity="center|start"
         android:padding="8dp"
         android:text="@string/vertical"
@@ -32,7 +33,6 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="@drawable/checked_btn_state"
-        android:drawablePadding="8dp"
         android:gravity="center|start"
         android:padding="10dp"
         android:text="@string/horizontal"
@@ -49,7 +49,6 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="@drawable/checked_btn_state"
-        android:drawablePadding="8dp"
         android:gravity="center|start"
         android:padding="10dp"
         android:text="@string/continuous_vertical"
@@ -57,6 +56,7 @@
         android:textSize="14sp"
         app:drawableEndCompat="@drawable/ic_continuous_vertical"
         app:drawableTint="?attr/colorControlNormal"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btn_vertical" />
 
@@ -97,17 +97,15 @@
 
     <com.google.android.material.checkbox.MaterialCheckBox
         android:id="@+id/screen_on_cb"
+        style="@style/Widget.Material3.CompoundButton.CheckBox"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="2dp"
         android:background="?attr/selectableItemBackground"
         android:layoutDirection="rtl"
         android:paddingEnd="10dp"
-        android:layout_marginStart="4dp"
         android:text="@string/keep_screen_on"
-        android:textColor="?attr/colorOnPrimary"
         android:textSize="14sp"
-        app:buttonTint="?attr/colorOnPrimary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/divider2" />
