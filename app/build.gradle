@@ -13,8 +13,8 @@ android {
         applicationId "com.vianh.blogtruyen"
         minSdkVersion 21
         targetSdkVersion 31
-        versionCode 14
-        versionName "0.14"
+        versionCode 15
+        versionName "0.15"
         setArchivesBaseName("blogTruyen_$versionName")
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -28,15 +28,6 @@ android {
 
     lintOptions {
         disable 'MissingTranslation'
-    }
-
-    signingConfigs {
-        debug {
-            storeFile file("../keystore.jks")
-            storePassword "datchim147"
-            keyAlias "key0"
-            keyPassword "datchim147"
-        }
     }
 
     buildTypes {
@@ -111,7 +102,7 @@ dependencies {
     // Html parser
     implementation 'org.jsoup:jsoup:1.14.3'
 
-    def coroutine_version = '1.6.0'
+    def coroutine_version = '1.6.1'
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutine_version"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutine_version"
 
@@ -129,7 +120,7 @@ dependencies {
     androidTestImplementation "androidx.room:room-testing:$room_version"
 
     // DI
-    def koin_version = '3.1.2'
+    def koin_version = '3.1.5'
     implementation "io.insert-koin:koin-android:$koin_version"
 
     // Logger
