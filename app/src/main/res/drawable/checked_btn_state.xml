@@ -4,9 +4,9 @@
     android:exitFadeDuration="@integer/material_motion_duration_short_1"
     xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:state_pressed="true">
-        <ripple android:color="?attr/colorAccent" />
+        <ripple android:color="?attr/colorSecondary"/>
     </item>
     <item android:state_checked="true">
-        <color android:color="?attr/colorAccent" />
+        <color android:color="?attr/colorSecondary" />
     </item>
 </selector>

@@ -26,6 +26,8 @@ class SettingPopupWindow(context: Context, private val appSetting: AppSettings, 
         with(binding) {
             setUpCheck(btnHorizon)
             setUpCheck(btnVertical)
+            setUpCheck(binding.btnContinuousVertical)
+
 
             screenOnCb.isChecked = appSetting.getKeepScreenOn()
             screenOnCb.setOnCheckedChangeListener { _, isChecked ->
@@ -33,11 +35,8 @@ class SettingPopupWindow(context: Context, private val appSetting: AppSettings, 
                 callback.onKeepScreenOnChange(isChecked)
             }
         }
-        checkReaderMode(appSetting.getReaderMode())
 
-        setUpCheck(binding.btnHorizon)
-        setUpCheck(binding.btnVertical)
-        setUpCheck(binding.btnContinuousVertical)
+        checkReaderMode(appSetting.getReaderMode())
     }
 
     private fun checkReaderMode(mode: ReaderMode) {

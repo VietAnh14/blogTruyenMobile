@@ -13,7 +13,7 @@ android {
         applicationId "com.vianh.blogtruyen"
         minSdkVersion 21
         targetSdkVersion 31
-        versionCode 15
+        versionCode 16
         versionName "0.15"
         setArchivesBaseName("blogTruyen_$versionName")
 
