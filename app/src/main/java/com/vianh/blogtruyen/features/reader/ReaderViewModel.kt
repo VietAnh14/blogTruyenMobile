@@ -36,8 +36,20 @@ class ReaderViewModel(
         ReaderModel(manga, chapter, items)
     }.asLiveData(viewModelScope.coroutineContext + Dispatchers.Default)
 
-    val pageString = combine(currentPage, currentChapter) { page, chapter ->
-        "${page + 1}/${chapter.pages.size}"
+    val controllerState = combine(currentPage, listItems) { page, list ->
+        val isEnable = when (list.firstOrNull()) {
+            null -> false
+            is LoadingItem -> false
+            is ErrorItem -> false
+            else -> true
+        }
+
+        var validPage = page
+        if (page > list.size) {
+            validPage = 0
+        }
+
+        ControllerState(isEnable, validPage + 1, list.size)
     }.asLiveData(Dispatchers.Default)
 
     val controllerVisibility = MutableLiveData(true)
@@ -52,7 +64,7 @@ class ReaderViewModel(
 
     fun loadPages() {
         loadPageJob?.cancel()
-        loadPageJob = launchJob {
+        loadPageJob = launchLoading {
             listItems.value = listOf(LoadingItem)
             val chapter = currentChapter.value
             val pages = if (isOffline) {
@@ -117,9 +129,3 @@ class ReaderViewModel(
         }
     }
 }
-
-//var listImageCaption = [{"url":"https://i5.truyen-hay.com/415/415633/00-p2j.jpg","speechs":[]},{"url":"https://i5.truyen-hay.com/415/415633/01.jpg","speechs":[{"coords":"508,7,512,89,651,105,785,104,786,18","text":"Ranga crimson"},{"coords":"539,214,529,305,616,361,744,349,804,295,807,213,683,137","text":"Blogtruyen vô đối"}]},{"url":"https://i5.truyen-hay.com/415/415633/02-p2j.jpg","speechs":[]},{"url":"https://i5.truyen-hay.com/415/415633/03-p2j.jpg","speechs":[]},{"url":"https://i5.truyen-hay.com/415/415633/04-p2j.jpg","speechs":[]},{"url":"https://i5.truyen-hay.com/415/415633/05-p2j.jpg","speechs":[]},{"url":"https://i5.truyen-hay.com/415/415633/06-p2j.jpg","speechs":[]},{"url":"https://i5.truyen-hay.com/415/415633/07-p2j.jpg","speechs":[]},{"url":"https://i5.truyen-hay.com/415/415633/08-p2j.jpg","speechs":[]},{"url":"https://i5.truyen-hay.com/415/415633/09-p2j.jpg","speechs":[]},{"url":"https://i5.truyen-hay.com/415/415633/10-p2j.jpg","speechs":[]},{"url":"https://i5.truyen-hay.com/415/415633/11-p2j.jpg","speechs":[]},{"url":"https://i5.truyen-hay.com/415/415633/12-p2j.jpg","speechs":[]},{"url":"https://i5.truyen-hay.com/415/415633/13-p2j.jpg","speechs":[]},{"url":"https://i5.truyen-hay.com/415/415633/14-p2j.jpg","speechs":[]},{"url":"https://i5.truyen-hay.com/415/415633/15-p2j.jpg","speechs":[]},{"url":"https://i5.truyen-hay.com/415/415633/16-p2j.jpg","speechs":[]},{"url":"https://i5.truyen-hay.com/415/415633/17-p2j.jpg","speechs":[]},{"url":"https://i5.truyen-hay.com/415/415633/18-p2j.jpg","speechs":[]},{"url":"https://i5.truyen-hay.com/415/415633/19-p2j.jpg","speechs":[]},{"url":"https://i5.truyen-hay.com/415/415633/20-p2j.jpg","speechs":[]},{"url":"https://i5.truyen-hay.com/415/415633/21-p2j.jpg","speechs":[]},{"url":"https://i5.truyen-hay.com/415/415633/22-p2j.jpg","speechs":[]},{"url":"https://i5.truyen-hay.com/415/415633/23-p2j.jpg","speechs":[]},{"url":"https://i5.truyen-hay.com/415/415633/24-p2j.jpg","speechs":[]},{"url":"https://i5.truyen-hay.com/415/415633/25-p2j.jpg","speechs":[]},{"url":"https://i5.truyen-hay.com/415/415633/26-p2j.jpg","speechs":[]},{"url":"https://i5.truyen-hay.com/415/415633/27-p2j.jpg","speechs":[]},{"url":"https://i5.truyen-hay.com/415/415633/28-p2j.jpg","speechs":[]},{"url":"https://i5.truyen-hay.com/415/415633/29-p2j.jpg","speechs":[]},{"url":"https://i5.truyen-hay.com/415/415633/30-p2j.jpg","speechs":[]},{"url":"https://i5.truyen-hay.com/415/415633/31-p2j.jpg","speechs":[]},{"url":"https://i5.truyen-hay.com/415/415633/32-p2j.jpg","speechs":[]},{"url":"https://i5.truyen-hay.com/415/415633/33-p2j.jpg","speechs":[]},{"url":"https://i5.truyen-hay.com/415/415633/34-p2j.jpg","speechs":[]},{"url":"https://i5.truyen-hay.com/415/415633/35-p2j.jpg","speechs":[]},{"url":"https://i5.truyen-hay.com/415/415633/36-p2j.jpg","speechs":[]},{"url":"https://i5.truyen-hay.com/415/415633/37-p2j.jpg","speechs":[]},{"url":"https://i5.truyen-hay.com/415/415633/38-p2j.jpg","speechs":[]},{"url":"https://i5.truyen-hay.com/415/415633/39-p2j.jpg","speechs":[]},{"url":"https://i5.truyen-hay.com/415/415633/40-p2j.jpg","speechs":[]}];
-//var app = angular.module('showImageApp', []);
-//app.controller('showImageController', function ($scope, $http) {
-//    $scope.listImageCaption = listImageCaption;
-//});

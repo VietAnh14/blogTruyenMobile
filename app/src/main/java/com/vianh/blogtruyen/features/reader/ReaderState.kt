@@ -14,3 +14,9 @@ data class ReaderState(
 ) : Parcelable {
 
 }
+
+data class ControllerState(
+    val enable: Boolean = true,
+    val page: Int,
+    val pageSize: Int
+)

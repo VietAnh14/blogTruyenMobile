@@ -200,7 +200,7 @@ class MangaDetailsViewModel(
             return
         }
 
-        commentJob = launchJob {
+        commentJob = launchJob(Dispatchers.Default) {
             val commentMap = repo.loadComments(mangaFlow.value.id, offset)
             hasNextCommentPage = commentMap.isNotEmpty()
             val flattenComments = ArrayList(comments.value!!)
@@ -209,7 +209,7 @@ class MangaDetailsViewModel(
                 flattenComments.addAll(comment.value)
             }
 
-            comments.value = flattenComments
+            comments.postValue(flattenComments)
             ++commentPage
         }
     }

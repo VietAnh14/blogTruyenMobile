@@ -37,45 +37,60 @@
         <View
             android:id="@+id/dummy_view"
             android:layout_width="match_parent"
-            android:layout_height="70dp"
+            android:layout_height="?attr/actionBarSize"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/page_text"
-            android:layout_width="wrap_content"
+        <com.google.android.material.slider.Slider
+            android:id="@+id/page_slider"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="0/0"
+            android:stepSize="1"
+            android:valueFrom="0"
+            android:valueTo="20"
+            app:labelBehavior="gone"
             app:layout_constraintBottom_toBottomOf="@id/dummy_view"
             app:layout_constraintEnd_toStartOf="@+id/btn_next"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/btn_previous"
-            app:layout_constraintTop_toTopOf="@id/dummy_view" />
+            app:layout_constraintTop_toTopOf="@id/dummy_view"
+            app:layout_constraintWidth_percent=".5"
+            app:thumbRadius="8dp"
+            app:tickVisible="false" />
+
+        <TextView
+            android:id="@+id/page_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@+id/page_slider"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:text="0/0" />
 
         <ImageButton
             android:id="@+id/btn_next"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="8dp"
             android:background="?attr/selectableItemBackgroundBorderless"
+            android:padding="8dp"
             android:src="@drawable/ic_skip_next"
             app:layout_constraintBottom_toBottomOf="@id/dummy_view"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/page_text"
+            app:layout_constraintStart_toEndOf="@+id/page_slider"
             app:layout_constraintTop_toTopOf="@id/dummy_view" />
 
         <ImageButton
             android:id="@+id/btn_previous"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="8dp"
             android:background="?attr/selectableItemBackgroundBorderless"
+            android:padding="8dp"
             android:src="@drawable/ic_skip_previous"
             app:layout_constraintBottom_toBottomOf="@id/dummy_view"
-            app:layout_constraintEnd_toStartOf="@+id/page_text"
+            app:layout_constraintEnd_toStartOf="@+id/page_slider"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/dummy_view" />

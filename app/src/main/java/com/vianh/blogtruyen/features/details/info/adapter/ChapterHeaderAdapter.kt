@@ -16,19 +16,26 @@ class ChapterHeaderAdapter(private val viewModel: MangaDetailsViewModel) : ListA
         return HeaderVH(ChapterHeaderItemBinding.inflate(inflater, parent, false), viewModel)
     }
 
+    override fun onBindViewHolder(holder: HeaderVH, position: Int, payloads: MutableList<Any>) {
+        super.onBindViewHolder(holder, position, payloads)
+    }
+
     override fun onBindViewHolder(holder: HeaderVH, position: Int) {
         holder.onBind(getItem(position))
     }
 
     class DiffCallback : DiffUtil.ItemCallback<HeaderItem>() {
         override fun areItemsTheSame(oldItem: HeaderItem, newItem: HeaderItem): Boolean {
-            return newItem == oldItem
+            return true
         }
 
         override fun areContentsTheSame(oldItem: HeaderItem, newItem: HeaderItem): Boolean {
             return newItem == oldItem
         }
 
+        override fun getChangePayload(oldItem: HeaderItem, newItem: HeaderItem): Any? {
+            return if (newItem.descendingSort != oldItem.descendingSort) newItem.descendingSort else null
+        }
     }
 
 }

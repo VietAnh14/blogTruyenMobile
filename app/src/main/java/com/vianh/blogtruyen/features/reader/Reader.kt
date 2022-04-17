@@ -10,6 +10,10 @@ abstract class Reader(@LayoutRes layoutRes: Int): Fragment(layoutRes) {
 
     abstract fun toPage(pos: Int, animate: Boolean = true)
 
+    fun onPageChange(pos: Int) {
+        readerViewModel.currentPage.value = pos
+    }
+
     interface ReaderContract {
         val readerViewModel: ReaderViewModel
     }

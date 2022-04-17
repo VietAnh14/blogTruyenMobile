@@ -4,8 +4,6 @@ import android.os.Bundle
 import android.view.*
 import androidx.appcompat.widget.Toolbar
 import androidx.core.graphics.Insets
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.FragmentTransaction
 import androidx.fragment.app.commit
@@ -39,7 +37,7 @@ class ReaderFragment : BaseFragment<ReaderFragmentBinding>(), Reader.ReaderContr
     override val readerViewModel by viewModel<ReaderViewModel> { parametersOf(getRestoreState()) }
 
     private val currentReader
-        get() = childFragmentManager.findFragmentById(R.id.reader_container)
+        get() = childFragmentManager.findFragmentById(R.id.reader_container) as? Reader
 
     override fun getToolbar(): Toolbar? {
         return requireBinding.toolbar
@@ -56,7 +54,7 @@ class ReaderFragment : BaseFragment<ReaderFragmentBinding>(), Reader.ReaderContr
         readerViewModel.uiState.observe(viewLifecycleOwner, ::onContentChange)
         readerViewModel.toast.observe(viewLifecycleOwner, this::showToast)
         readerViewModel.controllerVisibility.observe(viewLifecycleOwner, ::setReaderControlVisibility)
-        readerViewModel.pageString.observe(viewLifecycleOwner) { requireBinding.pageText.text = it }
+        readerViewModel.controllerState.observe(viewLifecycleOwner, ::bindControllerState)
     }
 
     private fun setup() {
@@ -69,6 +67,13 @@ class ReaderFragment : BaseFragment<ReaderFragmentBinding>(), Reader.ReaderContr
                 readerViewModel.toPreviousChapter()
             }
 
+            pageSlider.addOnChangeListener { slider, value, fromUser ->
+                pageText.text = "${value.toInt()}/${slider.valueTo.toInt()}"
+                if (fromUser) {
+                    currentReader?.toPage(value.toInt(), false)
+                }
+            }
+
             readerContainer.callback = this@ReaderFragment
             chapterController.setBackgroundColor(requireContext().getSurfaceColorPrimary())
         }
@@ -78,7 +83,7 @@ class ReaderFragment : BaseFragment<ReaderFragmentBinding>(), Reader.ReaderContr
     }
 
     private fun getReader(mode: ReaderMode): Reader {
-        return when(mode) {
+        return when (mode) {
             ReaderMode.HORIZON -> PagerReader.newInstance()
             ReaderMode.VERTICAL -> VerticalReader.newInstance()
             ReaderMode.CONTINUOUS_VERTICAL -> VerticalReader.newInstance(false)
@@ -125,15 +130,19 @@ class ReaderFragment : BaseFragment<ReaderFragmentBinding>(), Reader.ReaderContr
         }
     }
 
-    private fun showSettingMenu(anchor: View) {
-        SettingPopupWindow.show(anchor, appSettings, this)
+    private fun bindControllerState(controllerState: ControllerState) {
+        requireBinding.pageSlider.apply {
+            value = controllerState.page.toFloat()
+            valueTo = controllerState.pageSize.toFloat()
+            isEnabled = controllerState.enable
+        }
     }
 
     override fun onMenuItemClick(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.setting_item -> {
                 val anchor = requireView().findViewById<View>(R.id.setting_item) ?: return false
-                showSettingMenu(anchor)
+                SettingPopupWindow.show(anchor, appSettings, this)
                 true
             }
 

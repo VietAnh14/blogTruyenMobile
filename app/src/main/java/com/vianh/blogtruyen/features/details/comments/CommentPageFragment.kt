@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.WindowInsetsCompat
 import com.vianh.blogtruyen.databinding.CommentPageFragmentBinding
 import com.vianh.blogtruyen.features.base.BaseFragment
 import com.vianh.blogtruyen.features.details.MangaDetailsViewModel

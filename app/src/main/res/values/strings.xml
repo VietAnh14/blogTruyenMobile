@@ -28,7 +28,8 @@
     <string name="start_reading">Start reading</string>
     <string name="refresh">Refresh</string>
     <string name="next_chapter_guide">Release to go to next chapter</string>
-    <string name="pull_down_guild">End chapter %1$s, scroll down to go to next chapter</string>
+    <string name="pull_down_guide">End chapter %1$s, scroll down to go to next chapter</string>
+    <string name="swipe_guide">End chapter %1$s, swipe to go to next chapter</string>
     <string name="end_chapter_pager">End chapter %1$s</string>
     <string name="retry">Retry</string>
     <string name="no_next_chapter">End chapter %1$s, no next chapter available</string>

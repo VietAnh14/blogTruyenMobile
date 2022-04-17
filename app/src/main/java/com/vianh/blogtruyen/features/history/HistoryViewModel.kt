@@ -21,18 +21,18 @@ class HistoryViewModel(private val historyRepository: HistoryRepository) : BaseV
 
     private val historyItems = historyRepository.observeHistory()
     private val query = MutableStateFlow("")
+    private val debounceQueryFlow
+        get() = query.debounce(500)
+            .stateIn(viewModelScope, SharingStarted.Eagerly, "")
 
     val toInfoCommand = SingleLiveEvent<Manga>()
 
     val content = combine(
         historyItems,
-        // Debounce delay combine somehow, so we emit empty string on start
-        query.debounce(500).distinctUntilChanged()
-        .onStart { emit("") }
+        debounceQueryFlow
     ) { items, query -> filterItems(items, query) }
         .map { mapHistoryToListItem(it) }
         .ifEmpty { listOf(EmptyItem(message = "Empty history")) }
-        .onStart { emit(listOf(LoadingItem)) }
         .distinctUntilChanged()
         .asLiveData(viewModelScope.coroutineContext + Dispatchers.Default)
 
