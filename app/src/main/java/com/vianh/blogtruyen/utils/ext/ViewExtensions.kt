@@ -111,13 +111,8 @@ inline fun <T : ViewBinding> ViewGroup.viewBinding(factory: (inflater: LayoutInf
     factory(LayoutInflater.from(context), this, false)
 
 @ColorInt
-fun Context.getColorFromAttr(
-    @AttrRes attrColor: Int,
-    typedValue: TypedValue = TypedValue(),
-    resolveRefs: Boolean = true
-): Int {
-    theme.resolveAttribute(attrColor, typedValue, resolveRefs)
-    return typedValue.data
+fun Context.getThemeColor(@AttrRes attrColor: Int): Int {
+    return typeValue(attrColor).data
 }
 
 inline fun Context.typeValue(resId: Int): TypedValue {

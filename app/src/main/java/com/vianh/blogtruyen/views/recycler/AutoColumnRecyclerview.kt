@@ -1,4 +1,4 @@
-package com.vianh.blogtruyen.views
+package com.vianh.blogtruyen.views.recycler
 
 import android.content.Context
 import android.util.AttributeSet

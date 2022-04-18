@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.vianh.blogtruyen.views.PinchRecyclerView
+<com.vianh.blogtruyen.views.recycler.PinchRecyclerView
     android:id="@+id/reader_recycler"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"

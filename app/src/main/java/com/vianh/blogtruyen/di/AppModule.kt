@@ -10,7 +10,7 @@ import com.vianh.blogtruyen.data.db.MangaDb
 import com.vianh.blogtruyen.data.remote.BlogtruyenProvider
 import com.vianh.blogtruyen.data.remote.MangaProvider
 import com.vianh.blogtruyen.features.local.LocalSourceRepo
-import com.vianh.blogtruyen.utils.BlogTruyenInterceptor
+import com.vianh.blogtruyen.utils.ext.BlogTruyenInterceptor
 import okhttp3.Cache
 import okhttp3.OkHttpClient
 import org.koin.dsl.module

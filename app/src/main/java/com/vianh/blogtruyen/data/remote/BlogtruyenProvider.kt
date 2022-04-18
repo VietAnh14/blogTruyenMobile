@@ -5,8 +5,8 @@ import com.vianh.blogtruyen.data.model.Category
 import com.vianh.blogtruyen.data.model.Chapter
 import com.vianh.blogtruyen.data.model.Comment
 import com.vianh.blogtruyen.data.model.Manga
-import com.vianh.blogtruyen.utils.getBodyString
-import com.vianh.blogtruyen.utils.mapToSet
+import com.vianh.blogtruyen.utils.ext.getBodyString
+import com.vianh.blogtruyen.utils.ext.mapToSet
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient

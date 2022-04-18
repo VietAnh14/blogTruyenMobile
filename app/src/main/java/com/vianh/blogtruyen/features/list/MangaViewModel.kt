@@ -16,22 +16,24 @@ import kotlinx.coroutines.flow.combine
 
 abstract class MangaViewModel(val settings: AppSettings, categoryRepo: CategoryRepo): BaseVM() {
     protected val filterCategories: MutableStateFlow<Set<String>> = MutableStateFlow(ArraySet())
-    val categoryItems = combine(categoryRepo.observeAll(), filterCategories) { categories, filterCategories ->
-        categories
-            .sortedBy { it.name }
-            .map {
-                val selected = filterCategories.contains(it.name)
-                FilterCategoryItem(it, selected)
-            }
-    }.asLiveData(Dispatchers.Default)
+    val categoryItems = combine(categoryRepo.observeAll(), filterCategories, ::combineCategory)
+        .asLiveData(Dispatchers.Default)
 
     protected val listMode = MutableStateFlow(settings.getListMode())
     protected val searchQuery = MutableStateFlow("")
 
     abstract val content: LiveData<List<ListItem>>
-
     abstract fun loadNextPage()
     abstract fun reload()
+
+    private fun combineCategory(categories: List<Category>, filters: Set<String>): List<FilterCategoryItem> {
+        return categories
+            .sortedBy { it.name }
+            .map {
+                val selected = filters.contains(it.name)
+                FilterCategoryItem(it, selected)
+            }
+    }
 
     fun saveListMode(listMode: ListMode) {
         settings.saveListMode(listMode)

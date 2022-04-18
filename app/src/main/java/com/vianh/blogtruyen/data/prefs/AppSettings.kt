@@ -2,9 +2,6 @@ package com.vianh.blogtruyen.data.prefs
 
 import android.content.Context
 import androidx.core.content.edit
-import com.vianh.blogtruyen.data.model.Category
-import com.vianh.blogtruyen.utils.mapToSet
-import org.json.JSONObject
 import timber.log.Timber
 
 class AppSettings(context: Context) {

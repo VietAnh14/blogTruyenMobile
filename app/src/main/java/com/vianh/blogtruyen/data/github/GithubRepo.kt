@@ -1,6 +1,6 @@
 package com.vianh.blogtruyen.data.github
 
-import com.vianh.blogtruyen.utils.getBodyString
+import com.vianh.blogtruyen.utils.ext.getBodyString
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.HttpUrl.Companion.toHttpUrl

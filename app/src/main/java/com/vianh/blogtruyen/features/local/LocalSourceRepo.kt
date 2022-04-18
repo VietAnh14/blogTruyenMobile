@@ -5,7 +5,7 @@ import com.vianh.blogtruyen.data.db.MangaDb
 import com.vianh.blogtruyen.data.db.entity.ChapterEntity
 import com.vianh.blogtruyen.data.model.Chapter
 import com.vianh.blogtruyen.data.model.Manga
-import com.vianh.blogtruyen.utils.toSafeFileName
+import com.vianh.blogtruyen.utils.ext.toSafeFileName
 import java.io.File
 
 class LocalSourceRepo(private val context: Context, private val db: MangaDb) {

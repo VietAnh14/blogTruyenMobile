@@ -12,7 +12,7 @@ import com.vianh.blogtruyen.features.base.list.items.ListItem
 import com.vianh.blogtruyen.features.reader.ReaderViewModel
 import com.vianh.blogtruyen.features.reader.list.ReaderItem
 import com.vianh.blogtruyen.features.reader.list.TransitionPageVH
-import com.vianh.blogtruyen.utils.await
+import com.vianh.blogtruyen.utils.ext.await
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 

@@ -1,8 +1,9 @@
-package com.vianh.blogtruyen.utils
+package com.vianh.blogtruyen.views.recycler
 
 import android.content.Context
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.vianh.blogtruyen.utils.ext.getDeviceHeight
 
 class PreCacheLayoutManager(val context: Context,
                             orientation: Int = RecyclerView.VERTICAL,

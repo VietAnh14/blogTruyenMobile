@@ -1,5 +1,6 @@
 package com.vianh.blogtruyen.features.list
 
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.MenuItem
@@ -17,7 +18,8 @@ import com.vianh.blogtruyen.data.prefs.ListMode
 import com.vianh.blogtruyen.databinding.HomeFragmentBinding
 import com.vianh.blogtruyen.features.base.BaseFragment
 import com.vianh.blogtruyen.features.list.filter.FilterDialogFragment
-import com.vianh.blogtruyen.utils.ScrollLoadMore
+import com.vianh.blogtruyen.views.recycler.ScrollLoadMore
+import com.vianh.blogtruyen.utils.getThemeColor
 import com.vianh.blogtruyen.utils.toPx
 
 abstract class MangaFragment<VM : MangaViewModel> : BaseFragment<HomeFragmentBinding>(),
@@ -74,16 +76,9 @@ abstract class MangaFragment<VM : MangaViewModel> : BaseFragment<HomeFragmentBin
         }
 
         requireBinding.swipeRefreshLayout.setOnRefreshListener(this)
-
         requireBinding.btnFilter.show()
         requireBinding.btnFilter.setOnClickListener {
             filterDialogFragment.show(childFragmentManager, null)
-        }
-    }
-
-    private fun observe() {
-        viewModel.content.observe(viewLifecycleOwner) {
-            mangaAdapter?.submitList(it)
         }
 
         with(requireBinding.toolbar) {
@@ -100,6 +95,19 @@ abstract class MangaFragment<VM : MangaViewModel> : BaseFragment<HomeFragmentBin
                     return false
                 }
             })
+        }
+    }
+
+    private fun observe() {
+        viewModel.content.observe(viewLifecycleOwner) {
+            mangaAdapter?.submitList(it)
+        }
+
+        viewModel.categoryItems.observe(viewLifecycleOwner) { items ->
+            val hasFilter = items.any { it.isSelected }
+            val colorId = if (hasFilter) R.attr.colorSecondary else R.attr.colorOnSurface
+            val filterColor = requireContext().getThemeColor(colorId)
+            requireBinding.btnFilter.iconTint = ColorStateList.valueOf(filterColor)
         }
     }
 

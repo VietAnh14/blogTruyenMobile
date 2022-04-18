@@ -7,7 +7,7 @@ import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.vianh.blogtruyen.data.model.Chapter
 import com.vianh.blogtruyen.data.model.Manga
-import com.vianh.blogtruyen.utils.await
+import com.vianh.blogtruyen.utils.ext.await
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.*
 import org.koin.android.ext.android.inject

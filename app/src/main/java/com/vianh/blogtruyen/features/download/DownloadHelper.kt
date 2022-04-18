@@ -6,10 +6,10 @@ import com.vianh.blogtruyen.data.model.Chapter
 import com.vianh.blogtruyen.data.model.Manga
 import com.vianh.blogtruyen.data.remote.MangaProvider
 import com.vianh.blogtruyen.features.local.LocalSourceRepo
-import com.vianh.blogtruyen.utils.await
-import com.vianh.blogtruyen.utils.cancelableCatching
-import com.vianh.blogtruyen.utils.copyTo
-import com.vianh.blogtruyen.utils.createDirs
+import com.vianh.blogtruyen.utils.ext.await
+import com.vianh.blogtruyen.utils.ext.cancelableCatching
+import com.vianh.blogtruyen.utils.ext.copyTo
+import com.vianh.blogtruyen.utils.ext.createDirs
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import okhttp3.OkHttpClient

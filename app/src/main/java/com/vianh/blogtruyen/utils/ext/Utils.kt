@@ -1,16 +1,13 @@
-package com.vianh.blogtruyen.utils
+package com.vianh.blogtruyen.utils.ext
 
 import android.content.ContentResolver
 import android.content.ContentValues
 import android.content.Context
 import android.graphics.Bitmap
-import android.graphics.Color
 import android.net.Uri
 import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
-import android.view.View
-import android.view.Window
 import com.vianh.blogtruyen.data.remote.BlogtruyenProvider
 import okhttp3.Interceptor
 import okhttp3.Response

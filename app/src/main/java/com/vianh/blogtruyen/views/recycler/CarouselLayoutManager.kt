@@ -1,4 +1,4 @@
-package com.vianh.blogtruyen.utils
+package com.vianh.blogtruyen.views.recycler
 
 import android.content.Context
 import androidx.recyclerview.widget.LinearLayoutManager

@@ -1,4 +1,4 @@
-package com.vianh.blogtruyen.utils
+package com.vianh.blogtruyen.utils.ext
 
 import com.bumptech.glide.RequestBuilder
 import com.bumptech.glide.load.DataSource

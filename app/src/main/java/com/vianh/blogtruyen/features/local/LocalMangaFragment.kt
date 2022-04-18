@@ -11,7 +11,7 @@ import com.vianh.blogtruyen.features.base.BaseFragment
 import com.vianh.blogtruyen.features.details.MangaDetailsFragment
 import com.vianh.blogtruyen.features.list.MangaItem
 import com.vianh.blogtruyen.features.list.MangaListAdapter
-import com.vianh.blogtruyen.utils.DefaultSpanSizeLookup
+import com.vianh.blogtruyen.views.recycler.DefaultSpanSizeLookup
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class LocalMangaFragment : BaseFragment<HomeFragmentBinding>(),

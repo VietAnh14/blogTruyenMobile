@@ -7,7 +7,7 @@ import com.vianh.blogtruyen.R
 import com.vianh.blogtruyen.data.model.Chapter
 import com.vianh.blogtruyen.databinding.ChapterItemBinding
 import com.vianh.blogtruyen.features.download.DownloadState
-import com.vianh.blogtruyen.utils.getColorFromAttr
+import com.vianh.blogtruyen.utils.getThemeColor
 import com.vianh.blogtruyen.utils.typeValue
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -55,7 +55,7 @@ class ChapterVH(
         val textColor = if (item.chapter.read) {
             ContextCompat.getColor(itemView.context, R.color.textColorDeactivated)
         } else {
-            itemView.context.getColorFromAttr(R.attr.colorOnSurface)
+            itemView.context.getThemeColor(R.attr.colorOnSurface)
         }
 
         binding.chapterName.setTextColor(textColor)

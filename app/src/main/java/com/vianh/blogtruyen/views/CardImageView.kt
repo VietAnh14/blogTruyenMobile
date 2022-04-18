@@ -15,7 +15,7 @@ import com.bumptech.glide.request.target.Target
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.progressindicator.CircularProgressIndicator
 import com.vianh.blogtruyen.R
-import com.vianh.blogtruyen.utils.getColorFromAttr
+import com.vianh.blogtruyen.utils.getThemeColor
 import com.vianh.blogtruyen.utils.gone
 import com.vianh.blogtruyen.utils.toPx
 
@@ -43,7 +43,7 @@ class CardImageView @JvmOverloads constructor(
             trackCornerRadius = 10.toPx
             indicatorSize = 24.toPx
             trackThickness = 4.toPx
-            setIndicatorColor(context.getColorFromAttr(R.attr.colorAccent))
+            setIndicatorColor(context.getThemeColor(R.attr.colorAccent))
             isIndeterminate = true
         }
         addView(image, LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)

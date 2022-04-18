@@ -4,7 +4,7 @@ import androidx.room.Embedded
 import androidx.room.Junction
 import androidx.room.Relation
 import com.vianh.blogtruyen.data.model.Manga
-import com.vianh.blogtruyen.utils.mapToSet
+import com.vianh.blogtruyen.utils.ext.mapToSet
 
 data class FullManga(
     @Embedded

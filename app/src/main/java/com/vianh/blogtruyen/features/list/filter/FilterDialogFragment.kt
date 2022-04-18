@@ -2,6 +2,7 @@ package com.vianh.blogtruyen.features.list.filter
 
 import android.app.Dialog
 import android.content.DialogInterface
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -27,14 +28,20 @@ class FilterDialogFragment: BottomSheetDialogFragment(), OnApplyWindowInsetsList
     private var filterAdapter: FilterAdapter? = null
     private var lastInsets: Insets? = null
 
+    val behavior
+        get() = (dialog as? BottomSheetDialog)?.behavior
+
     private fun parentViewModel(): MangaViewModel {
         val parent = requireParentFragment() as MangaFragment<*>
         return parent.viewModel
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        setStyle(STYLE_NORMAL, R.style.Theme_BottomSheetTheme)
         val dialog = super.onCreateDialog(savedInstanceState)
-        val behavior = (dialog as BottomSheetDialog).behavior
+
+        dialog.window?.statusBarColor = Color.TRANSPARENT
+        dialog.window?.navigationBarColor = Color.TRANSPARENT
         return dialog
     }
 
@@ -75,9 +82,7 @@ class FilterDialogFragment: BottomSheetDialogFragment(), OnApplyWindowInsetsList
         super.onDestroyView()
     }
 
-    override fun getTheme(): Int = R.style.Theme_BottomSheetTheme
-
-    fun bindViewModel() {
+    private fun bindViewModel() {
         viewModel.categoryItems.observe(viewLifecycleOwner, this::onCategoryChange)
     }
 
@@ -92,7 +97,7 @@ class FilterDialogFragment: BottomSheetDialogFragment(), OnApplyWindowInsetsList
         }
     }
 
-    fun onCategoryChange(items: List<FilterCategoryItem>) {
+    private fun onCategoryChange(items: List<FilterCategoryItem>) {
         filterAdapter?.submitList(items)
     }
 

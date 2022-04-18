@@ -1,6 +1,5 @@
-package com.vianh.blogtruyen.views
+package com.vianh.blogtruyen.views.recycler
 
-import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.content.Context
@@ -14,7 +13,6 @@ import android.view.ScaleGestureDetector.SimpleOnScaleGestureListener
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.OverScroller
 import androidx.recyclerview.widget.RecyclerView
-import timber.log.Timber
 
 // Referred https://stackoverflow.com/questions/12479859/view-with-horizontal-and-vertical-pan-drag-and-pinch-zoom/38205219#38205219
 

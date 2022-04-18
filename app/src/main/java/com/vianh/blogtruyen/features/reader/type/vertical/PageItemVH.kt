@@ -14,10 +14,9 @@ import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
 import com.vianh.blogtruyen.R
 import com.vianh.blogtruyen.databinding.MangaPageItemBinding
 import com.vianh.blogtruyen.features.base.list.AbstractBindingHolder
-import com.vianh.blogtruyen.features.base.list.AbstractViewHolder
 import com.vianh.blogtruyen.features.reader.list.PageLoadCallBack
 import com.vianh.blogtruyen.features.reader.list.ReaderItem
-import com.vianh.blogtruyen.utils.SubsamplingScaleImageViewTarget
+import com.vianh.blogtruyen.views.SubsamplingScaleImageViewTarget
 import com.vianh.blogtruyen.utils.gone
 import com.vianh.blogtruyen.utils.invisible
 import com.vianh.blogtruyen.utils.visible

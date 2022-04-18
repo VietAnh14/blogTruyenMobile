@@ -10,6 +10,7 @@ import com.vianh.blogtruyen.features.base.list.items.*
 import com.vianh.blogtruyen.features.list.data.CategoryRepo
 import com.vianh.blogtruyen.features.list.filter.FilterCategoryItem
 import com.vianh.blogtruyen.utils.*
+import com.vianh.blogtruyen.utils.ext.cancelableCatching
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
