@@ -18,7 +18,7 @@ class CommentVH(val binding: CommentItemBinding): RecyclerView.ViewHolder(bindin
         with(binding) {
             avatar.loadNetWorkImage(item.avatar)
             time.text = item.time
-            comment.text = item.message
+            comment.setText(item.message)
             username.text = item.userName
         }
 
@@ -31,5 +31,9 @@ class CommentVH(val binding: CommentItemBinding): RecyclerView.ViewHolder(bindin
                 leftMargin = replyCommentMargin
             }
         }
+    }
+
+    fun onRecycle() {
+        binding.comment.shrink()
     }
 }

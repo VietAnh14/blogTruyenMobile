@@ -47,6 +47,7 @@
         <entry key="app/src/main/res/layout/empty_item.xml" value="0.23715277777777777" />
         <entry key="app/src/main/res/layout/empty_manga_item.xml" value="0.33" />
         <entry key="app/src/main/res/layout/error_reader_item.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/expandable_text_view.xml" value="0.5" />
         <entry key="app/src/main/res/layout/feed_fragment.xml" value="0.23715277777777777" />
         <entry key="app/src/main/res/layout/feed_item.xml" value="0.25" />
         <entry key="app/src/main/res/layout/filter_dialog_fragment.xml" value="0.25" />

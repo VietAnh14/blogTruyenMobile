@@ -4,4 +4,9 @@
         <attr name="ratio_width" format="integer" />
         <attr name="ratio_height" format="integer" />
     </declare-styleable>
+
+    <declare-styleable name="ExpandableText">
+        <attr name="text" format="string" />
+        <attr name="max_lines" format="integer" />
+    </declare-styleable>
 </resources>

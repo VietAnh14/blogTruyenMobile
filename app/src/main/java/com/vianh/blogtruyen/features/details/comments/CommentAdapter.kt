@@ -18,6 +18,11 @@ class CommentAdapter(): ListAdapter<Comment, CommentVH>(DiffUtils()) {
         holder.onBind(getItem(position))
     }
 
+    override fun onViewRecycled(holder: CommentVH) {
+        holder.onRecycle()
+        super.onViewRecycled(holder)
+    }
+
     class DiffUtils: DiffUtil.ItemCallback<Comment>() {
         override fun areItemsTheSame(oldItem: Comment, newItem: Comment): Boolean {
             return oldItem == newItem
