@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 2,
-    "identityHash": "b0ba08dde4cce433b098cb3fc4b18c83",
+    "identityHash": "fdecc16b20b401d4710575e528646c77",
     "entities": [
       {
         "tableName": "manga",
@@ -107,7 +107,17 @@
           ],
           "autoGenerate": false
         },
-        "indices": [],
+        "indices": [
+          {
+            "name": "index_chapters_mangaId",
+            "unique": false,
+            "columnNames": [
+              "mangaId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_chapters_mangaId` ON `${TABLE_NAME}` (`mangaId`)"
+          }
+        ],
         "foreignKeys": [
           {
             "table": "manga",
@@ -241,6 +251,7 @@
               "refMangaId",
               "chapterId"
             ],
+            "orders": [],
             "createSql": "CREATE INDEX IF NOT EXISTS `index_history_refMangaId_chapterId` ON `${TABLE_NAME}` (`refMangaId`, `chapterId`)"
           }
         ],
@@ -323,7 +334,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'b0ba08dde4cce433b098cb3fc4b18c83')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'fdecc16b20b401d4710575e528646c77')"
     ]
   }
 }

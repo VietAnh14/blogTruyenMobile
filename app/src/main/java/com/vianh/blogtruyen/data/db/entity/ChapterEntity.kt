@@ -43,7 +43,7 @@ data class ChapterEntity(
             return ChapterEntity(
                 url = chapter.url,
                 name = chapter.name,
-                id =  chapter.id,
+                id = chapter.id,
                 mangaId = mangaId,
                 isRead = chapter.read,
                 number = chapter.number,

@@ -47,7 +47,6 @@ android {
     }
 
     sourceSets {
-        // Adds exported schema location as test app assets.
         getByName("androidTest").assets.srcDir("$projectDir/schemas")
     }
 
@@ -64,6 +63,10 @@ android {
         jvmTarget = "1.8"
     }
 
+    kotlinOptions.freeCompilerArgs += [
+            "-Xuse-experimental=kotlinx.coroutines.ExperimentalCoroutinesApi",
+            "-Xuse-experimental=kotlinx.coroutines.FlowPreview"
+    ]
 }
 
 dependencies {

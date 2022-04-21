@@ -1,11 +1,10 @@
 package com.vianh.blogtruyen
 
 import com.vianh.blogtruyen.data.remote.BlogtruyenProvider
-import com.vianh.blogtruyen.utils.BlogTruyenInterceptor
+import com.vianh.blogtruyen.utils.ext.BlogTruyenInterceptor
 import kotlinx.coroutines.runBlocking
 import okhttp3.OkHttpClient
 import okhttp3.Request
-import org.junit.Test
 import org.junit.Assert.*
 
 class ParserUnitTest {

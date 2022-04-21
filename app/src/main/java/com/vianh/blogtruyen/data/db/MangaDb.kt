@@ -34,24 +34,10 @@ abstract class MangaDb : RoomDatabase() {
         private const val DB_NAME = "MangaDB.db"
 
         fun provideDb(context: Context): MangaDb {
-            var mangaDb: MangaDb? = null
-//            val callback = object : RoomDatabase.Callback() {
-//                override fun onCreate(db: SupportSQLiteDatabase) {
-//                    super.onCreate(db)
-//                    mangaDb?.let {
-//                        GlobalScope.launch(Dispatchers.IO) {
-//                            it.categoryDao().insert(categories)
-//                        }
-//                    }
-//                }
-//            }
-
-            mangaDb = Room.databaseBuilder(context, MangaDb::class.java, DB_NAME)
+            return Room.databaseBuilder(context, MangaDb::class.java, DB_NAME)
                 .addMigrations(Migrations.MIGRATION_1_2)
-//                .addCallback(callback)
                 .fallbackToDestructiveMigration()
                 .build()
-            return mangaDb
         }
     }
 }
