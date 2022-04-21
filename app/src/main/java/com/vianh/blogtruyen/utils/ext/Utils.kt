@@ -9,6 +9,7 @@ import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
 import com.vianh.blogtruyen.data.remote.BlogtruyenProvider
+import kotlinx.coroutines.CancellationException
 import okhttp3.Interceptor
 import okhttp3.Response
 import timber.log.Timber
@@ -17,14 +18,6 @@ import javax.microedition.khronos.egl.EGL10
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.egl.EGLContext
 import kotlin.math.max
-
-fun getDeviceHeight(context: Context): Int {
-    return context.resources.displayMetrics.heightPixels
-}
-
-fun getDeviceWidth(context: Context): Int {
-    return context.resources.displayMetrics.widthPixels
-}
 
 class BlogTruyenInterceptor : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
@@ -40,6 +33,16 @@ class BlogTruyenInterceptor : Interceptor {
         }
     }
 
+}
+
+inline fun <T> cancelableCatching(block: () -> T): Result<T> {
+    return try {
+        Result.success(block.invoke())
+    } catch (e: CancellationException) {
+        throw e
+    } catch (e: Exception) {
+        Result.failure(e)
+    }
 }
 
 val maxTileSize by lazy { getMaxTextureSize() }

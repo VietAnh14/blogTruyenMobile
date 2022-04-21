@@ -16,8 +16,8 @@ import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
 import com.vianh.blogtruyen.R
 import com.vianh.blogtruyen.features.main.MainActivity
-import com.vianh.blogtruyen.utils.attrDimenPixel
-import com.vianh.blogtruyen.utils.getSurfaceColorPrimary
+import com.vianh.blogtruyen.utils.ext.attrDimenPixel
+import com.vianh.blogtruyen.utils.ext.getSurfaceColorPrimary
 
 abstract class BaseFragment<B : ViewBinding> : Fragment(), OnApplyWindowInsetsListener,
     Toolbar.OnMenuItemClickListener {

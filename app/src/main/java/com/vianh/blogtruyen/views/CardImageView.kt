@@ -15,9 +15,9 @@ import com.bumptech.glide.request.target.Target
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.progressindicator.CircularProgressIndicator
 import com.vianh.blogtruyen.R
-import com.vianh.blogtruyen.utils.getThemeColor
-import com.vianh.blogtruyen.utils.gone
-import com.vianh.blogtruyen.utils.toPx
+import com.vianh.blogtruyen.utils.ext.getThemeColor
+import com.vianh.blogtruyen.utils.ext.gone
+import com.vianh.blogtruyen.utils.ext.toPx
 
 class CardImageView @JvmOverloads constructor(
     context: Context,

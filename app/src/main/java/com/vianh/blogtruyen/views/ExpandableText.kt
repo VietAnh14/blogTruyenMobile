@@ -1,14 +1,16 @@
 package com.vianh.blogtruyen.views
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.FrameLayout
 import androidx.core.view.doOnLayout
-import com.vianh.blogtruyen.utils.gone
-import com.vianh.blogtruyen.utils.visible
+import androidx.core.view.updatePadding
 import com.vianh.blogtruyen.R
 import com.vianh.blogtruyen.databinding.ExpandableTextViewBinding
+import com.vianh.blogtruyen.utils.ext.gone
+import com.vianh.blogtruyen.utils.ext.visible
 
 class ExpandableText @JvmOverloads constructor(
     context: Context,
@@ -16,19 +18,24 @@ class ExpandableText @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ): FrameLayout(context, attrs, defStyleAttr) {
     val binding = ExpandableTextViewBinding.inflate(LayoutInflater.from(context), this)
-    private var maxLine = 3
 
+    private var text: String? = null
+    private var maxLine = 3
     private var isExpand = false
     private val canShrink
         get() = binding.content.lineCount > maxLine
+
+    private val contentText
+        get() = binding.content
 
     init {
         if (attrs != null) {
             val array = context.obtainStyledAttributes(attrs, R.styleable.ExpandableText)
             maxLine = array.getInt(R.styleable.ExpandableText_max_lines, 3)
-            val text = array.getString(R.styleable.ExpandableText_text)
-            binding.content.maxLines = maxLine
-            binding.content.text = text
+            text = array.getString(R.styleable.ExpandableText_text)
+
+            contentText.maxLines = maxLine
+            contentText.text = text
             array.recycle()
         }
 
@@ -57,6 +64,7 @@ class ExpandableText @JvmOverloads constructor(
         }
     }
 
+    @SuppressLint("SetTextI18n")
     fun shrink() {
         if (!canShrink) {
             binding.actionBtn.gone()
@@ -64,7 +72,9 @@ class ExpandableText @JvmOverloads constructor(
         }
 
         isExpand = false
-        binding.content.maxLines = maxLine
+        contentText.updatePadding(bottom = 0)
+        contentText.maxLines = maxLine
+        binding.actionBtn.text = "...${context.getString(R.string.view_more)}"
         binding.actionBtn.visible()
     }
 
@@ -75,18 +85,22 @@ class ExpandableText @JvmOverloads constructor(
         }
 
         isExpand = true
-        binding.actionBtn.gone()
-        binding.content.maxLines = Int.MAX_VALUE
+        binding.actionBtn.visible()
+        binding.actionBtn.text = context.getString(R.string.hide)
+        contentText.updatePadding(bottom = binding.content.lineHeight)
+        contentText.maxLines = Int.MAX_VALUE
     }
 
     fun setText(text: String) {
-        binding.content.text = text
+        contentText.text = text
         syncState()
     }
 
+    fun getText() = text
+
     fun setMaxLine(maxLine: Int) {
         this.maxLine = maxLine
-        binding.content.maxLines = maxLine
+        contentText.maxLines = maxLine
         syncState()
     }
 }

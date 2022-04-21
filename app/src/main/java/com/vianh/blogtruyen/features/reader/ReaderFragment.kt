@@ -14,10 +14,10 @@ import com.vianh.blogtruyen.databinding.ReaderFragmentBinding
 import com.vianh.blogtruyen.features.base.BaseFragment
 import com.vianh.blogtruyen.features.reader.type.pager.PagerReader
 import com.vianh.blogtruyen.features.reader.type.vertical.VerticalReader
-import com.vianh.blogtruyen.utils.getSurfaceColorPrimary
-import com.vianh.blogtruyen.utils.resetPos
-import com.vianh.blogtruyen.utils.slideDown
-import com.vianh.blogtruyen.utils.slideUp
+import com.vianh.blogtruyen.utils.ext.getSurfaceColorPrimary
+import com.vianh.blogtruyen.utils.ext.resetPos
+import com.vianh.blogtruyen.utils.ext.slideDown
+import com.vianh.blogtruyen.utils.ext.slideUp
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf

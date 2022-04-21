@@ -7,8 +7,8 @@ import com.vianh.blogtruyen.R
 import com.vianh.blogtruyen.data.model.Chapter
 import com.vianh.blogtruyen.databinding.ChapterItemBinding
 import com.vianh.blogtruyen.features.download.DownloadState
-import com.vianh.blogtruyen.utils.getThemeColor
-import com.vianh.blogtruyen.utils.typeValue
+import com.vianh.blogtruyen.utils.ext.getThemeColor
+import com.vianh.blogtruyen.utils.ext.typeValue
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.launchIn

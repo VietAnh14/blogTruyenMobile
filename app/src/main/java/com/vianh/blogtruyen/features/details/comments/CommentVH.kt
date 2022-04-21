@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.vianh.blogtruyen.R
 import com.vianh.blogtruyen.data.model.Comment
 import com.vianh.blogtruyen.databinding.CommentItemBinding
-import com.vianh.blogtruyen.utils.loadNetWorkImage
+import com.vianh.blogtruyen.utils.ext.loadNetWorkImage
 
 class CommentVH(val binding: CommentItemBinding): RecyclerView.ViewHolder(binding.root) {
     var data: Comment? = null

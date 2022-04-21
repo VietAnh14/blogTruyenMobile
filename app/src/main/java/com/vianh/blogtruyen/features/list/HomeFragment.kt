@@ -13,7 +13,7 @@ import com.vianh.blogtruyen.features.details.MangaDetailsFragment
 import com.vianh.blogtruyen.features.main.MainActivity
 import com.vianh.blogtruyen.features.search.SearchFragment
 import com.vianh.blogtruyen.views.recycler.DefaultSpanSizeLookup
-import com.vianh.blogtruyen.utils.toPx
+import com.vianh.blogtruyen.utils.ext.toPx
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class HomeFragment: MangaFragment<HomeViewModel>() {

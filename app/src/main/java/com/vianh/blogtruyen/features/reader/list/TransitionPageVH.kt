@@ -2,15 +2,14 @@ package com.vianh.blogtruyen.features.reader.list
 
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.core.view.updateLayoutParams
 import com.vianh.blogtruyen.R
 import com.vianh.blogtruyen.data.prefs.ReaderMode
 import com.vianh.blogtruyen.databinding.TransitionPageBinding
 import com.vianh.blogtruyen.features.base.list.AbstractBindingHolder
 import com.vianh.blogtruyen.features.reader.ReaderViewModel
-import com.vianh.blogtruyen.utils.gone
-import com.vianh.blogtruyen.utils.visible
+import com.vianh.blogtruyen.utils.ext.gone
+import com.vianh.blogtruyen.utils.ext.visible
 import me.everything.android.ui.overscroll.IOverScrollState
 import kotlin.math.min
 

@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.annotation.IdRes
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.vianh.blogtruyen.R
@@ -20,10 +19,9 @@ import com.vianh.blogtruyen.features.feed.NewFeedFragment
 import com.vianh.blogtruyen.features.history.HistoryFragment
 import com.vianh.blogtruyen.features.local.LocalMangaFragment
 import com.vianh.blogtruyen.features.update.UpdateHelper
-import com.vianh.blogtruyen.utils.showToast
+import com.vianh.blogtruyen.utils.ext.showToast
 import com.vianh.blogtruyen.views.ViewHeightAnimator
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import timber.log.Timber
 
 class MainActivity : BaseActivity<HomeActivityBinding>(), FragmentManager.OnBackStackChangedListener {
 

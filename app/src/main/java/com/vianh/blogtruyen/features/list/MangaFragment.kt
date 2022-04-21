@@ -19,8 +19,8 @@ import com.vianh.blogtruyen.databinding.HomeFragmentBinding
 import com.vianh.blogtruyen.features.base.BaseFragment
 import com.vianh.blogtruyen.features.list.filter.FilterDialogFragment
 import com.vianh.blogtruyen.views.recycler.ScrollLoadMore
-import com.vianh.blogtruyen.utils.getThemeColor
-import com.vianh.blogtruyen.utils.toPx
+import com.vianh.blogtruyen.utils.ext.getThemeColor
+import com.vianh.blogtruyen.utils.ext.toPx
 
 abstract class MangaFragment<VM : MangaViewModel> : BaseFragment<HomeFragmentBinding>(),
     MangaListAdapter.Callback, SwipeRefreshLayout.OnRefreshListener {

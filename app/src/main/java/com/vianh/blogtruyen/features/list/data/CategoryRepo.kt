@@ -2,7 +2,7 @@ package com.vianh.blogtruyen.features.list.data
 
 import com.vianh.blogtruyen.data.db.MangaDb
 import com.vianh.blogtruyen.data.model.Category
-import com.vianh.blogtruyen.utils.mapList
+import com.vianh.blogtruyen.utils.ext.mapList
 import kotlinx.coroutines.flow.Flow
 
 class CategoryRepo(private val db: MangaDb) {

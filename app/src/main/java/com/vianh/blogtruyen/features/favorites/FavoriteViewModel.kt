@@ -7,8 +7,8 @@ import com.vianh.blogtruyen.features.base.BaseVM
 import com.vianh.blogtruyen.features.base.list.items.EmptyItem
 import com.vianh.blogtruyen.features.favorites.data.FavoriteRepository
 import com.vianh.blogtruyen.features.list.MangaItem
-import com.vianh.blogtruyen.utils.ifEmpty
-import com.vianh.blogtruyen.utils.mapList
+import com.vianh.blogtruyen.utils.ext.ifEmpty
+import com.vianh.blogtruyen.utils.ext.mapList
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 

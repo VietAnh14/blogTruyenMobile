@@ -25,8 +25,8 @@ import com.vianh.blogtruyen.features.base.BaseFragment
 import com.vianh.blogtruyen.features.main.MainActivity
 import com.vianh.blogtruyen.features.main.MainViewModel
 import com.vianh.blogtruyen.utils.PendingIntentHelper
-import com.vianh.blogtruyen.utils.getSurfaceColorPrimary
-import com.vianh.blogtruyen.utils.loadNetWorkImage
+import com.vianh.blogtruyen.utils.ext.getSurfaceColorPrimary
+import com.vianh.blogtruyen.utils.ext.loadNetWorkImage
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf

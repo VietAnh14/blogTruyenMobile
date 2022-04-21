@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import com.vianh.blogtruyen.features.base.list.items.HasUniqueId
 import com.vianh.blogtruyen.features.base.list.items.ListItem
-import com.vianh.blogtruyen.utils.inflate
+import com.vianh.blogtruyen.utils.ext.inflate
 import java.util.*
 
 // T: List data

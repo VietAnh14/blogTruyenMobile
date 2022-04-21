@@ -1,4 +1,4 @@
-package com.vianh.blogtruyen.utils
+package com.vianh.blogtruyen.utils.ext
 
 import android.content.Context
 import android.content.res.Resources
@@ -146,8 +146,8 @@ fun Context.getSurfaceColorPrimary(): Int {
     return SurfaceColors.SURFACE_2.getColor(this)
 }
 
-val screenHeight
-    get() = Resources.getSystem().displayMetrics.heightPixels
+val Context.screenHeight
+    get() = resources.displayMetrics.heightPixels
 
-val screenWidth
-    get() = Resources.getSystem().displayMetrics.widthPixels
+val Context.screenWidth
+    get() = resources.displayMetrics.widthPixels

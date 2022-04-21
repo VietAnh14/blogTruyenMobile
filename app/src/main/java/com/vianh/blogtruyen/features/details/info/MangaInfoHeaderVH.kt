@@ -5,9 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.chip.Chip
 import com.vianh.blogtruyen.data.model.Manga
-import com.vianh.blogtruyen.databinding.ChipItemBinding
 import com.vianh.blogtruyen.databinding.MangaInfoItemBinding
-import com.vianh.blogtruyen.utils.loadNetWorkImage
 
 class MangaInfoHeaderVH(private val binding: MangaInfoItemBinding) : RecyclerView.ViewHolder(binding.root) {
     init {
@@ -16,7 +14,7 @@ class MangaInfoHeaderVH(private val binding: MangaInfoItemBinding) : RecyclerVie
 
     fun onBind(manga: Manga) {
         with(binding) {
-            summary.text = manga.description
+            summary.setText(manga.description)
             categoryGroup.removeAllViews()
 
             for (category in manga.categories) {

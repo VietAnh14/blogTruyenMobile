@@ -2,16 +2,13 @@ package com.vianh.blogtruyen.features.list
 
 import androidx.lifecycle.*
 import com.vianh.blogtruyen.data.DataManager
-import com.vianh.blogtruyen.data.model.Category
 import com.vianh.blogtruyen.data.model.Manga
 import com.vianh.blogtruyen.data.prefs.AppSettings
 import com.vianh.blogtruyen.data.prefs.ListMode
 import com.vianh.blogtruyen.features.base.list.items.*
 import com.vianh.blogtruyen.features.list.data.CategoryRepo
-import com.vianh.blogtruyen.features.list.filter.FilterCategoryItem
-import com.vianh.blogtruyen.utils.*
 import com.vianh.blogtruyen.utils.ext.cancelableCatching
-import kotlinx.coroutines.CancellationException
+import com.vianh.blogtruyen.utils.ext.withPrevious
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.*

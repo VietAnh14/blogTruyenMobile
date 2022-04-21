@@ -4,8 +4,8 @@ import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.Interpolator
 import androidx.core.view.doOnLayout
-import com.vianh.blogtruyen.utils.gone
-import com.vianh.blogtruyen.utils.visible
+import com.vianh.blogtruyen.utils.ext.gone
+import com.vianh.blogtruyen.utils.ext.visible
 
 class ViewHeightAnimator(val view: View) {
     var height = 0

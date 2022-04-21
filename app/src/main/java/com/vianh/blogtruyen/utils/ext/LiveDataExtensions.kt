@@ -1,4 +1,4 @@
-package com.vianh.blogtruyen.utils
+package com.vianh.blogtruyen.utils.ext
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.asLiveData

@@ -3,7 +3,7 @@ package com.vianh.blogtruyen.features.history.data
 import com.vianh.blogtruyen.data.db.MangaDb
 import com.vianh.blogtruyen.data.db.entity.HistoryEntity
 import com.vianh.blogtruyen.data.model.History
-import com.vianh.blogtruyen.utils.mapList
+import com.vianh.blogtruyen.utils.ext.mapList
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn

@@ -10,6 +10,7 @@ import com.vianh.blogtruyen.data.model.Manga
 import com.vianh.blogtruyen.features.base.BaseVM
 import com.vianh.blogtruyen.features.favorites.data.FavoriteRepository
 import com.vianh.blogtruyen.utils.*
+import com.vianh.blogtruyen.utils.ext.asLiveDataDistinct
 import com.vianh.blogtruyen.utils.ext.await
 import com.vianh.blogtruyen.utils.ext.saveImageToGalley
 import com.vianh.blogtruyen.utils.ext.toSafeFileName

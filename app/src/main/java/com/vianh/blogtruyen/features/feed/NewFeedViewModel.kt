@@ -9,8 +9,8 @@ import com.vianh.blogtruyen.features.base.list.items.EmptyItem
 import com.vianh.blogtruyen.features.feed.list.NewFeedItem
 import com.vianh.blogtruyen.features.history.data.HistoryRepository
 import com.vianh.blogtruyen.features.list.MangaItem
-import com.vianh.blogtruyen.utils.ifEmpty
-import com.vianh.blogtruyen.utils.mapList
+import com.vianh.blogtruyen.utils.ext.ifEmpty
+import com.vianh.blogtruyen.utils.ext.mapList
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.distinctUntilChanged

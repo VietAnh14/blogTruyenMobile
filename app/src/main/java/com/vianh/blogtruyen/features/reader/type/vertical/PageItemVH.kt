@@ -17,9 +17,9 @@ import com.vianh.blogtruyen.features.base.list.AbstractBindingHolder
 import com.vianh.blogtruyen.features.reader.list.PageLoadCallBack
 import com.vianh.blogtruyen.features.reader.list.ReaderItem
 import com.vianh.blogtruyen.views.SubsamplingScaleImageViewTarget
-import com.vianh.blogtruyen.utils.gone
-import com.vianh.blogtruyen.utils.invisible
-import com.vianh.blogtruyen.utils.visible
+import com.vianh.blogtruyen.utils.ext.gone
+import com.vianh.blogtruyen.utils.ext.invisible
+import com.vianh.blogtruyen.utils.ext.visible
 import timber.log.Timber
 import java.io.File
 

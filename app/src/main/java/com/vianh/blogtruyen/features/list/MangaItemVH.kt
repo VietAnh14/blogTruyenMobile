@@ -2,13 +2,11 @@ package com.vianh.blogtruyen.features.list
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import com.bumptech.glide.Glide
 import com.vianh.blogtruyen.databinding.FeedItemBinding
 import com.vianh.blogtruyen.features.base.list.AbstractViewHolder
 import com.vianh.blogtruyen.features.base.list.ItemClick
-import com.vianh.blogtruyen.utils.gone
-import com.vianh.blogtruyen.utils.loadNetWorkImage
-import com.vianh.blogtruyen.utils.visible
+import com.vianh.blogtruyen.utils.ext.gone
+import com.vianh.blogtruyen.utils.ext.visible
 
 class MangaItemVH(private val binding: FeedItemBinding, clickListener: ItemClick<MangaItem>) :
     AbstractViewHolder<MangaItem, Unit>(binding.root) {

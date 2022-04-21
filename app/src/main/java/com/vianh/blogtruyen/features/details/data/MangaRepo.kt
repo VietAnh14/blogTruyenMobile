@@ -7,7 +7,7 @@ import com.vianh.blogtruyen.data.model.Chapter
 import com.vianh.blogtruyen.data.model.Comment
 import com.vianh.blogtruyen.data.model.Manga
 import com.vianh.blogtruyen.data.remote.MangaProvider
-import com.vianh.blogtruyen.utils.mapList
+import com.vianh.blogtruyen.utils.ext.mapList
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 

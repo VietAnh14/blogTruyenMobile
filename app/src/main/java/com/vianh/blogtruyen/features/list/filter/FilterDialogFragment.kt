@@ -19,8 +19,8 @@ import com.vianh.blogtruyen.R
 import com.vianh.blogtruyen.databinding.FilterDialogFragmentBinding
 import com.vianh.blogtruyen.features.list.MangaFragment
 import com.vianh.blogtruyen.features.list.MangaViewModel
-import com.vianh.blogtruyen.utils.screenHeight
-import com.vianh.blogtruyen.utils.toPx
+import com.vianh.blogtruyen.utils.ext.screenHeight
+import com.vianh.blogtruyen.utils.ext.toPx
 
 class FilterDialogFragment: BottomSheetDialogFragment(), OnApplyWindowInsetsListener {
     lateinit var binding: FilterDialogFragmentBinding
@@ -51,7 +51,7 @@ class FilterDialogFragment: BottomSheetDialogFragment(), OnApplyWindowInsetsList
         savedInstanceState: Bundle?
     ): View {
         binding = FilterDialogFragmentBinding.inflate(inflater, container, false)
-        binding.root.minHeight = screenHeight
+        binding.root.minHeight = requireContext().screenHeight
         ViewCompat.setOnApplyWindowInsetsListener(binding.filterRecycler, this)
         return binding.root
     }

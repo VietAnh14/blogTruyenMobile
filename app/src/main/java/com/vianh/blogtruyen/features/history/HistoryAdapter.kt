@@ -2,16 +2,14 @@ package com.vianh.blogtruyen.features.history
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import com.vianh.blogtruyen.databinding.EmptyItemBinding
 import com.vianh.blogtruyen.databinding.HistoryItemBinding
 import com.vianh.blogtruyen.databinding.TimeItemBinding
 import com.vianh.blogtruyen.features.base.list.AbstractAdapter
 import com.vianh.blogtruyen.features.base.list.AbstractViewHolder
 import com.vianh.blogtruyen.features.base.list.commonVH.EmptyFeedVH
 import com.vianh.blogtruyen.features.base.list.commonVH.LoadingItemVH
-import com.vianh.blogtruyen.features.base.list.items.EmptyItem
 import com.vianh.blogtruyen.features.base.list.items.ListItem
-import com.vianh.blogtruyen.utils.loadNetWorkImage
+import com.vianh.blogtruyen.utils.ext.loadNetWorkImage
 
 class HistoryAdapter(private val viewModel: HistoryViewModel) :
     AbstractAdapter<ListItem, Unit>(Unit) {

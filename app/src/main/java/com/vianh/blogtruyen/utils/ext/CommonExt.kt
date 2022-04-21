@@ -20,15 +20,6 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
-class HttpError(private val code: Int, message: String?) : Exception(message) {
-    override val message: String?
-        get() = "Request response with code: ${code}, message: ${super.message}"
-
-    fun getErrorCode(): Int {
-        return code
-    }
-}
-
 suspend fun Call.getBodyString(): String {
     return suspendCancellableCoroutine {
         it.invokeOnCancellation {
@@ -69,16 +60,6 @@ suspend fun Call.await(): Response {
                 it.resume(response)
             }
         })
-    }
-}
-
-inline fun <T> cancelableCatching(block: () -> T): Result<T> {
-    return try {
-        Result.success(block.invoke())
-    } catch (e: CancellationException) {
-        throw e
-    } catch (e: Exception) {
-        Result.failure(e)
     }
 }
 

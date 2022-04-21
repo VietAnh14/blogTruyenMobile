@@ -14,8 +14,10 @@ import com.vianh.blogtruyen.databinding.PagerReaderItemBinding
 import com.vianh.blogtruyen.features.base.list.AbstractBindingHolder
 import com.vianh.blogtruyen.features.reader.list.PageLoadCallBack
 import com.vianh.blogtruyen.features.reader.list.ReaderItem
-import com.vianh.blogtruyen.utils.*
+import com.vianh.blogtruyen.utils.ext.gone
+import com.vianh.blogtruyen.utils.ext.invisible
 import com.vianh.blogtruyen.utils.ext.maxTileSize
+import com.vianh.blogtruyen.utils.ext.visible
 import com.vianh.blogtruyen.views.SubsamplingScaleImageViewTarget
 import timber.log.Timber
 import java.io.File

@@ -19,9 +19,9 @@ import com.vianh.blogtruyen.features.download.DownloadState
 import com.vianh.blogtruyen.features.favorites.data.FavoriteRepository
 import com.vianh.blogtruyen.features.local.LocalSourceRepo
 import com.vianh.blogtruyen.utils.SingleLiveEvent
-import com.vianh.blogtruyen.utils.asLiveDataDistinct
+import com.vianh.blogtruyen.utils.ext.asLiveDataDistinct
 import com.vianh.blogtruyen.utils.ext.mapToSet
-import com.vianh.blogtruyen.utils.mapList
+import com.vianh.blogtruyen.utils.ext.mapList
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 

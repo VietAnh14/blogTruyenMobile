@@ -47,4 +47,6 @@
     <string name="filter_out_categories">Filter out categories</string>
     <string name="filter">Filter</string>
     <string name="clear" translatable="false">Clear</string>
+    <string name="view_more">view more</string>
+    <string name="hide">Hide</string>
 </resources>

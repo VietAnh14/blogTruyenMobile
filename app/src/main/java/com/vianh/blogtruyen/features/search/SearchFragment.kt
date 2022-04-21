@@ -16,8 +16,8 @@ import com.vianh.blogtruyen.features.details.MangaDetailsFragment
 import com.vianh.blogtruyen.features.feed.list.NewFeedAdapter
 import com.vianh.blogtruyen.features.list.MangaItem
 import com.vianh.blogtruyen.views.recycler.ScrollLoadMore
-import com.vianh.blogtruyen.utils.hideSoftKeyboard
-import com.vianh.blogtruyen.utils.showSoftKeyBoard
+import com.vianh.blogtruyen.utils.ext.hideSoftKeyboard
+import com.vianh.blogtruyen.utils.ext.showSoftKeyBoard
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchFragment: BaseFragment<HomeFragmentBinding>(), SearchView.OnQueryTextListener, NewFeedAdapter.Callbacks {
