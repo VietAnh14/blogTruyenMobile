@@ -10,7 +10,7 @@ val infoModule
         single<MangaRepo> { MangaRepository(get(), get()) }
         viewModel { parameters ->
             MangaDetailsViewModel(
-                repo = get(),
+                mangaRepo = get(),
                 favoriteRepo = get(),
                 localSourceRepo = get(),
                 manga = parameters[0],

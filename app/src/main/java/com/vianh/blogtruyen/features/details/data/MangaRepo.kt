@@ -4,21 +4,18 @@ import androidx.room.withTransaction
 import com.vianh.blogtruyen.data.db.MangaDb
 import com.vianh.blogtruyen.data.db.entity.*
 import com.vianh.blogtruyen.data.model.Chapter
-import com.vianh.blogtruyen.data.model.Comment
 import com.vianh.blogtruyen.data.model.Manga
 import com.vianh.blogtruyen.data.remote.MangaProvider
 import com.vianh.blogtruyen.utils.ext.mapList
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 
-interface MangaRepo {
+interface MangaRepo: MangaProvider {
     suspend fun upsertManga(manga: Manga, updateCategories: Boolean = true)
 
     suspend fun fetchMangaDetails(manga: Manga, remote: Boolean = true): Manga
 
     suspend fun loadChapters(mangaId: Int, remote: Boolean = true): List<Chapter>
-
-    suspend fun loadComments(mangaId: Int, offset: Int): Map<Comment, List<Comment>>
 
     suspend fun markChapterAsRead(chapter: Chapter, mangaId: Int)
 
@@ -28,7 +25,7 @@ interface MangaRepo {
 class MangaRepository(
     private val db: MangaDb,
     private val provider: MangaProvider
-) : MangaRepo {
+) : MangaRepo, MangaProvider by provider {
 
     override suspend fun upsertManga(manga: Manga, updateCategories: Boolean) {
         db.withTransaction {
@@ -47,7 +44,7 @@ class MangaRepository(
     // TODO: USE ID
     override suspend fun fetchMangaDetails(manga: Manga, remote: Boolean): Manga {
         return if (remote) {
-            val details = provider.fetchDetailManga(manga)
+            val details = provider.getMangaDetails(manga)
             upsertManga(details, true)
             details
         } else {
@@ -64,7 +61,7 @@ class MangaRepository(
                 .toSet()
 
             return provider
-                .fetchChapterList(mangaId)
+                .getChapterList(mangaId)
                 .map {
                     it.read = readIds.contains(it.id)
                     it
@@ -72,10 +69,6 @@ class MangaRepository(
         }
 
         return observeChapter(mangaId).first()
-    }
-
-    override suspend fun loadComments(mangaId: Int, offset: Int): Map<Comment, List<Comment>> {
-        return provider.fetchComment(mangaId, offset)
     }
 
     override suspend fun markChapterAsRead(chapter: Chapter, mangaId: Int) {

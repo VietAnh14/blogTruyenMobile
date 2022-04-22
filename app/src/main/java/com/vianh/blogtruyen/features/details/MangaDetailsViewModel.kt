@@ -28,7 +28,7 @@ import kotlinx.coroutines.flow.*
 class MangaDetailsViewModel(
     manga: Manga,
     val isOffline: Boolean,
-    private val repo: MangaRepo,
+    private val mangaRepo: MangaRepo,
     private val favoriteRepo: FavoriteRepository,
     private val localSourceRepo: LocalSourceRepo,
 ) : BaseVM() {
@@ -44,7 +44,7 @@ class MangaDetailsViewModel(
 
     private val descendingSort = MutableStateFlow(true)
     private val mangaFlow: MutableStateFlow<Manga> = MutableStateFlow(manga)
-    private val localChapters = mangaFlow.map { it.id }.flatMapLatest { repo.observeChapter(it) }
+    private val localChapters = mangaFlow.map { it.id }.flatMapLatest { mangaRepo.observeChapter(it) }
     private val remoteChapter = MutableStateFlow<List<Chapter>>(emptyList())
     private val mainChapters = combine(localChapters, remoteChapter) { local, remote ->
         val readIds = local.filter { it.read }.map { it.id }.toSet()
@@ -131,7 +131,7 @@ class MangaDetailsViewModel(
 
     private suspend fun loadDetails() {
         // Keep current chapter
-        mangaFlow.value = repo
+        mangaFlow.value = mangaRepo
             .fetchMangaDetails(currentManga, !isOffline)
             .copy(chapters = currentManga.chapters)
     }
@@ -140,7 +140,7 @@ class MangaDetailsViewModel(
         val fetchChapters = if (isOffline)
             localSourceRepo.getChapters(currentManga.id)
         else
-            repo.loadChapters(currentManga.id)
+            mangaRepo.loadChapters(currentManga.id)
 
         mangaFlow.update { it.copy(chapters = fetchChapters) }
         remoteChapter.value = fetchChapters
@@ -201,7 +201,7 @@ class MangaDetailsViewModel(
         }
 
         commentJob = launchJob(Dispatchers.Default) {
-            val commentMap = repo.loadComments(mangaFlow.value.id, offset)
+            val commentMap = mangaRepo.getComment(mangaFlow.value.id, offset)
             hasNextCommentPage = commentMap.isNotEmpty()
             val flattenComments = ArrayList(comments.value!!)
             for (comment in commentMap) {

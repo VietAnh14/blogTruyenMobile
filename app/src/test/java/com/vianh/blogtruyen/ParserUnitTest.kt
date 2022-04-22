@@ -19,7 +19,7 @@ class ParserUnitTest {
         val mangaId = 25859
         val page = 1
         runBlocking {
-            val comments = blogtruyenProvider.fetchComment(mangaId, page)
+            val comments = blogtruyenProvider.getComment(mangaId, page)
             print(comments)
             assertEquals(20, comments.size)
         }
@@ -27,7 +27,7 @@ class ParserUnitTest {
 
     fun testParseNewFeed() {
         runBlocking {
-            val response = blogtruyenProvider.fetchNewFeed()
+            val response = blogtruyenProvider.getNewFeed()
         }
     }
 

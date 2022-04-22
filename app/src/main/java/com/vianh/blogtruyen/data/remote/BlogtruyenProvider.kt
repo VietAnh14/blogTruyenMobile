@@ -27,7 +27,9 @@ class BlogtruyenProvider(private val client: OkHttpClient) : MangaProvider {
         private const val AJAX_LOAD_COMMENT = BuildConfig.HOST + "/Comment/AjaxLoadComment"
     }
 
-    override suspend fun fetchNewManga(pageNumber: Int): List<Manga> {
+    override val baseUrl: String = BuildConfig.HOST
+
+    override suspend fun getMangaList(pageNumber: Int): List<Manga> {
         return withContext(Dispatchers.IO) {
             val url = BuildConfig.HOST_FULL + "/page-$pageNumber"
             val request = Request.Builder().url(url).build()
@@ -36,7 +38,7 @@ class BlogtruyenProvider(private val client: OkHttpClient) : MangaProvider {
         }
     }
 
-    override suspend fun fetchDetailManga(manga: Manga): Manga {
+    override suspend fun getMangaDetails(manga: Manga): Manga {
         return withContext(Dispatchers.IO) {
             val url = BuildConfig.HOST + manga.link
             val request = Request.Builder().url(url).build()
@@ -45,7 +47,7 @@ class BlogtruyenProvider(private val client: OkHttpClient) : MangaProvider {
         }
     }
 
-    override suspend fun fetchChapterList(mangaId: Int): List<Chapter> {
+    override suspend fun getChapterList(mangaId: Int): List<Chapter> {
         return withContext(Dispatchers.IO) {
             val result: MutableList<Chapter> = mutableListOf()
             var lastPage: Int
@@ -77,7 +79,7 @@ class BlogtruyenProvider(private val client: OkHttpClient) : MangaProvider {
         }
     }
 
-    override suspend fun fetchChapterPage(link: String): List<String> {
+    override suspend fun getChapterPage(link: String): List<String> {
         return withContext(Dispatchers.IO) {
             val url = BuildConfig.HOST_FULL + link
             val request = Request.Builder().url(url).build()
@@ -86,7 +88,7 @@ class BlogtruyenProvider(private val client: OkHttpClient) : MangaProvider {
         }
     }
 
-    override suspend fun fetchComment(mangaId: Int, offset: Int): Map<Comment, List<Comment>> {
+    override suspend fun getComment(mangaId: Int, offset: Int): Map<Comment, List<Comment>> {
         return withContext(Dispatchers.IO) {
             val uri = "$AJAX_LOAD_COMMENT?mangaId=$mangaId&p=$offset"
             val request = Request.Builder().url(uri).build()
@@ -95,7 +97,7 @@ class BlogtruyenProvider(private val client: OkHttpClient) : MangaProvider {
         }
     }
 
-    override suspend fun fetchNewFeed(): FeedItem {
+    override suspend fun getNewFeed(): FeedItem {
         return withContext(Dispatchers.IO) {
             val request = Request.Builder().url(BuildConfig.HOST_FULL).build()
             val response = client.newCall(request).getBodyString()

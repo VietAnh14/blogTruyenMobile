@@ -3,9 +3,9 @@ package com.vianh.blogtruyen.features.feed
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.vianh.blogtruyen.data.model.Manga
-import com.vianh.blogtruyen.data.remote.MangaProvider
 import com.vianh.blogtruyen.features.base.BaseVM
 import com.vianh.blogtruyen.features.base.list.items.EmptyItem
+import com.vianh.blogtruyen.features.details.data.MangaRepo
 import com.vianh.blogtruyen.features.feed.list.NewFeedItem
 import com.vianh.blogtruyen.features.history.data.HistoryRepository
 import com.vianh.blogtruyen.features.list.MangaItem
@@ -16,7 +16,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 
-class NewFeedViewModel(private val provider: MangaProvider, historyRepository: HistoryRepository) :
+class NewFeedViewModel(private val provider: MangaRepo, historyRepository: HistoryRepository) :
     BaseVM() {
 
     private val pinFlow = MutableStateFlow<List<Manga>>(emptyList())
@@ -51,10 +51,10 @@ class NewFeedViewModel(private val provider: MangaProvider, historyRepository: H
 
     fun loadFeed() {
         launchLoading {
-            val items = provider.fetchNewFeed()
-            pinFlow.value = items.pinStories
-            updateFlow.value = items.newUpdate
-            newStoriesFlow.value = items.newStories
+            val items = provider.getNewFeed()
+            pinFlow.value = items.hotManga
+            updateFlow.value = items.newUpdateManga
+            newStoriesFlow.value = items.newUploadManga
         }
     }
 }

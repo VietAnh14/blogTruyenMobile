@@ -44,7 +44,7 @@ class MangaDetailsFragment : BaseFragment<MangaDetailsFragmentBinding>() {
         parametersOf(getManga(), getOfflineState())
     }
 
-    override fun getToolbar(): Toolbar? {
+    override fun getToolbar(): Toolbar {
         return requireBinding.toolbar
     }
 

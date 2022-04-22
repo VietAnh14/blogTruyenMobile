@@ -1,11 +1,11 @@
 package com.vianh.blogtruyen.features.list
 
 import androidx.lifecycle.*
-import com.vianh.blogtruyen.data.DataManager
 import com.vianh.blogtruyen.data.model.Manga
 import com.vianh.blogtruyen.data.prefs.AppSettings
 import com.vianh.blogtruyen.data.prefs.ListMode
 import com.vianh.blogtruyen.features.base.list.items.*
+import com.vianh.blogtruyen.features.details.data.MangaRepo
 import com.vianh.blogtruyen.features.list.data.CategoryRepo
 import com.vianh.blogtruyen.utils.ext.cancelableCatching
 import com.vianh.blogtruyen.utils.ext.withPrevious
@@ -16,7 +16,7 @@ import kotlinx.coroutines.plus
 import timber.log.Timber
 
 class HomeViewModel(
-    private val dataManager: DataManager,
+    private val mangaRepo: MangaRepo,
     categoryRepo: CategoryRepo,
     settings: AppSettings,
 ) : MangaViewModel(settings, categoryRepo) {
@@ -103,9 +103,7 @@ class HomeViewModel(
         loadPageJob = launchJob {
 
             cancelableCatching {
-                val newManga = dataManager
-                    .mangaProvider
-                    .fetchNewManga(offset)
+                val newManga = mangaRepo.getMangaList(offset)
 
                 currentPage = offset
                 hasNextPage.value = newManga.isNotEmpty()

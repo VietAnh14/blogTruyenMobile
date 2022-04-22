@@ -2,7 +2,7 @@ package com.vianh.blogtruyen
 
 import android.app.Application
 import com.vianh.blogtruyen.data.prefs.prefsModule
-import com.vianh.blogtruyen.di.appModule
+import com.vianh.blogtruyen.data.dataModule
 import com.vianh.blogtruyen.di.viewModelModule
 import com.vianh.blogtruyen.features.download.DownloadNotificationHelper
 import com.vianh.blogtruyen.features.download.downloadModule
@@ -28,7 +28,7 @@ class BlogApp: Application() {
             androidContext(this@BlogApp)
             modules(
                 prefsModule,
-                appModule,
+                dataModule,
                 viewModelModule,
                 historyModule,
                 infoModule,
