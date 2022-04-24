@@ -5,27 +5,20 @@ import com.vianh.blogtruyen.data.db.MangaDb
 import com.vianh.blogtruyen.data.db.entity.*
 import com.vianh.blogtruyen.data.model.Chapter
 import com.vianh.blogtruyen.data.model.Manga
-import com.vianh.blogtruyen.data.remote.MangaProvider
 import com.vianh.blogtruyen.utils.ext.mapList
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
 
-interface MangaRepo: MangaProvider {
+interface AppMangaRepo {
     suspend fun upsertManga(manga: Manga, updateCategories: Boolean = true)
 
-    suspend fun fetchMangaDetails(manga: Manga, remote: Boolean = true): Manga
-
-    suspend fun loadChapters(mangaId: Int, remote: Boolean = true): List<Chapter>
+    suspend fun findMangaById(mangaId: Int): Manga?
 
     suspend fun markChapterAsRead(chapter: Chapter, mangaId: Int)
 
     fun observeChapter(mangaId: Int): Flow<List<Chapter>>
 }
 
-class MangaRepository(
-    private val db: MangaDb,
-    private val provider: MangaProvider
-) : MangaRepo, MangaProvider by provider {
+class AppMangaRepository(private val db: MangaDb) : AppMangaRepo {
 
     override suspend fun upsertManga(manga: Manga, updateCategories: Boolean) {
         db.withTransaction {
@@ -41,34 +34,8 @@ class MangaRepository(
         }
     }
 
-    // TODO: USE ID
-    override suspend fun fetchMangaDetails(manga: Manga, remote: Boolean): Manga {
-        return if (remote) {
-            val details = provider.getMangaDetails(manga)
-            upsertManga(details, true)
-            details
-        } else {
-            db.mangaDao.getFullMangaById(manga.id)?.toManga()
-                ?: throw IllegalStateException("Cannot found Manga")
-        }
-    }
-
-    override suspend fun loadChapters(mangaId: Int, remote: Boolean): List<Chapter> {
-        if (remote) {
-            val readIds = db.chapterDao.observeReadChapterByMangaId(mangaId)
-                .mapList { it.id }
-                .first()
-                .toSet()
-
-            return provider
-                .getChapterList(mangaId)
-                .map {
-                    it.read = readIds.contains(it.id)
-                    it
-                }
-        }
-
-        return observeChapter(mangaId).first()
+    override suspend fun findMangaById(mangaId: Int): Manga? {
+        return db.mangaDao.getFullMangaById(mangaId)?.toManga()
     }
 
     override suspend fun markChapterAsRead(chapter: Chapter, mangaId: Int) {

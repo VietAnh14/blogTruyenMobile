@@ -17,7 +17,7 @@ import com.vianh.blogtruyen.features.feed.list.NewFeedItem
 import com.vianh.blogtruyen.features.list.HomeFragment
 import com.vianh.blogtruyen.features.list.MangaItem
 import com.vianh.blogtruyen.features.search.SearchFragment
-import com.vianh.blogtruyen.views.recycler.CarouselLayoutManager
+import com.vianh.blogtruyen.features.views.recycler.CarouselLayoutManager
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import java.util.concurrent.TimeUnit
 

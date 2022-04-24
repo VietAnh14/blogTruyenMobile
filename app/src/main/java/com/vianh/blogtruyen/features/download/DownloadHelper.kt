@@ -54,7 +54,7 @@ class DownloadHelper(
                 cover?.copyTo(File(localSourceRepo.getCoverDir(), coverFileName), true)
             }
 
-            val pages = mangaProvider.getChapterPage(chapter.url)
+            val pages = mangaProvider.getChapterPage(chapter)
             var successPage = 0
             val chapterDir = localSourceRepo
                 .getChapterDir(manga.id, manga.title, chapter)

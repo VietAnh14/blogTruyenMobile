@@ -7,7 +7,7 @@
     android:layout_width="100dp"
     android:layout_height="wrap_content">
 
-    <com.vianh.blogtruyen.views.CardImageView
+    <com.vianh.blogtruyen.features.views.CardImageView
         android:id="@+id/card_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

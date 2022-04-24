@@ -1,4 +1,4 @@
-package com.vianh.blogtruyen.views
+package com.vianh.blogtruyen.features.views
 
 import android.annotation.SuppressLint
 import android.content.Context

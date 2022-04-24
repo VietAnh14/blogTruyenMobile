@@ -6,11 +6,12 @@ import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.vianh.blogtruyen.data.model.Chapter
 import com.vianh.blogtruyen.data.model.Manga
+import com.vianh.blogtruyen.data.repo.MangaProviderRepo
 import com.vianh.blogtruyen.features.base.BaseVM
 import com.vianh.blogtruyen.features.base.list.items.ErrorItem
 import com.vianh.blogtruyen.features.base.list.items.ListItem
 import com.vianh.blogtruyen.features.base.list.items.LoadingItem
-import com.vianh.blogtruyen.features.details.data.MangaRepo
+import com.vianh.blogtruyen.features.details.data.AppMangaRepo
 import com.vianh.blogtruyen.features.local.LocalSourceRepo
 import com.vianh.blogtruyen.features.reader.list.ReaderItem
 import kotlinx.coroutines.CancellationException
@@ -21,7 +22,8 @@ import kotlinx.coroutines.flow.*
 
 class ReaderViewModel(
     state: ReaderState,
-    private val mangaRepo: MangaRepo,
+    private val appMangaRepo: AppMangaRepo,
+    private val mangaProviderRepo: MangaProviderRepo,
     private val localSourceRepo: LocalSourceRepo,
 ) : BaseVM() {
 
@@ -70,7 +72,7 @@ class ReaderViewModel(
             val pages = if (isOffline) {
                 localSourceRepo.loadPages(manga, chapter)
             } else {
-                mangaRepo.getChapterPage(chapter.url)
+                mangaProviderRepo.getChapterPages(chapter)
             }
 
             currentChapter.value = chapter.copy(pages = pages)
@@ -87,7 +89,7 @@ class ReaderViewModel(
             pageItems.add(ReaderItem.TransitionItem(transitionItemType, currentChapter.value))
 
             listItems.value = pageItems
-            mangaRepo.markChapterAsRead(chapter, manga.id)
+            appMangaRepo.markChapterAsRead(chapter, manga.id)
         }
     }
 

@@ -16,7 +16,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/appbar">
-        <com.vianh.blogtruyen.views.recycler.AutoColumnRecyclerview
+        <com.vianh.blogtruyen.features.views.recycler.AutoColumnRecyclerview
             android:id="@+id/feedRecycler"
             android:paddingTop="4dp"
             android:clipToPadding="false"

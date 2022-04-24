@@ -22,7 +22,7 @@ import com.vianh.blogtruyen.R
 import com.vianh.blogtruyen.data.model.Manga
 import com.vianh.blogtruyen.databinding.MangaDetailsFragmentBinding
 import com.vianh.blogtruyen.features.base.BaseFragment
-import com.vianh.blogtruyen.features.main.MainActivity
+import com.vianh.blogtruyen.application.MainActivity
 import com.vianh.blogtruyen.features.main.MainViewModel
 import com.vianh.blogtruyen.utils.PendingIntentHelper
 import com.vianh.blogtruyen.utils.ext.getSurfaceColorPrimary

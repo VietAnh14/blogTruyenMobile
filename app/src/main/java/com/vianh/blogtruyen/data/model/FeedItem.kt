@@ -1,6 +1,4 @@
-package com.vianh.blogtruyen.data.remote
-
-import com.vianh.blogtruyen.data.model.Manga
+package com.vianh.blogtruyen.data.model
 
 data class FeedItem (
     val hotManga: List<Manga>,

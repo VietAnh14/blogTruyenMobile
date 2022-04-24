@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import com.vianh.blogtruyen.databinding.CommentPageFragmentBinding
 import com.vianh.blogtruyen.features.base.BaseFragment
 import com.vianh.blogtruyen.features.details.MangaDetailsViewModel
-import com.vianh.blogtruyen.views.recycler.ScrollLoadMore
+import com.vianh.blogtruyen.features.views.recycler.ScrollLoadMore
 import org.koin.androidx.viewmodel.ext.android.getViewModel
 
 class CommentPageFragment: BaseFragment<CommentPageFragmentBinding>() {

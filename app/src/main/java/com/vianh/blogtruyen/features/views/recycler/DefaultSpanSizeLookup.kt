@@ -1,4 +1,4 @@
-package com.vianh.blogtruyen.views.recycler
+package com.vianh.blogtruyen.features.views.recycler
 
 import android.annotation.SuppressLint
 import android.util.Log

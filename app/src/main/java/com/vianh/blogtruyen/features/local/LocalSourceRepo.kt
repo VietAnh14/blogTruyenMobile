@@ -10,6 +10,9 @@ import java.io.File
 
 class LocalSourceRepo(private val context: Context, private val db: MangaDb) {
 
+    suspend fun getMangaDetails(mangaId: Int): Manga? {
+        return db.mangaDao.getMangaById(mangaId)?.toManga()
+    }
 
     suspend fun getMangaList(): List<Manga> {
         val mangaDir = getStorageDir()

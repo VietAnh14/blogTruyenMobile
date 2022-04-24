@@ -13,15 +13,15 @@ android {
         applicationId "com.vianh.blogtruyen"
         minSdkVersion 21
         targetSdkVersion 31
-        versionCode 18
+        versionCode 19
         versionName "0.18"
         setArchivesBaseName("blogTruyen_$versionName")
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
-        javaCompileOptions {
-            annotationProcessorOptions {
-                arguments += ["room.schemaLocation": "$projectDir/schemas".toString()]
+        kapt {
+            arguments {
+                arg("room.schemaLocation", "$projectDir/schemas".toString())
             }
         }
     }

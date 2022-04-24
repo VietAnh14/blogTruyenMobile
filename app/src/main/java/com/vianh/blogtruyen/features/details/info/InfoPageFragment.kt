@@ -26,6 +26,7 @@ import com.vianh.blogtruyen.features.details.info.adapter.*
 import com.vianh.blogtruyen.features.download.DownloadService
 import com.vianh.blogtruyen.features.reader.ReaderFragment
 import com.vianh.blogtruyen.features.reader.ReaderState
+import com.vianh.blogtruyen.utils.ext.getThemeColor
 import org.koin.androidx.viewmodel.ext.android.getViewModel
 import timber.log.Timber
 
@@ -116,8 +117,8 @@ class InfoPageFragment : BaseFragment<ChapterPageFragmentBinding>(), ChapterVH.C
 
             actionWebview.setOnClickListener {
                 val builder = CustomTabsIntent.Builder()
-                val toolbarColor = ContextCompat.getColor(requireContext(), R.color.colorPrimary)
-                val secondaryColor = ContextCompat.getColor(requireContext(), R.color.colorAccent)
+                val toolbarColor = requireContext().getThemeColor(R.attr.colorPrimary)
+                val secondaryColor = requireContext().getThemeColor(R.attr.colorSecondary)
 
                 val defaultColors = CustomTabColorSchemeParams.Builder()
                     .setSecondaryToolbarColor(secondaryColor)
@@ -170,7 +171,7 @@ class InfoPageFragment : BaseFragment<ChapterPageFragmentBinding>(), ChapterVH.C
     override fun onMenuItemClick(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.select_all -> {
-                chapterAdapter?.selectChapters(viewModel.chapters.value)
+                chapterAdapter?.selectChapters(viewModel.mainChapters.value)
                 updateCab()
                 true
             }

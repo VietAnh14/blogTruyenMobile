@@ -17,6 +17,8 @@ interface FavoriteRepository {
 
     suspend fun removeFromFavorite(mangaId: Int)
 
+    suspend fun toggleFavorite(manga: Manga)
+
     suspend fun upsertFavorite(favorite: Favorite)
 
     suspend fun clearNewChapters(mangaId: Int)
@@ -35,6 +37,15 @@ class FavoriteRepo(private val db: MangaDb) : FavoriteRepository {
 
     override suspend fun removeFromFavorite(mangaId: Int) {
         db.favoriteDao.delete(mangaId)
+    }
+
+    override suspend fun toggleFavorite(manga: Manga) {
+        val isFavorite = db.favoriteDao.findByMangaId(manga.id) != null
+        if (isFavorite) {
+            addToFavorite(manga)
+        } else {
+            removeFromFavorite(manga.id)
+        }
     }
 
     override suspend fun upsertFavorite(favorite: Favorite) {

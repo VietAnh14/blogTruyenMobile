@@ -1,10 +1,7 @@
 package com.vianh.blogtruyen.data.remote
 
 import com.vianh.blogtruyen.BuildConfig
-import com.vianh.blogtruyen.data.model.Category
-import com.vianh.blogtruyen.data.model.Chapter
-import com.vianh.blogtruyen.data.model.Comment
-import com.vianh.blogtruyen.data.model.Manga
+import com.vianh.blogtruyen.data.model.*
 import com.vianh.blogtruyen.utils.ext.getBodyString
 import com.vianh.blogtruyen.utils.ext.mapToSet
 import kotlinx.coroutines.Dispatchers
@@ -26,8 +23,6 @@ class BlogtruyenProvider(private val client: OkHttpClient) : MangaProvider {
         private const val AJAX_LOAD_CHAPTER = BuildConfig.HOST + "/Chapter/LoadListChapter"
         private const val AJAX_LOAD_COMMENT = BuildConfig.HOST + "/Comment/AjaxLoadComment"
     }
-
-    override val baseUrl: String = BuildConfig.HOST
 
     override suspend fun getMangaList(pageNumber: Int): List<Manga> {
         return withContext(Dispatchers.IO) {
@@ -79,9 +74,9 @@ class BlogtruyenProvider(private val client: OkHttpClient) : MangaProvider {
         }
     }
 
-    override suspend fun getChapterPage(link: String): List<String> {
+    override suspend fun getChapterPage(chapter: Chapter): List<String> {
         return withContext(Dispatchers.IO) {
-            val url = BuildConfig.HOST_FULL + link
+            val url = BuildConfig.HOST_FULL + chapter
             val request = Request.Builder().url(url).build()
             val content = client.newCall(request).getBodyString()
             return@withContext parseChapter(content)

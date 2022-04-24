@@ -7,10 +7,10 @@ import androidx.core.app.NotificationManagerCompat
 import androidx.work.*
 import com.vianh.blogtruyen.R
 import com.vianh.blogtruyen.data.model.Favorite
-import com.vianh.blogtruyen.features.details.data.MangaRepo
 import com.vianh.blogtruyen.features.download.DownloadNotificationHelper
 import com.vianh.blogtruyen.features.favorites.data.FavoriteRepository
-import com.vianh.blogtruyen.features.main.MainActivity
+import com.vianh.blogtruyen.application.MainActivity
+import com.vianh.blogtruyen.data.repo.MangaProviderRepo
 import com.vianh.blogtruyen.utils.PendingIntentHelper
 import kotlinx.coroutines.flow.first
 import org.koin.core.component.KoinComponent
@@ -21,7 +21,7 @@ class UpdateFavoriteWorker(context: Context, workerParameters: WorkerParameters)
     CoroutineWorker(context, workerParameters), KoinComponent {
 
     private val favoriteRepository by inject<FavoriteRepository>()
-    private val mangaRepository by inject<MangaRepo>()
+    private val mangaRepo by inject<MangaProviderRepo>()
 
     override suspend fun doWork(): Result {
         val favoriteMangas = favoriteRepository.observeAll().first()
@@ -67,7 +67,7 @@ class UpdateFavoriteWorker(context: Context, workerParameters: WorkerParameters)
 
         for (favorite in favorites) {
             val manga = favorite.manga
-            val remoteChapters = mangaRepository.loadChapters(manga.id, true)
+            val remoteChapters = mangaRepo.getChapters(manga.id)
             val knownChapterCount = favorite.currentChapterCount + favorite.newChapterCount
             val newChapterCount = remoteChapters.size - knownChapterCount
 

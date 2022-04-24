@@ -1,4 +1,4 @@
-package com.vianh.blogtruyen.features.main
+package com.vianh.blogtruyen.application
 
 import android.content.Context
 import android.content.Intent
@@ -18,9 +18,11 @@ import com.vianh.blogtruyen.features.favorites.UpdateFavoriteWorker
 import com.vianh.blogtruyen.features.feed.NewFeedFragment
 import com.vianh.blogtruyen.features.history.HistoryFragment
 import com.vianh.blogtruyen.features.local.LocalMangaFragment
+import com.vianh.blogtruyen.features.main.MainViewModel
+import com.vianh.blogtruyen.features.main.NavigationHelper
 import com.vianh.blogtruyen.features.update.UpdateHelper
 import com.vianh.blogtruyen.utils.ext.showToast
-import com.vianh.blogtruyen.views.ViewHeightAnimator
+import com.vianh.blogtruyen.features.views.ViewHeightAnimator
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : BaseActivity<HomeActivityBinding>(), FragmentManager.OnBackStackChangedListener {

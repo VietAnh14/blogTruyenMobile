@@ -10,9 +10,9 @@ import androidx.core.view.updateLayoutParams
 import com.vianh.blogtruyen.R
 import com.vianh.blogtruyen.databinding.HomeFragmentBinding
 import com.vianh.blogtruyen.features.details.MangaDetailsFragment
-import com.vianh.blogtruyen.features.main.MainActivity
+import com.vianh.blogtruyen.application.MainActivity
 import com.vianh.blogtruyen.features.search.SearchFragment
-import com.vianh.blogtruyen.views.recycler.DefaultSpanSizeLookup
+import com.vianh.blogtruyen.features.views.recycler.DefaultSpanSizeLookup
 import com.vianh.blogtruyen.utils.ext.toPx
 import org.koin.androidx.viewmodel.ext.android.viewModel
 

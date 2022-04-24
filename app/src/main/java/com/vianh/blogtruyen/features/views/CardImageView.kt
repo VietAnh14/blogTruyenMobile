@@ -1,4 +1,4 @@
-package com.vianh.blogtruyen.views
+package com.vianh.blogtruyen.features.views
 
 import android.content.Context
 import android.graphics.drawable.Drawable

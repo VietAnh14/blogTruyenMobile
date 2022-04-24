@@ -1,4 +1,4 @@
-package com.vianh.blogtruyen.views.recycler
+package com.vianh.blogtruyen.features.views.recycler
 
 import android.animation.ValueAnimator
 import android.annotation.SuppressLint
