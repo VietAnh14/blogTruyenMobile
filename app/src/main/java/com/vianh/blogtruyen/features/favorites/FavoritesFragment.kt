@@ -9,7 +9,7 @@ import androidx.appcompat.widget.Toolbar
 import com.vianh.blogtruyen.R
 import com.vianh.blogtruyen.databinding.HomeFragmentBinding
 import com.vianh.blogtruyen.features.base.BaseFragment
-import com.vianh.blogtruyen.features.details.MangaDetailsFragment
+import com.vianh.blogtruyen.features.details.ui.MangaDetailsFragment
 import com.vianh.blogtruyen.features.list.MangaItem
 import com.vianh.blogtruyen.features.list.MangaListAdapter
 import com.vianh.blogtruyen.features.views.recycler.DefaultSpanSizeLookup

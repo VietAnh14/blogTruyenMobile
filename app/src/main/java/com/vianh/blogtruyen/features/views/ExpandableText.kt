@@ -3,9 +3,11 @@ package com.vianh.blogtruyen.features.views
 import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
+import android.util.Log
 import android.view.LayoutInflater
 import android.widget.FrameLayout
 import androidx.core.view.doOnLayout
+import androidx.core.view.doOnPreDraw
 import androidx.core.view.updatePadding
 import com.vianh.blogtruyen.R
 import com.vianh.blogtruyen.databinding.ExpandableTextViewBinding
@@ -22,11 +24,11 @@ class ExpandableText @JvmOverloads constructor(
     private var text: String? = null
     private var maxLine = 3
     private var isExpand = false
-    private val canShrink
-        get() = binding.content.lineCount > maxLine
-
     private val contentText
         get() = binding.content
+
+    private val canShrink
+        get() = binding.content.lineCount > maxLine
 
     init {
         if (attrs != null) {
@@ -43,7 +45,8 @@ class ExpandableText @JvmOverloads constructor(
             toggleExpand()
         }
 
-        doOnLayout {
+        // Wait for layout to get line count, doOnLayout lineCount return 0 so we use onPreDraw
+        doOnPreDraw {
             syncState()
         }
     }

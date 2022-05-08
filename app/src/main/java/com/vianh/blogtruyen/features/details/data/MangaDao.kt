@@ -21,4 +21,8 @@ abstract class MangaDao: BaseDao<MangaEntity>() {
 
     @Insert
     abstract suspend fun insertCategoryRelation(relations: Collection<MangaCategory>)
+
+    suspend fun requireManga(mangaId: Int): MangaEntity {
+        return getMangaById(mangaId) ?: throw IllegalStateException("No manga found")
+    }
 }

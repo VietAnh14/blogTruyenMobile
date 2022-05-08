@@ -1,4 +1,4 @@
-package com.vianh.blogtruyen.features.details.info
+package com.vianh.blogtruyen.features.details.ui.info
 
 import android.net.Uri
 import android.os.Bundle
@@ -8,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.browser.customtabs.CustomTabColorSchemeParams
 import androidx.browser.customtabs.CustomTabsIntent
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -21,8 +20,8 @@ import com.vianh.blogtruyen.data.model.Favorite
 import com.vianh.blogtruyen.data.model.Manga
 import com.vianh.blogtruyen.databinding.ChapterPageFragmentBinding
 import com.vianh.blogtruyen.features.base.BaseFragment
-import com.vianh.blogtruyen.features.details.MangaDetailsViewModel
-import com.vianh.blogtruyen.features.details.info.adapter.*
+import com.vianh.blogtruyen.features.details.ui.MangaDetailsViewModel
+import com.vianh.blogtruyen.features.details.ui.info.adapter.*
 import com.vianh.blogtruyen.features.download.DownloadService
 import com.vianh.blogtruyen.features.reader.ReaderFragment
 import com.vianh.blogtruyen.features.reader.ReaderState
@@ -141,7 +140,9 @@ class InfoPageFragment : BaseFragment<ChapterPageFragmentBinding>(), ChapterVH.C
     private fun toReaderFragment(chapter: Chapter) {
         hostActivity?.changeFragment(
             ReaderFragment
-            .newInstance(ReaderState(viewModel.currentManga, chapter, viewModel.isOffline)), true)
+                .newInstance(ReaderState(viewModel.currentManga, chapter, viewModel.isOffline)),
+            true
+        )
     }
 
     private fun updateCab() {

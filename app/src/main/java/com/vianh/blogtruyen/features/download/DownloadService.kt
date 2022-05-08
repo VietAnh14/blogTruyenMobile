@@ -74,7 +74,7 @@ class DownloadService : LifecycleService() {
             }
             .catch { Timber.e(it) }
             .onCompletion {
-                downloadState.value = DownloadState.Completed
+                downloadState.value = DownloadState.Downloaded
                 completeDownload(downloadItem, chapter.id.hashCode())
             }
 
@@ -113,16 +113,14 @@ class DownloadService : LifecycleService() {
 
 
     companion object {
-
+        private const val DOWNLOAD_INTENT_KEY = "DOWNLOAD_INTENT"
         val downloadQueue by lazy { MutableStateFlow(listOf<Pair<DownloadItem, Flow<Int>>>()) }
 
-        private const val DOWNLOAD_INTENT_KEY = "DOWNLOAD_INTENT"
-
         fun download(context: Context, manga: Manga, chapters: List<Chapter>) {
-            // Don't save large items to bundle
-            val emptyChapterManga = manga.copy(chapters = emptyList())
             val intent = Intent(context, DownloadService::class.java)
-            intent.putExtra(DOWNLOAD_INTENT_KEY, DownloadIntent(emptyChapterManga, chapters))
+
+            // Don't save large items to bundle
+            intent.putExtra(DOWNLOAD_INTENT_KEY, DownloadIntent(manga.withoutChapter(), chapters))
             context.startService(intent)
         }
     }

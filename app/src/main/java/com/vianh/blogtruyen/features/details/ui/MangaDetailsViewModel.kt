@@ -1,4 +1,4 @@
-package com.vianh.blogtruyen.features.details
+package com.vianh.blogtruyen.features.details.ui
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -10,15 +10,16 @@ import com.vianh.blogtruyen.data.model.Chapter
 import com.vianh.blogtruyen.data.model.Comment
 import com.vianh.blogtruyen.data.model.Favorite
 import com.vianh.blogtruyen.data.model.Manga
-import com.vianh.blogtruyen.data.repo.MangaProviderRepo
 import com.vianh.blogtruyen.features.base.BaseVM
 import com.vianh.blogtruyen.features.details.data.AppMangaRepo
-import com.vianh.blogtruyen.features.details.info.adapter.ChapterItem
-import com.vianh.blogtruyen.features.details.info.adapter.HeaderItem
+import com.vianh.blogtruyen.features.details.ui.info.adapter.ChapterItem
+import com.vianh.blogtruyen.features.details.ui.info.adapter.HeaderItem
 import com.vianh.blogtruyen.features.download.DownloadService
 import com.vianh.blogtruyen.features.download.DownloadState
 import com.vianh.blogtruyen.features.favorites.data.FavoriteRepository
-import com.vianh.blogtruyen.features.local.LocalSourceRepo
+import com.vianh.blogtruyen.data.repo.LocalSourceRepo
+import com.vianh.blogtruyen.data.repo.ProviderRepoManager
+import com.vianh.blogtruyen.features.download.DownloadItem
 import com.vianh.blogtruyen.utils.SingleLiveEvent
 import com.vianh.blogtruyen.utils.ext.asLiveDataDistinct
 import com.vianh.blogtruyen.utils.ext.mapToSet
@@ -29,14 +30,13 @@ import kotlinx.coroutines.flow.*
 class MangaDetailsViewModel(
     manga: Manga,
     val isOffline: Boolean,
-    private val mangaProviderRepo: MangaProviderRepo,
+    private val providerRepoManager: ProviderRepoManager,
     private val appMangaRepo: AppMangaRepo,
     private val favoriteRepo: FavoriteRepository,
     private val localSourceRepo: LocalSourceRepo,
 ) : BaseVM() {
 
-    // Keep scroll state
-    var lastScroll = -1f
+    private val providerRepo = providerRepoManager.create(isOffline)
 
     val toReaderEvent = SingleLiveEvent<Chapter>()
     val onNewPageSelected = SingleLiveEvent<Int>()
@@ -46,50 +46,19 @@ class MangaDetailsViewModel(
     private var commentJob: Job? = null
     val comments: MutableLiveData<List<Comment>> = MutableLiveData(listOf())
 
-    val currentManga
-        get() = mangaFlow.value
-
     private val descendingSort = MutableStateFlow(true)
     private val mangaFlow: MutableStateFlow<Manga> = MutableStateFlow(manga)
     private val localChapters = mangaFlow.map { it.id }.flatMapLatest { appMangaRepo.observeChapter(it) }
-    private val remoteChapter = MutableStateFlow<List<Chapter>>(emptyList())
-    val mainChapters = combine(localChapters, remoteChapter) { local, remote ->
-        val readIds = local.filter { it.read }.map { it.id }.toSet()
-        remote.map {
-            it.read = readIds.contains(it.id)
-            it
-        }
-    }.stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
-
-    private val downloadingState = DownloadService
-        .downloadQueue
-        .mapList { pair -> pair.first }
-        .map { items -> items.filter { it.manga.id == manga.id } }
-        .distinctUntilChanged()
-        .map { downloadItem -> downloadItem.associateBy { it.chapter.id } }
+    private val remoteChapter = mangaFlow.map { it.chapters }
+    val mainChapters = combine(localChapters, remoteChapter, this::combineChapters)
+        .stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
 
     val chapterItems = combine(
         mainChapters,
-        downloadingState,
-        descendingSort
-    ) { mainChapters, downloading, desc ->
-        val downloadedIds = localSourceRepo.getChapters(manga.id).mapToSet { it.id }
-
-        val chapters = if (desc) mainChapters.sortedByDescending { it.number } else mainChapters.sortedBy { it.number }
-        chapters.map {
-            var state: DownloadState = DownloadState.NotDownloaded
-            if (downloadedIds.contains(it.id)) {
-                state = DownloadState.Completed
-            }
-
-            val downloadItem = downloading[it.id]
-            if (downloadItem != null) {
-                ChapterItem(it, downloadItem.state)
-            } else {
-                ChapterItem(it, MutableStateFlow(state))
-            }
-        }
-    }.asLiveDataDistinct(Dispatchers.Default)
+        getDownloadState(manga),
+        descendingSort,
+        this::combineContent
+    ).asLiveDataDistinct(Dispatchers.Default)
 
     val headerItem = combine(mainChapters, descendingSort) { chapters, isDescending ->
         HeaderItem(chapters.size, isDescending)
@@ -99,7 +68,8 @@ class MangaDetailsViewModel(
         .observeFavorite(manga.id)
         .distinctUntilChangedBy { it?.manga?.id }
         .asLiveData(viewModelScope.coroutineContext)
-    val isFavorite = favorite.value != null
+    val isFavorite
+        get() = favorite.value != null
 
     val readButtonState = mainChapters.map { chapters ->
         val enable = chapters.isNotEmpty()
@@ -110,6 +80,8 @@ class MangaDetailsViewModel(
     }.asLiveDataDistinct(Dispatchers.Default, Pair(false, R.string.start_reading))
 
     val manga = mangaFlow.asLiveData(viewModelScope.coroutineContext)
+    val currentManga
+        get() = mangaFlow.value
 
     init {
         loadMangaInfo()
@@ -126,25 +98,15 @@ class MangaDetailsViewModel(
 
     private suspend fun loadDetails() {
         // Keep current chapter
-        val currentChapter = currentManga.chapters
-        val mangaDetails = if (isOffline) {
-            localSourceRepo.getMangaDetails(currentManga.id) ?: throw IllegalStateException("No manga found")
-        } else {
-            mangaProviderRepo.getMangaDetails(currentManga)
-        }
-
-        mangaFlow.value = mangaDetails.copy(chapters = currentChapter)
+        val mangaDetails = providerRepo.getMangaDetails(currentManga)
+        val currentChapters = currentManga.chapters
+        mangaFlow.update { mangaDetails.copy(chapters = currentChapters) }
+        appMangaRepo.updateMangaCategory(mangaDetails)
     }
 
     private suspend fun loadChapters() {
-        val sourceChapters = if (isOffline) {
-            localSourceRepo.getChapters(currentManga.id)
-        } else {
-            mangaProviderRepo.getChapters(currentManga.id)
-        }
-
+        val sourceChapters = providerRepo.getChapters(currentManga.id)
         mangaFlow.update { it.copy(chapters = sourceChapters) }
-        remoteChapter.value = sourceChapters
 
         if (!isOffline && isFavorite) {
             val newFavorite = favorite.value?.copy(
@@ -155,6 +117,44 @@ class MangaDetailsViewModel(
             favoriteRepo.upsertFavorite(newFavorite)
         }
     }
+
+    private fun combineChapters(local: List<Chapter>, remote: List<Chapter>): List<Chapter> {
+        val readIds = local.filter { it.read }.map { it.id }.toSet()
+        return remote.map {
+            it.read = readIds.contains(it.id)
+            it
+        }
+    }
+
+    private suspend fun combineContent(
+        chapters: List<Chapter>,
+        downloadState: Map<String, DownloadItem>,
+        desc: Boolean
+    ): List<ChapterItem> {
+        val downloadedIds = localSourceRepo.getChapters(currentManga.id).mapToSet { it.id }
+        val result = if (desc) {
+            chapters.sortedByDescending { it.number }
+        } else {
+            chapters.sortedBy { it.number }
+        }
+
+        return result.map {
+            var state: DownloadState = DownloadState.NotDownloaded
+            if (downloadedIds.contains(it.id)) {
+                state = DownloadState.Downloaded
+            }
+
+            val downloadItemState = downloadState[it.id]?.state ?: MutableStateFlow(state)
+            ChapterItem(it, downloadItemState)
+        }
+    }
+
+    private fun getDownloadState(manga: Manga) = DownloadService
+        .downloadQueue
+        .mapList { pair -> pair.first }
+        .map { items -> items.filter { it.manga.id == manga.id } }
+        .distinctUntilChanged()
+        .map { downloadItem -> downloadItem.associateBy { it.chapter.id } }
 
     fun toggleFavorite() {
         launchJob {
@@ -171,7 +171,7 @@ class MangaDetailsViewModel(
     }
 
     fun continueReading() {
-        val chapters = remoteChapter.value
+        val chapters = mainChapters.value
         val lastReadChapter = chapters
             .filter { it.read }
             .maxByOrNull { it.number } ?: chapters.first { it.number == 1 }
@@ -188,12 +188,12 @@ class MangaDetailsViewModel(
     }
 
     fun loadComments(offset: Int = commentPage) {
-        if (commentJob?.isCompleted == false || !hasNextCommentPage || isOffline) {
+        if (commentJob?.isCompleted == false || !hasNextCommentPage) {
             return
         }
 
         commentJob = launchJob(Dispatchers.Default) {
-            val commentMap = mangaProviderRepo.getComment(currentManga.id, offset)
+            val commentMap = providerRepo.getComment(currentManga.id, offset)
             hasNextCommentPage = commentMap.isNotEmpty()
             val flattenComments = ArrayList(comments.value!!)
             for (comment in commentMap) {

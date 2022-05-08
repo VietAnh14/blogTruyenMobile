@@ -8,6 +8,7 @@ import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.FragmentTransaction
 import androidx.fragment.app.commit
 import com.vianh.blogtruyen.R
+import com.vianh.blogtruyen.data.model.Chapter
 import com.vianh.blogtruyen.data.prefs.AppSettings
 import com.vianh.blogtruyen.data.prefs.ReaderMode
 import com.vianh.blogtruyen.databinding.ReaderFragmentBinding
@@ -33,6 +34,9 @@ class ReaderFragment : BaseFragment<ReaderFragmentBinding>(), Reader.ReaderContr
 
     private val appSettings by inject<AppSettings>()
     private var lastSavedState: Bundle? = null
+
+    // Avoid passing large list to bundle
+    var chapters: List<Chapter>? = null
 
     override val readerViewModel by viewModel<ReaderViewModel> { parametersOf(getRestoreState()) }
 
@@ -68,7 +72,6 @@ class ReaderFragment : BaseFragment<ReaderFragmentBinding>(), Reader.ReaderContr
             }
 
             pageSlider.addOnChangeListener { slider, value, fromUser ->
-                pageText.text = "${value.toInt()}/${slider.valueTo.toInt()}"
                 if (fromUser) {
                     currentReader?.toPage(value.toInt(), false)
                 }
@@ -110,8 +113,12 @@ class ReaderFragment : BaseFragment<ReaderFragmentBinding>(), Reader.ReaderContr
 
     private fun getRestoreState(): ReaderState {
         val bundle = lastSavedState ?: arguments
-        val state = bundle?.getParcelable<ReaderState>(READER_STATE_KEY)
-        return state ?: throw IllegalStateException("No reader state")
+        var state = bundle?.getParcelable<ReaderState>(READER_STATE_KEY) ?: throw IllegalStateException("No reader state")
+        if (!chapters.isNullOrEmpty()) {
+            state = state.withChapters(chapters.orEmpty())
+        }
+
+        return state
     }
 
     override fun applyInsets(insets: Insets): Boolean {
@@ -131,9 +138,10 @@ class ReaderFragment : BaseFragment<ReaderFragmentBinding>(), Reader.ReaderContr
     }
 
     private fun bindControllerState(controllerState: ControllerState) {
+        requireBinding.pageText.text = "${controllerState.page}/${controllerState.pageSize}"
         requireBinding.pageSlider.apply {
-            value = controllerState.page.toFloat()
             valueTo = controllerState.pageSize.toFloat()
+            value = controllerState.page.toFloat()
             isEnabled = controllerState.enable
         }
     }
@@ -186,10 +194,11 @@ class ReaderFragment : BaseFragment<ReaderFragmentBinding>(), Reader.ReaderContr
 
         fun newInstance(readerState: ReaderState): ReaderFragment {
             val bundle = Bundle(1).apply {
-                putParcelable(READER_STATE_KEY, readerState)
+                putParcelable(READER_STATE_KEY, readerState.withoutChapters())
             }
 
             return ReaderFragment().apply {
+                chapters = readerState.manga.chapters
                 arguments = bundle
             }
         }

@@ -9,7 +9,7 @@ interface MangaProviderRepo {
     suspend fun getList(page: Int): List<Manga>
     suspend fun getMangaDetails(manga: Manga): Manga
     suspend fun getChapters(mangaId: Int): List<Chapter>
-    suspend fun getChapterPages(chapter: Chapter): List<String>
+    suspend fun getChapterPages(chapter: Chapter, mangaId: Int): List<String>
     suspend fun getComment(mangaId: Int, offset: Int): Map<Comment, List<Comment>>
     suspend fun getNewFeed(): FeedItem
 }

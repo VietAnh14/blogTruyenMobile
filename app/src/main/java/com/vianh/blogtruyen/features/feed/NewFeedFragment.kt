@@ -11,7 +11,7 @@ import com.vianh.blogtruyen.R
 import com.vianh.blogtruyen.databinding.FeedFragmentBinding
 import com.vianh.blogtruyen.features.base.BaseFragment
 import com.vianh.blogtruyen.features.base.list.items.ListItem
-import com.vianh.blogtruyen.features.details.MangaDetailsFragment
+import com.vianh.blogtruyen.features.details.ui.MangaDetailsFragment
 import com.vianh.blogtruyen.features.feed.list.NewFeedAdapter
 import com.vianh.blogtruyen.features.feed.list.NewFeedItem
 import com.vianh.blogtruyen.features.list.HomeFragment

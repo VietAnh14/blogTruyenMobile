@@ -1,16 +1,12 @@
 package com.vianh.blogtruyen.features.download
 
 import android.app.Notification
-import android.app.NotificationChannel
-import android.app.NotificationManager
 import android.content.Context
-import android.os.Build
-import androidx.core.app.NotificationChannelCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.vianh.blogtruyen.R
 import com.vianh.blogtruyen.data.model.Manga
-import com.vianh.blogtruyen.features.details.MangaDetailsFragment
+import com.vianh.blogtruyen.features.details.ui.MangaDetailsFragment
 import com.vianh.blogtruyen.utils.NotificationHelper
 
 class DownloadNotificationHelper(private val context: Context) {

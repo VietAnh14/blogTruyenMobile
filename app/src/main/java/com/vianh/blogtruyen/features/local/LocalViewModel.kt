@@ -3,6 +3,7 @@ package com.vianh.blogtruyen.features.local
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.vianh.blogtruyen.data.model.Manga
+import com.vianh.blogtruyen.data.repo.LocalSourceRepo
 import com.vianh.blogtruyen.features.base.BaseVM
 import com.vianh.blogtruyen.features.base.list.items.EmptyItem
 import com.vianh.blogtruyen.features.list.MangaItem
@@ -27,7 +28,7 @@ class LocalViewModel(private val localRepo: LocalSourceRepo): BaseVM() {
 
     fun loadMangaList() {
         launchLoading(Dispatchers.IO) {
-            content.value = localRepo.getMangaList()
+            content.value = localRepo.getList(0)
         }
     }
 

@@ -7,7 +7,7 @@ import androidx.appcompat.widget.Toolbar
 import com.vianh.blogtruyen.R
 import com.vianh.blogtruyen.databinding.HistoryFragmentBinding
 import com.vianh.blogtruyen.features.base.BaseFragment
-import com.vianh.blogtruyen.features.details.MangaDetailsFragment
+import com.vianh.blogtruyen.features.details.ui.MangaDetailsFragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class HistoryFragment: BaseFragment<HistoryFragmentBinding>() {

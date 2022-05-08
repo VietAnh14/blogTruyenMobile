@@ -1,4 +1,4 @@
-package com.vianh.blogtruyen.features.details.info
+package com.vianh.blogtruyen.features.details.ui.info
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

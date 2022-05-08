@@ -1,4 +1,4 @@
-package com.vianh.blogtruyen.features.details.comments
+package com.vianh.blogtruyen.features.details.ui.comments
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

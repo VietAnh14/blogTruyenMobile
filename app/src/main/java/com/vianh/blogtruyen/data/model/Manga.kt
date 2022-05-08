@@ -16,6 +16,8 @@ data class Manga(
     val chapters: List<Chapter> = listOf()
 ): Parcelable {
 
+    fun withoutChapter() = copy(chapters = emptyList())
+
     companion object {
         const val EMPTY_ID = -1
         fun getEmpty(): Manga {

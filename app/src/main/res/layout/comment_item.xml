@@ -34,7 +34,6 @@
 
     <com.vianh.blogtruyen.features.views.ExpandableText
         android:id="@+id/comment"
-        android:animateLayoutChanges="true"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"

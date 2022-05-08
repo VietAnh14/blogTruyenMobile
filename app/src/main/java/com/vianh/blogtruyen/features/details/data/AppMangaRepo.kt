@@ -9,28 +9,33 @@ import com.vianh.blogtruyen.utils.ext.mapList
 import kotlinx.coroutines.flow.Flow
 
 interface AppMangaRepo {
-    suspend fun upsertManga(manga: Manga, updateCategories: Boolean = true)
+    suspend fun upsertManga(manga: Manga)
+
+    suspend fun updateMangaCategory(manga: Manga)
 
     suspend fun findMangaById(mangaId: Int): Manga?
 
     suspend fun markChapterAsRead(chapter: Chapter, mangaId: Int)
+
+    suspend fun upsertChapter(chapter: Chapter, mangaId: Int)
 
     fun observeChapter(mangaId: Int): Flow<List<Chapter>>
 }
 
 class AppMangaRepository(private val db: MangaDb) : AppMangaRepo {
 
-    override suspend fun upsertManga(manga: Manga, updateCategories: Boolean) {
+    override suspend fun upsertManga(manga: Manga) {
+        db.mangaDao.upsert(MangaEntity.fromManga(manga))
+    }
+
+    override suspend fun updateMangaCategory(manga: Manga) {
         db.withTransaction {
             val mangaId = manga.id
-            db.mangaDao.upsert(MangaEntity.fromManga(manga))
-            if (updateCategories) {
-                db.mangaDao.deleteCategoryRelation(mangaId)
-                val categoryEntities = manga.categories.map { CategoryEntity.fromCategory(it) }
-                db.categoryDao.upsert(categoryEntities)
-                val relations = categoryEntities.map { MangaCategory(mangaId, it.categoryId) }
-                db.mangaDao.insertCategoryRelation(relations)
-            }
+            db.mangaDao.deleteCategoryRelation(mangaId)
+            val categoryEntities = manga.categories.map { CategoryEntity.fromCategory(it) }
+            db.categoryDao.upsert(categoryEntities)
+            val relations = categoryEntities.map { MangaCategory(mangaId, it.categoryId) }
+            db.mangaDao.insertCategoryRelation(relations)
         }
     }
 
@@ -54,5 +59,10 @@ class AppMangaRepository(private val db: MangaDb) : AppMangaRepo {
 
     override fun observeChapter(mangaId: Int): Flow<List<Chapter>> {
         return db.chapterDao.observeChaptersByMangaId(mangaId).mapList { it.toChapter() }
+    }
+
+    override suspend fun upsertChapter(chapter: Chapter, mangaId: Int) {
+        val entity = ChapterEntity.fromChapter(chapter, mangaId)
+        db.chapterDao.upsert(entity)
     }
 }

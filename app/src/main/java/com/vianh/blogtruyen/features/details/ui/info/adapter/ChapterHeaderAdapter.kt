@@ -1,4 +1,4 @@
-package com.vianh.blogtruyen.features.details.info.adapter
+package com.vianh.blogtruyen.features.details.ui.info.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.vianh.blogtruyen.R
 import com.vianh.blogtruyen.databinding.ChapterHeaderItemBinding
-import com.vianh.blogtruyen.features.details.MangaDetailsViewModel
+import com.vianh.blogtruyen.features.details.ui.MangaDetailsViewModel
 
 class ChapterHeaderAdapter(private val viewModel: MangaDetailsViewModel) : ListAdapter<HeaderItem, HeaderVH>(DiffCallback()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HeaderVH {

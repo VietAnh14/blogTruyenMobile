@@ -1,4 +1,4 @@
-package com.vianh.blogtruyen.features.details
+package com.vianh.blogtruyen.features.details.ui
 
 import android.app.PendingIntent
 import android.content.Context
@@ -71,15 +71,8 @@ class MangaDetailsFragment : BaseFragment<MangaDetailsFragmentBinding>() {
     private fun setup() {
         configToolbar(menuId = R.menu.manga_details_menu)
         with(requireBinding) {
-            pager.adapter = ContentPagerAdapter(this@MangaDetailsFragment)
-            TabLayoutMediator(tabLayout, pager) { tab, position ->
-                tab.text = when (position) {
-                    0 -> getString(R.string.manga_info)
-                    1 -> getString(R.string.comment)
-                    else -> "Unknown"
-                }
-            }.attach()
-
+            val pagerAdapter = ContentPagerAdapter(this@MangaDetailsFragment)
+            pager.adapter = pagerAdapter
             pager.registerOnPageChangeCallback(object: ViewPager2.OnPageChangeCallback() {
                 override fun onPageSelected(position: Int) {
                     super.onPageSelected(position)
@@ -87,27 +80,15 @@ class MangaDetailsFragment : BaseFragment<MangaDetailsFragmentBinding>() {
                 }
             })
 
+            TabLayoutMediator(tabLayout, pager, pagerAdapter).attach()
             tabLayout.doOnLayout {
                 toolbar.updateLayoutParams<ViewGroup.MarginLayoutParams> {
                     bottomMargin = it.height
                 }
             }
 
-            // Todo: Restore scroll offset
-            when(viewModel.lastScroll) {
-                0f -> appBarLayout.setExpanded(true)
-                1f -> appBarLayout.setExpanded(false)
-                else -> appBarLayout.setExpanded(true)
-            }
-
             toolbar.setBackgroundColor(Color.TRANSPARENT)
             collapsingToolbar.setContentScrimColor(requireContext().getSurfaceColorPrimary())
-            appBarLayout.addOnOffsetChangedListener(object: AppBarLayout.OnOffsetChangedListener {
-                override fun onOffsetChanged(appBarLayout: AppBarLayout, verticalOffset: Int) {
-                    val progress = -verticalOffset.toFloat()/appBarLayout.totalScrollRange
-                    viewModel.lastScroll = progress
-                }
-            })
         }
     }
 
@@ -150,7 +131,6 @@ class MangaDetailsFragment : BaseFragment<MangaDetailsFragmentBinding>() {
     companion object {
         const val MANGA_BUNDLE_KEY = "MANGA_KEY"
         const val OFFLINE_MODE_KEY = "OFFLINE"
-        const val APPBAR_SCROLL_KEY = "app_bar_scroll"
 
         fun newInstance(manga: Manga, isOffline: Boolean = false): MangaDetailsFragment {
             val bundle = Bundle(2).apply {

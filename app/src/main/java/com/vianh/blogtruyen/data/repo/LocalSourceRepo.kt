@@ -1,20 +1,17 @@
-package com.vianh.blogtruyen.features.local
+package com.vianh.blogtruyen.data.repo
 
 import android.content.Context
 import com.vianh.blogtruyen.data.db.MangaDb
-import com.vianh.blogtruyen.data.db.entity.ChapterEntity
 import com.vianh.blogtruyen.data.model.Chapter
+import com.vianh.blogtruyen.data.model.Comment
+import com.vianh.blogtruyen.data.model.FeedItem
 import com.vianh.blogtruyen.data.model.Manga
 import com.vianh.blogtruyen.utils.ext.toSafeFileName
 import java.io.File
 
-class LocalSourceRepo(private val context: Context, private val db: MangaDb) {
+class LocalSourceRepo(private val context: Context, private val db: MangaDb): MangaProviderRepo {
 
-    suspend fun getMangaDetails(mangaId: Int): Manga? {
-        return db.mangaDao.getMangaById(mangaId)?.toManga()
-    }
-
-    suspend fun getMangaList(): List<Manga> {
+    override suspend fun getList(page: Int): List<Manga> {
         val mangaDir = getStorageDir()
 
         val listMangaDirs = mangaDir.listFiles { dir, name ->
@@ -30,12 +27,11 @@ class LocalSourceRepo(private val context: Context, private val db: MangaDb) {
             .map { it.copy(imageUrl = findCoverById(it.id)?.absolutePath.orEmpty()) }
     }
 
-    fun findCoverById(mangaId: Int): File? {
-        return getCoverDir().listFiles()
-            ?.firstOrNull { it.isFile && it.nameWithoutExtension == mangaId.toString() }
+    override suspend fun getMangaDetails(manga: Manga): Manga {
+        return db.mangaDao.getMangaById(manga.id)?.toManga() ?: throw IllegalStateException("Manga not found")
     }
 
-    suspend fun getChapters(mangaId: Int): List<Chapter> {
+    override suspend fun getChapters(mangaId: Int): List<Chapter> {
         val localDir = getStorageDir()
         val mangaDir = localDir.listFiles { dir, name ->
             dir.isDirectory && name.split("_").lastOrNull()?.toIntOrNull() == mangaId
@@ -56,27 +52,33 @@ class LocalSourceRepo(private val context: Context, private val db: MangaDb) {
         }.sortedByDescending { it.number }
     }
 
-    suspend fun getChapterById(id: String): Chapter? {
-        return db.chapterDao.findChapterById(id)?.toChapter()
-    }
-
-    fun loadPages(manga: Manga, chapter: Chapter): List<String> {
-        val chapterDir = getChapterDir(manga.id, manga.title, chapter)
-        if (!chapterDir.exists())
+    override suspend fun getChapterPages(chapter: Chapter, mangaId: Int): List<String> {
+        val manga = db.mangaDao.requireManga(mangaId)
+        val chapterDir = getChapterDir(manga.mangaId, manga.title, chapter)
+        if (!chapterDir.exists()) {
             throw IllegalStateException("Could not find chapter in local source")
+        }
 
         val pages = chapterDir.listFiles() ?: throw IllegalStateException("No page found")
-        pages.sortBy { it.nameWithoutExtension }
         return pages
             .filter { it.nameWithoutExtension.toIntOrNull() != null }
+            .sortedBy { it.nameWithoutExtension }
             .map { it.absolutePath }
     }
 
-    suspend fun upsertChapter(chapter: Chapter, mangaId: Int) {
-        val readState = db.chapterDao.findChapterById(chapter.id)?.isRead ?: false
-        chapter.read = readState
-        val entity = ChapterEntity.fromChapter(chapter, mangaId)
-        db.chapterDao.upsert(entity)
+    override suspend fun getComment(mangaId: Int, offset: Int): Map<Comment, List<Comment>> = emptyMap()
+
+    override suspend fun getNewFeed(): FeedItem {
+        throw UnsupportedOperationException("Local manga not support new feed")
+    }
+
+    fun findCoverById(mangaId: Int): File? {
+        return getCoverDir().listFiles()
+            ?.firstOrNull { it.isFile && it.nameWithoutExtension == mangaId.toString() }
+    }
+
+    suspend fun getChapterById(id: String): Chapter? {
+        return db.chapterDao.findChapterById(id)?.toChapter()
     }
 
     fun getChapterDir(mangaId: Int, title: String, chapter: Chapter): File {
@@ -111,12 +113,10 @@ class LocalSourceRepo(private val context: Context, private val db: MangaDb) {
 
     companion object {
 
+        const val REPO_NAME = "local"
         const val COVER_DIR = "covers"
-
         const val LOCAL_MANGA_DIR = "localManga"
-
         const val MANGA_FORMAT = "%s_%d"
-
         const val CHAPTER_FORMAT = "%03d_%s"
     }
 }

@@ -76,7 +76,7 @@ class BlogtruyenProvider(private val client: OkHttpClient) : MangaProvider {
 
     override suspend fun getChapterPage(chapter: Chapter): List<String> {
         return withContext(Dispatchers.IO) {
-            val url = BuildConfig.HOST_FULL + chapter
+            val url = BuildConfig.HOST_FULL + chapter.url
             val request = Request.Builder().url(url).build()
             val content = client.newCall(request).getBodyString()
             return@withContext parseChapter(content)

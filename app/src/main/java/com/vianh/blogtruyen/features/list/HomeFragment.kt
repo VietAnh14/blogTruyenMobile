@@ -9,7 +9,7 @@ import androidx.core.graphics.Insets
 import androidx.core.view.updateLayoutParams
 import com.vianh.blogtruyen.R
 import com.vianh.blogtruyen.databinding.HomeFragmentBinding
-import com.vianh.blogtruyen.features.details.MangaDetailsFragment
+import com.vianh.blogtruyen.features.details.ui.MangaDetailsFragment
 import com.vianh.blogtruyen.application.MainActivity
 import com.vianh.blogtruyen.features.search.SearchFragment
 import com.vianh.blogtruyen.features.views.recycler.DefaultSpanSizeLookup

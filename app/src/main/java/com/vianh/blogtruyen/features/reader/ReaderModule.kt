@@ -5,5 +5,5 @@ import org.koin.dsl.module
 
 val readerModule
     get() = module {
-        viewModel { ReaderViewModel(get(), get(), get(), get()) }
+        viewModel { ReaderViewModel(get(), get(), get()) }
     }

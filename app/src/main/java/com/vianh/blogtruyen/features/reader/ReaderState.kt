@@ -13,6 +13,14 @@ data class ReaderState(
     val isOffline: Boolean = false
 ) : Parcelable {
 
+    fun withoutChapters(): ReaderState {
+        return this.copy(manga = manga.withoutChapter())
+    }
+
+    fun withChapters(chapters: List<Chapter>): ReaderState {
+        val mangaWithChapters = manga.copy(chapters = chapters)
+        return this.copy(manga = mangaWithChapters)
+    }
 }
 
 data class ControllerState(

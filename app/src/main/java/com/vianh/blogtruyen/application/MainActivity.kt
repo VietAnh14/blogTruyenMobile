@@ -12,7 +12,7 @@ import com.vianh.blogtruyen.data.github.Release
 import com.vianh.blogtruyen.data.model.Manga
 import com.vianh.blogtruyen.databinding.HomeActivityBinding
 import com.vianh.blogtruyen.features.base.BaseActivity
-import com.vianh.blogtruyen.features.details.MangaDetailsFragment
+import com.vianh.blogtruyen.features.details.ui.MangaDetailsFragment
 import com.vianh.blogtruyen.features.favorites.FavoritesFragment
 import com.vianh.blogtruyen.features.favorites.UpdateFavoriteWorker
 import com.vianh.blogtruyen.features.feed.NewFeedFragment
@@ -43,9 +43,12 @@ class MainActivity : BaseActivity<HomeActivityBinding>(), FragmentManager.OnBack
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        UpdateFavoriteWorker.executeOneTime(this)
         bindViewModel()
         setupViews()
+
+        if (savedInstanceState == null) {
+            UpdateFavoriteWorker.executeOneTime(this)
+        }
 
         if (!handleNewIntent(intent)) {
             setUpDefaultFragment()

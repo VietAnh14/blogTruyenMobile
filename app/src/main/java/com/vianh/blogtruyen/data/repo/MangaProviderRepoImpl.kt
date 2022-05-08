@@ -18,7 +18,8 @@ class MangaProviderRepoImpl(val provider: MangaProvider, val db: MangaDb): Manga
 
     override suspend fun getMangaDetails(manga: Manga): Manga {
         val remoteManga = provider.getMangaDetails(manga)
-        return manga
+        db.mangaDao.upsert(MangaEntity.fromManga(remoteManga))
+        return remoteManga
     }
 
     override suspend fun getChapters(mangaId: Int): List<Chapter> {
@@ -31,7 +32,7 @@ class MangaProviderRepoImpl(val provider: MangaProvider, val db: MangaDb): Manga
         return remoteChapter
     }
 
-    override suspend fun getChapterPages(chapter: Chapter): List<String> = provider.getChapterPage(chapter)
+    override suspend fun getChapterPages(chapter: Chapter, mangaId: Int): List<String> = provider.getChapterPage(chapter)
 
     override suspend fun getComment(mangaId: Int, offset: Int): Map<Comment, List<Comment>> = provider.getComment(mangaId, offset)
 

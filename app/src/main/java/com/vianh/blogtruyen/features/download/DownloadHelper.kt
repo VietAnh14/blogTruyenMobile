@@ -5,7 +5,8 @@ import com.bumptech.glide.Glide
 import com.vianh.blogtruyen.data.model.Chapter
 import com.vianh.blogtruyen.data.model.Manga
 import com.vianh.blogtruyen.data.remote.MangaProvider
-import com.vianh.blogtruyen.features.local.LocalSourceRepo
+import com.vianh.blogtruyen.data.repo.LocalSourceRepo
+import com.vianh.blogtruyen.features.details.data.AppMangaRepo
 import com.vianh.blogtruyen.utils.ext.await
 import com.vianh.blogtruyen.utils.ext.cancelableCatching
 import com.vianh.blogtruyen.utils.ext.copyTo
@@ -24,7 +25,7 @@ sealed class DownloadState {
     object Queued : DownloadState()
     data class InProgress(val progress: Int) : DownloadState()
     data class Error(val cause: Throwable) : DownloadState()
-    object Completed : DownloadState()
+    object Downloaded : DownloadState()
 }
 
 data class DownloadItem(
@@ -38,7 +39,8 @@ class DownloadHelper(
     private val context: Context,
     private val client: OkHttpClient,
     private val mangaProvider: MangaProvider,
-    private val localSourceRepo: LocalSourceRepo
+    private val localSourceRepo: LocalSourceRepo,
+    private val appMangaRepo: AppMangaRepo
 ) {
 
     // TODO: DOWNLOAD TO TEMP FILE WHILE PROCESSING
@@ -76,7 +78,7 @@ class DownloadHelper(
                 emit((successPage * 100f / pages.size).toInt())
             }
 
-            localSourceRepo.upsertChapter(chapter, manga.id)
+            appMangaRepo.upsertChapter(chapter, manga.id)
         }.distinctUntilChanged().flowOn(Dispatchers.IO)
     }
 

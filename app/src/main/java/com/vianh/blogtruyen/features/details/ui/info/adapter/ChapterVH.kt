@@ -1,4 +1,4 @@
-package com.vianh.blogtruyen.features.details.info.adapter
+package com.vianh.blogtruyen.features.details.ui.info.adapter
 
 import android.view.View
 import androidx.core.content.ContextCompat
@@ -66,7 +66,7 @@ class ChapterVH(
                     binding.stateButton.setImageResource(R.drawable.ic_file_download)
                 }
 
-                is DownloadState.Completed -> {
+                is DownloadState.Downloaded -> {
                     binding.stateButton.setImageResource(R.drawable.ic_download_done)
                 }
 
