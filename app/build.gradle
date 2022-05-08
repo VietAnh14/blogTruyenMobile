@@ -13,8 +13,8 @@ android {
         applicationId "com.vianh.blogtruyen"
         minSdkVersion 21
         targetSdkVersion 31
-        versionCode 19
-        versionName "0.18"
+        versionCode 20
+        versionName "0.20"
         setArchivesBaseName("blogTruyen_$versionName")
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
